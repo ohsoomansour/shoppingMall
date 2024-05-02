@@ -1,4 +1,4 @@
-package com.rb.admin.controller;
+package com.shoppingmall.admin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
