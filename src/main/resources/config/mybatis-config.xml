@@ -1,0 +1,16 @@
+<!DOCTYPE configuration SYSTEM "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />
+	</settings>
+	<!--
+	 ataMap이라는 별칭을 com.shoppingmall.object.DataMap 클래스에 지정 
+	 이렇게 함으로써 MyBatis에서는 dataMap이라는 이름으로 DataMap 클래스를 사용가능
+	-->
+	<typeAliases>
+		<typeAlias alias="dataMap" type="com.shoppingmall.object.DataMap"/>
+	</typeAliases>
+
+</configuration>
