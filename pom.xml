@@ -8,8 +8,8 @@
 		<version>3.1.11</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>com</groupId>
+	<artifactId>shoppingmall</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>demo</name>
@@ -48,7 +48,12 @@
 		<dependency>
 			<groupId>org.glassfish.web</groupId>
 			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
-			</dependency>
+		</dependency>
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>jstl</artifactId>
+		    <version>1.2</version>
+		</dependency>
 		<!-- SpringBoot 3.0이상 jsp 사용법 End -->
 	    <!-- JSP Compiler -->
 	    <dependency>
@@ -75,7 +80,7 @@
 		<dependency>
 		    <groupId>org.mybatis.spring.boot</groupId>
 		    <artifactId>mybatis-spring-boot-starter</artifactId>
-		    <version>2.1.4</version>
+		    <version>3.0.1</version>
 		</dependency>
         <dependency>
 		  <groupId>org.springframework.boot</groupId>

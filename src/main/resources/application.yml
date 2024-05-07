@@ -1,14 +1,16 @@
 spring:
   profiles:
     active: local # 사용할 환경 설정
+  
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres 
+    jdbc-url: jdbc:postgresql://localhost:5432/postgres #jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: 284823
+    
   mvc:
     view: 
-      prefix: /WEB-INF/view/
+      prefix: /WEB-INF/views/
       suffix: .jsp
       
   devtools:
@@ -22,6 +24,10 @@ server:
   port: 8080
   servlet:
     context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
   error:
     path: /error
     
@@ -31,10 +37,11 @@ mybatis:
     call-setters-on-nulls: true
     jdbc-type-for-null: varchar
     default-fetch-size: 500
+
+  type-aliases-package: com.shoppingmall.admin.model
   mapper-locations: classpath:/sqlmap/**/*.xml
 
 
 
 
-  
-
+ 
