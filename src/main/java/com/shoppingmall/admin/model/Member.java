@@ -1,16 +1,22 @@
 package com.shoppingmall.admin.model;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+
+
+@Data    //@Getter + @Setter
 public class Member {
     private int id;
     private String first_name;
     private String last_name;
     private String address;
-    private Date joinDate;
+    private Date join_date;
 
-    // Getters and setters
-
+    /* Getters and setters
+	
     public int getId() {
         return id;
     }
@@ -49,5 +55,6 @@ public class Member {
 
     public void setJoinDate(Date joinDate) {
         this.joinDate = joinDate;
-    }
+    }*/
+    
 }

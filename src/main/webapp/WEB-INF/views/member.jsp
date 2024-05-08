@@ -21,10 +21,11 @@
         <tbody>
             <c:forEach var="member" items="${members}">
                 <tr>
-                    <td>${member.firstName}</td>
-                    <td>${member.lastName}</td>
+                	<td>${member.id}</td>
+                    <td>${member.first_name}</td>
+                    <td>${member.last_name}</td>
                     <td>${member.address}</td>
-                    <td>${member.joinDate}</td>
+                    <td>${member.join_date}</td>
                 </tr>
             </c:forEach>
         </tbody>
