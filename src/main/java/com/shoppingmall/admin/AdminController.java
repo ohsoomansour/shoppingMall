@@ -20,9 +20,9 @@ public class AdminController {
 	@Autowired
 	private AdminServiceImpl adminServiceImpl;
 	
-	@GetMapping("/member")
+	@GetMapping("/memberList.do")
 	public ModelAndView getMembers() {
-		log.info("admin/member");
+		log.info("admin/memberList");
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("member");
 		System.out.println(this.adminServiceImpl.getMemberList());

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+
 <html>
 <head>
     <title>Members List</title>
@@ -11,11 +12,12 @@
     <table border="1">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Address</th>
-                <th>Join Date</th>
+                <th>ID         </th>
+                <th>First Name </th>
+                <th>Last Name  </th>
+                <th>Address    </th>
+                <th>Join date  </th>
+                <th>사용 승인</th>
             </tr>
         </thead>
         <tbody>
@@ -25,10 +27,17 @@
                     <td>${member.first_name}</td>
                     <td>${member.last_name}</td>
                     <td>${member.address}</td>
-                    <td>${member.join_date}</td>
+                    <td>${member.created_at}</td>
+                    <td>${member.signup_approval}</td>
                 </tr>
             </c:forEach>
         </tbody>
     </table>
+    <script>
+    
+    
+    
+    </script>
+    
 </body>
 </html>
