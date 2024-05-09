@@ -17,4 +17,6 @@ public interface MemberMapper {
     int updateMember(Member member);
 
     int deleteMember(int id);
+    
+    void doSignUpApproval(int id);
 }

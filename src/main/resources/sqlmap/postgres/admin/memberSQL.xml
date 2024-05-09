@@ -10,5 +10,12 @@
 				MEMBER		
 		]]>
 	</select>	
+	
+	<update id="doSignUpApproval"  parameterType="int" >
+         UPDATE member
+		 	SET
+		 	  signup_approval = true
+		 WHERE id = #{id}
+	</update>
 
 </mapper>

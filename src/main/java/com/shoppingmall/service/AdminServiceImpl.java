@@ -29,6 +29,7 @@ interface AdminService {
     int createMember(Member member);
     int updateMember(Member member);
     int deleteMember(int id);
+    void doSignUpApproval(int id);
 }
 
 @Service
@@ -48,6 +49,11 @@ public class AdminServiceImpl implements AdminService {
 	public List<Member> getMemberList() {
 	
 		return memberMapper.getMemberList();
+	}
+	
+	@Override
+	public void doSignUpApproval(int id) {
+		memberMapper.doSignUpApproval(id);
 	}
 
 	@Override

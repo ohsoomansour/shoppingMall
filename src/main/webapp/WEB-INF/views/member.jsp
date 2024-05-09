@@ -4,9 +4,39 @@
 
 <html>
 <head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Members List</title>
 </head>
 <body>
+<script>
+ $(document).ready(function(){
+ 	// member_type이 ADMIN의 경우 가입 승인 가능
+ 	function funcSignUpApproval(mode, seqno){
+	 	var member_type = '<%=(String)session.getAttribute("member_type") %>';
+	 	if(member_type === 'ADMIN'){
+	 	  $.ajax({
+	 	  	     type: 'GET',
+	 	  	     url: '/admin/signUpApproval.do?seqno=' + seqno
+	 	  	     success:function(data){
+	 	  	     	console.log(data); // {}
+	 	  	     
+	 	  	     },
+	 	  	     error:function(){},
+	 	  	     complete: function(){}
+	 	  
+	 	  })
+	 	  
+	 	}
+ 	}
+ 	
+ 	
+ 	
+ 	
+ })
+
+</script>
     <h1>Members</h1>
 
     <table border="1">
@@ -33,11 +63,7 @@
             </c:forEach>
         </tbody>
     </table>
-    <script>
     
-    
-    
-    </script>
     
 </body>
 </html>

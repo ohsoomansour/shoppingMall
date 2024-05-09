@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.shoppingmall.service.AdminServiceImpl;
@@ -28,6 +28,12 @@ public class AdminController {
 		System.out.println(this.adminServiceImpl.getMemberList());
 		mav.addObject("members", this.adminServiceImpl.getMemberList());
 		return mav;
+	}
+	
+	@GetMapping("/signUpApproval.do?seqno")
+	public void getApprovalOfMembership(@RequestParam("seqno") int id) {
+		adminServiceImpl.doSignUpApproval(id);
+		
 	}
 	
 }
