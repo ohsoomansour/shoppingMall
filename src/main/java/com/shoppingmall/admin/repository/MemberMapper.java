@@ -1,10 +1,9 @@
 package com.shoppingmall.admin.repository;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
-
 import com.shoppingmall.admin.model.Member;
+import com.shoppingmall.toaf.object.DataMap;
 
 @Mapper
 public interface MemberMapper {
@@ -18,5 +17,5 @@ public interface MemberMapper {
 
     int deleteMember(int id);
     
-    void doSignUpApproval(int id);
+    int updateSignUpApproval(int id);
 }

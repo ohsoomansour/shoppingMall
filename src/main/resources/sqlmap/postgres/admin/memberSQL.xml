@@ -11,11 +11,13 @@
 		]]>
 	</select>	
 	
-	<update id="doSignUpApproval"  parameterType="int" >
+	<update id="updateSignUpApproval"  parameterType="int">
+	  <![CDATA[
          UPDATE member
 		 	SET
 		 	  signup_approval = true
-		 WHERE id = #{id}
+		 WHERE id = #{id}::INTEGER
+      ]]>
 	</update>
 
 </mapper>

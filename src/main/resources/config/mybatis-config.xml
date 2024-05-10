@@ -11,6 +11,7 @@
 	-->
 	<typeAliases>
 		<typeAlias type="com.shoppingmall.admin.model.Member" alias="member" />
+		<typeAlias type="com.shoppingmall.toaf.object.DataMap" alias="dataMap" />
 	</typeAliases>
 
 </configuration>

@@ -98,11 +98,12 @@
 		   <artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 		<!-- commons: DataMap -->
-		<dependency>
-		   <groupId>org.apache.commons</groupId>
-		   <artifactId>commons-collections4</artifactId>
-		   <version>4.1</version>
-		</dependency>
+	   <dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-collections4</artifactId>
+		    <version>4.0</version>
+	   </dependency>
+
 		<!-- Resource  -->
        <dependency> 
 		   <groupId>javax.annotation</groupId> 
@@ -120,6 +121,21 @@
 	     <version>2.5</version>
 	     <scope>provided</scope>
 	   </dependency>
+	   <!--json 라이브러리 -->
+	   <dependency>
+		    <groupId>net.sf.json-lib</groupId>
+		    <artifactId>json-lib</artifactId>
+		    <version>2.3</version>
+		    <classifier>jdk15</classifier>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+	
+		</dependency>
+
+
+	   
 	</dependencies>
 
 	<build>

@@ -1,6 +1,7 @@
 package com.shoppingmall.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.shoppingmall.admin.model.Member;
 import com.shoppingmall.admin.repository.MemberMapper;
+import com.shoppingmall.toaf.object.DataMap;
 
 
 
@@ -24,12 +26,12 @@ import com.shoppingmall.admin.repository.MemberMapper;
 
 
 interface AdminService {
+	int updateSignUpApproval(int id);
 	Member getMember(int id);
 	List<Member> getMemberList();
-    int createMember(Member member);
-    int updateMember(Member member);
+    int createMember(int id);
+    int updateMember(int id);
     int deleteMember(int id);
-    void doSignUpApproval(int id);
 }
 
 @Service
@@ -51,19 +53,20 @@ public class AdminServiceImpl implements AdminService {
 		return memberMapper.getMemberList();
 	}
 	
+	
 	@Override
-	public void doSignUpApproval(int id) {
-		memberMapper.doSignUpApproval(id);
+	public int updateSignUpApproval(int id) {
+		return memberMapper.updateSignUpApproval(id);
 	}
 
 	@Override
-	public int createMember(Member member) {
+	public int createMember(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int updateMember(Member member) {
+	public int updateMember(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -73,6 +76,7 @@ public class AdminServiceImpl implements AdminService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 	
 }
