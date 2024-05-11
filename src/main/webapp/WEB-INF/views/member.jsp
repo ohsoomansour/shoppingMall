@@ -1,26 +1,26 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-
+ <html>
 
 <head>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
     <title>Members List</title>
 </head>
+<body>
  <script>
- /* 
- $(document).ready(function(){
- 	//  가입 승인 확인 함수 
- 	
- 
- })
+
+
+  /* 
  member_type이 ADMIN의 경우 가입  가능
  if(member_type === 'ADMIN'){
 	 	  
 	 	}
   */
+
+ 
 
   
  function funcSignUpApproval(id){
@@ -28,24 +28,45 @@
 	 	  $.ajax({
 	 	  	     type : 'POST',
 	 	  	     url :'/admin/signUpApproval.do?seqno='+id,
-	 	  	     //dataType : 'json',
-	 	  	     success: function(){
+	 	  	     dataType : 'json',
+	 	  	     success: function(res){
 	                // 요청이 성공한 경우 추가적인 작업 수행
+	                console.log(res);
 	                console.log('Success:');
 	             },
 	 	  	     error:function(e){
-	 	  	      console.error(e);  // 무슨 에러: 
+	 	  	      console.error(e);  
 	 	  	     },
-	 	  	     
-	 	  
 	 	  })
 	 	
  	}
+ 	/**/
+ function funcTest(){
+	 	  
+	 	  $.ajax({
+	 	  	     type : 'GET',
+	 	  	     url :'/admin/doTest.do',
+	 	  	     dataType : 'json',
+	 	  	     success: function(res){
+	                // 요청이 성공한 경우 추가적인 작업 수행
+	                console.log(res);
+	                console.log('Success:');
+	             },
+	 	  	     error:function(){
+	 	  	      
+	 	  	     },
+	 	  })
+	 	
+ }	
+
+ 
+
+
 
 </script>
 
-   <h1>Members</h1>
-
+  <h1>Members</h1>
+  <button onClick='funcTest()'>테스트</button>  
   <table border="1">
       <thead>
           <tr>
@@ -58,6 +79,7 @@
           </tr>
       </thead>
       <tbody>
+ 
           <c:forEach var="member" items="${members}">
               <tr>
               	<td>${member.id}</td>
@@ -69,9 +91,10 @@
                   
               </tr>
           </c:forEach>
+          
       </tbody>
   </table>
 
-    
+ </body>   
 
-
+</html>	

@@ -1,10 +1,13 @@
 package com.shoppingmall.config;
 
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+
 import com.shoppingmall.lms.cmm.intercept.SampleInterceptor;
 
 @Repository
@@ -20,6 +23,13 @@ public class WebMvcConfig implements WebMvcConfigurer{
     	registry.addInterceptor(new SampleInterceptor())
     	         .addPathPatterns("/**/*.do");
     }
+    
+    //REST API 설정 - josnView
+    @Bean
+    MappingJackson2JsonView jsonView(){
+        return new MappingJackson2JsonView();
+    }
+    
     /*
     @Bean
 	public MessageSource messageSource() {

@@ -18,4 +18,6 @@ public interface MemberMapper {
     int deleteMember(int id);
     
     int updateSignUpApproval(int id);
+    
+    
 }

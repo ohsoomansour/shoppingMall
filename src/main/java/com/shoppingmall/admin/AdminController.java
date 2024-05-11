@@ -1,5 +1,8 @@
 package com.shoppingmall.admin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.shoppingmall.admin.model.Member;
@@ -38,15 +42,32 @@ public class AdminController {
 	 *@param:  @ModelAttribute("seqno"):"seqno"은 실제 HTTP 요청의 파라미터 이름과는 다르며
 	*/
 	@RequestMapping(value="/signUpApproval.do") // HTTP 요청 파라미터를 객체로 바인딩                
-	public ModelAndView doapprovalofMembership(@ModelAttribute("seqno") int id) {   //int seqno
-		ModelAndView mav = new ModelAndView();	
-		mav.setViewName("member");
-		//System.out.println("가입승인 id:" + paraMap.get("seqno"));  // 가입승인 id:{}
-		//System.out.println("가입승인 id:" + paraMap);
-		//System.out.println("가입승인 id:" + paraMap.getint("seqno"));		
-		//System.out.println("가입승인 id:" + paraMap.getstr("seqno"));
-		System.out.println("가입승인 id:" + id);
+	public ModelAndView doApprovalofMembership(@ModelAttribute("seqno") int id) {   //int seqno
 		adminServiceImpl.updateSignUpApproval(id);
+		Map<String, Character> data = new HashMap<>();
+		System.out.println("가입승인 id:" + id);
+		//ModelAndView mav = new ModelAndView("member");
+		ModelAndView mav = new ModelAndView("jsonView");
+		mav.setViewName("member");
+		mav.addObject("status", "success");
+        mav.addObject("message", "This is a JSON response!");
+		data.put("id", 'A');
+		mav.addObject("id", data);
+		return mav;
+	}
+	
+	@ResponseBody   //없어도 가능함
+	@RequestMapping(value="/doTest.do") // HTTP 요청 파라미터를 객체로 바인딩
+	public ModelAndView doTest() {   //int seqno
+		
+		Map<String, Character> data = new HashMap<>();
+
+		 
+		ModelAndView mav = new ModelAndView("jsonView");
+		mav.addObject("status", "success");
+        mav.addObject("message", "This is a JSON response!");
+		//data.put("id", 'A');
+		//mav.addObject("id", data);
 		return mav;
 	}
 	
