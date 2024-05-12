@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.shoppingmall.admin.model.Member;
 import com.shoppingmall.admin.repository.MemberMapper;
+import com.shoppingmall.toaf.basemvc.BaseSvc;
 import com.shoppingmall.toaf.object.DataMap;
 
 
@@ -24,7 +25,7 @@ import com.shoppingmall.toaf.object.DataMap;
  * SQL 쿼리의 실행, 그리고 결과 매핑 등을 처리
  * */
 
-
+/*
 interface AdminService {
 	int updateSignUpApproval(int id);
 	Member getMember(int id);
@@ -32,51 +33,24 @@ interface AdminService {
     int createMember(int id);
     int updateMember(int id);
     int deleteMember(int id);
-}
+}*/
 
 @Service
 @Transactional(value="postgresqlTransactionManager", propagation= Propagation.REQUIRED, rollbackFor=Exception.class)
-public class AdminServiceImpl implements AdminService {
+public class AdminService extends BaseSvc<DataMap> {
+	//private MemberMapper memberMapper;
 	
-	@Autowired
-	private MemberMapper memberMapper;
-	
-	@Override
-	public Member getMember(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public List<Member> getMemberList() {
+
+	public List<DataMap> getMemberList(DataMap dataMap) {
 	
-		return memberMapper.getMemberList();
+		return this.dao.dolistQuery("AdminSQL.doGetMemberList", dataMap);
 	}
 	
 	
-	@Override
-	public int updateSignUpApproval(int id) {
-		return memberMapper.updateSignUpApproval(id);
-	}
-
-	@Override
-	public int createMember(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int updateMember(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int deleteMember(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
+	public int updateSignUpApproval(DataMap dataMap) {
+		return this.dao.updateQuery("AdminSQL.doUpdateSignUpApproval", dataMap);
+	} 
+    
 	
 }

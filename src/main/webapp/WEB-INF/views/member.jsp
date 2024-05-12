@@ -23,20 +23,27 @@
  
 
   
- function funcSignUpApproval(id){
-	 	  console.log("Sending AJAX request for id:", id);
+ function funcSignUpApproval(seqno){
+	 	  console.log("Sending AJAX request for id:", seqno);
 	 	  $.ajax({
-	 	  	     type : 'POST',
-	 	  	     url :'/admin/signUpApproval.do?seqno='+id,
-	 	  	     dataType : 'json',
+	 	  	     type : 'GET',
+	 	  	     url :'/admin/signUpApproval.do?seqno='+seqno,
+	 	  	     headers: {
+					"Content-Type":"application/json;charset=utf-8",    
+                    
+				  },			
+	 	  	     dataType:'json',
+	 	  	     contentType: 'application/json', // 요청 본문의 타입을 JSON으로 설정
 	 	  	     success: function(res){
 	                // 요청이 성공한 경우 추가적인 작업 수행
-	                console.log(res);
-	                console.log('Success:');
+	                console.log('Success:'+ res);
 	             },
 	 	  	     error:function(e){
 	 	  	      console.error(e);  
 	 	  	     },
+	 	  	     complete : function() {
+						
+				}
 	 	  })
 	 	
  	}
@@ -44,13 +51,16 @@
  function funcTest(){
 	 	  
 	 	  $.ajax({
-	 	  	     type : 'GET',
+	 	  	     type : 'POST',
 	 	  	     url :'/admin/doTest.do',
+	 	  	     data: {
+			        key1: "SUCCESS",
+			        key2: "SUCCESS",
+			     },
 	 	  	     dataType : 'json',
 	 	  	     success: function(res){
 	                // 요청이 성공한 경우 추가적인 작업 수행
-	                console.log(res);
-	                console.log('Success:');
+	                console.log('Success: ' + res);
 	             },
 	 	  	     error:function(){
 	 	  	      
