@@ -1,0 +1,49 @@
+spring:
+  profiles:
+    active: local # 사용할 환경 설정
+  
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    jdbc-url: jdbc:postgresql://localhost:5432/postgres #jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 284823
+    
+  mvc:
+    view: 
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+      
+  devtools:
+    livereload: # 서버 자동 재가동: JSP수정시 서버 재시작없이 바로 적용될 수 있게 설정
+      enabled: true
+  freemarker: 
+    cache: false
+    
+#서버 포트
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  error:
+    path: /error
+    
+mybatis:
+  configuration:
+    #map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    jdbc-type-for-null: varchar
+    default-fetch-size: 500
+
+  type-aliases-package: com.shoppingmall.admin.model
+  mapper-locations: classpath:/sqlmap/**/*.xml
+
+
+
+#show parameter binding
+            
+
+ 

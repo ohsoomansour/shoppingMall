@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+
+<!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
+<mapper namespace="AdminSQL"> 
+	<select id="doGetMemberList" resultType="dataMap">
+	<!-- 회원관리, 전체 회원  -->
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				MEMBER		
+		]]>
+	</select>	
+	
+	<update id="doUpdateSignUpApproval"  parameterType="dataMap" >
+	  <![CDATA[
+         UPDATE member
+		 	SET
+		 	  signup_approval = true
+		 WHERE id = #{seqno}::INTEGER
+      ]]>
+    </update>  
+</mapper>
