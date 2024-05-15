@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<<<<<<< HEAD
+=======
+	
+
+>>>>>>> 5bb0adc72111f24c9fcda0aa112156e834d4053b
 <!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
 <mapper namespace="AdminSQL"> 
 	<select id="doGetMemberList" resultType="dataMap">

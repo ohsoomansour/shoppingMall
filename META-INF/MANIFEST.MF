@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: shoppingMall
+Bundle-SymbolicName: shoppingMall
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: shoppingMall
+Export-Package: com.example.demo,
+ com.shoppingmall,
+ com.shoppingmall.config,
+ com.shoppingmall.lms.cmm.intercept,
+ com.shoppingmall.member,
+ com.shoppingmall.member.model,
+ com.shoppingmall.member.repository,
+ com.shoppingmall.service,
+ com.shoppingmall.toaf.basemvc,
+ com.shoppingmall.toaf.object

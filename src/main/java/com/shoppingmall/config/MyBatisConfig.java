@@ -1,5 +1,10 @@
 package com.shoppingmall.config;
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 5bb0adc72111f24c9fcda0aa112156e834d4053b
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
