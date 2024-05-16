@@ -26,166 +26,58 @@
   border:none;
 }
 </style>
-<script>
+
+<script > <!-- jsp 파일 구조를 아래와 같이 작성 시 페이지 파싱 후 script 실행-->
 var idCheck = false; //아이디 중복검사 체크
 var pwCheck = false; //패스워드 중복검사 체크
 const idRegex = /^[a-zA-Z0-9]{1,16}$/;//대소문자영문 숫자포함한 정규식
 const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,16}$/; //영문,숫자,특수문자를 포함한 8자이상 16자 이하 정규식
-$(document).ready(function(){	
-	$('#userEmail2').keyup(function () {
-	    $(this).val($(this).val().replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣]/g, ''));
-	    if ($('#userEmail3').val() !== "직접입력") {
-		    $('#userEmail3').val("직접입력");
-	        console.log("틀림 " + $('#userEmail3').val());
-	    }
-	});
 
-	$('#bizEmail2').keyup(function () {
-	    $(this).val($(this).val().replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣]/g, ''));
-	    if ($('#bizEmail3').val() !== "직접입력") {
-		    $('#bizEmail3').val("직접입력");
-	        console.log("틀림 " + $('#bizEmail3').val());
-	    }
-	});
+$(document).ready(function(){
+	// 유저 이메일 주소 직접 입력이 아닌 경우 1.
+	$('userEmail2').keyup(){
+		$(this).val($(this).val().replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣\]/g, '')); //문자열을 반환 -> 그 값을 기입
+		if($('#userEmail3').val() !== '직접입력'){
+			$('#userEmail3').val("직접입력");
+			console.log("틀림", $('#userEmail3').val());
+		}
+	}
+	// 비즈니스 계정이 주소 직접 입력이 아닌 경우
+	$('#bizEmail2').keyup(function(){
+		$(this).val($(this).val().replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, ''));
+		if($('#bizEmail3').val() !== "직접입력"){
+			$('#bizEmail3').val() !== "직접입력";
+			console.log("틀림 " + $('#bizEmail3').val());
+		}
+		
+	})
 	
-	//아이디 중복체크 클릭
-	$('#btnIdCheck').click(function() {
-		fncDoubleCheck("ID");
-	});
-
-	//사업자등록번호 중복체크 클릭
-	$('#btnBizRegnoCheck').click(function() {
-		fncDoubleCheck("BR");
-	});
-
-	//이메일 확인 이동
-	$('#btnEmailCheck').click(function() {
-		fncCheckEmail();
-	});
-	 // input필드에 자동완성 기능을 걸어준다
-	$("#bizName").autocomplete({
-    source: function (request, response) {
-	    var data = $('#bizName').val();
-        $.ajax({
-            url: "/techtalk/autoSearchBusinessX.do",
-            type: "POST",
-            dataType: "json",
-            data: { applicant_nm: request.term },
-            success: function (data) {
-                response(
-                    $.map(data.result, function (item) {
-	                    console.log("어케나옴"+JSON.stringify(item));
-                        return {
-                            label: item.applicant_nm+'label',
-                            value: item.applicant_nm,
-                            idx: item.applicant_nm+'idx',
-                        }
-                    })
-                )
-            }
-        })
-    },
-    focus: function (event, ui) {
-        return false;
-    },
-    select: function (event, ui) {
-    	console.log(ui.item.idx)
-    },
-    delay: 500,
-    autoFocus: true
-	});
-
-<<<<<<< HEAD
-				//이메일 확인 이동
-				$('#btnEmailCheck').click(function() {
-					fncCheckEmail();
-				});
-				 // input필드에 자동완성 기능을 걸어준다
-				$("#bizName").autocomplete({
-			    source: function (request, response) {
-			    	console.log(request)
-				    var data = $('#bizName').val();
-			        $.ajax({
-			            url: "/techtalk/autoSearchBusiness.do",
-			            type: "POST",
-			            dataType: "json",
-			            data: { applicant_nm: request.term },
-			            success: function (data) {
-			                response(
-			                    $.map(data.result, function (item) {
-				                    //console.log("어케나옴"+JSON.stringify(item));
-			                        return {
-			                            label: item.applicant_nm+'label',
-			                            value: item.applicant_nm,
-			                            idx: item.applicant_nm+'idx',
-			                        }
-			                    })
-			                )
-			            }
-			        })
-			    },
-			    focus: function (event, ui) {
-			        return false;
-			    },
-			    select: function (event, ui) {
-			    	console.log(ui.item.idx)
-			    },
-			    delay: 500,
-			    autoFocus: true
-			});
-
-			});
-=======
-});
->>>>>>> branch 'develop' of https://git.ttmsoft.co.kr/wert/tibiz.git
-
 	
-//[회원가입] - 기업명 자동검색 -> 2023/09/06 - 박성민
-function autoComplete(){
-	var data = $('#bizName').val();
-	console.log("입력값");
-	$.ajax({
-		type : 'POST',
-		url : '/techtalk/autoSearchBusinessX.do',
-		data : {
-			applicant_nm : data
-		},
-		dataType : 'json',
-		success : function(data) {
-			console.log("dd"+JSON.stringify(data.result));
-            $.map(data.result, function(item) {
-                console.log("어케나옴:+"+JSON.stringify(item.applicant_nm))
-                return {
-                    label : item.applicant_nm + 'label',
-                    value : item.applicant_nm,
-                    test : item.applicant_nm + 'test'
-                }
-            })
-				},
-		select : function(event, ui) {
-            console.log(ui);
-            console.log(ui.item.label);
-            console.log(ui.item.value);
-            console.log(ui.item.test);
-      },
-      focus : function(event, ui) {
-          return false;
-      },
-      minLength : 1,
-      autoFocus : true,
-      classes : {
-          'ui-autocomplete': 'highlight'
-      },
-      delay : 500,
-      position : { my : 'right top', at : 'right bottom' },
-      close : function(event) {
-          console.log(event);
-      }
-	});
+})
 
+
+
+function alert_popup_focus(message, selector){
+	alert(message);
+	$(selector).focus();
 }
 
-//회원가입 -> 2023/09/03 - 박성민
+function alert_popup(message, selector){
+	alert(message);
+	$(selector).focus();
+}
+//빈칸 검사 
+function isBlank(message, id){
+	if($.trim($(id).html()) == ''){
+		alert(message);
+	}
+	
+}
+// 사용자가 클릭한 요소 $(this)
+
+
+
+//회원가입 -> 2024/05/16 osm  $.trim($("selector").html())
 function fncMemberJoin(){
 	//개인정보 유효성 검사
 	if(!isBlank('아이디', '#id')){
@@ -213,8 +105,9 @@ function fncMemberJoin(){
 															if(!isBlank('업무용이메일', '#bizEmail1')){
 																if(!isBlank('업무용이메일도메인', '#bizEmail2')){
 																	if(!isBlank('회사용직통전화번호', '#bizTelNo')){
-																		var url = "/techtalk/memberJoinX.do"
+																		var url = "/member/memberJoinConfirm.do"
 																			var form = $('#frm')[0];
+																		    console.log(form); //뭐 나옴?  
 																			var data = new FormData(form);
 																				$.ajax({
 																				       url : url,
@@ -260,222 +153,9 @@ function fncMemberJoin(){
 	}
 }
 
-//[회원가입] - 아이디 및 사업자등록번호 중복확인 -> 2021/04/16 - 추정완
-function fncDoubleCheck(gubun) {
-	if (gubun == 'ID') {
-		var id = $('#id').val();
-		console.log('id : ' + id);
-		if (id == '' || id == null) {
-			alert_popup_focus('아이디를 입력 후 중복확인 버튼을 클릭해주세요.', '#id');
-			return false;
-		}
-		/*if(id.length < 8){
-			alert_popup_focus('아이디를 8글자 이상 입력해 주세요.','#id');
-			return false;
-			}*/
-		$.ajax({
-			type : 'POST',
-			url : '/techtalk/memberDoubleCheckX.do',
-			data : {
-				gubun : gubun,
-				id : id
-			},
-			dataType : 'json',
-<<<<<<< HEAD
-			success : function(data) {
-				console.log("dd"+JSON.stringify(data.result));
-             $.map(data.result, function(item) {
-                 //console.log("어케나옴:+"+JSON.stringify(item.applicant_nm))
-                 return {
-                     label : item.applicant_nm + 'label',
-                     value : item.applicant_nm,
-                     test : item.applicant_nm + 'test'
-                 }
-             })
-					},
-			select : function(event, ui) {
-	            console.log(ui);
-	            console.log(ui.item.label);
-	            console.log(ui.item.value);
-	            console.log(ui.item.test);
-       },
-       focus : function(event, ui) {
-           return false;
-       },
-       minLength : 1,
-       autoFocus : true,
-       classes : {
-           'ui-autocomplete': 'highlight'
-       },
-       delay : 500,
-       position : { my : 'right top', at : 'right bottom' },
-       close : function(event) {
-           console.log(event);
-       }
-		});
 
-	}
-	
-	//회원가입 -> 2023/09/03 - 박성민
-	function fncMemberJoin(){
-		//개인정보 유효성 검사
-		if(!isBlank('아이디', '#id'))
-		if(!idCheck){
-			alert_popup_focus('아이디 중복확인을 해주세요.',"#id");
-			return false;
-			}
-		if(!isBlank('비밀번호', '#pw'))
-		if(!isBlank('비밀번호 확인', '#passWordCk'))
-		if(!isBlank('이름', '#userName'))
-		if(!isBlank('개인이메일', '#userEmail1'))
-		if(!isBlank('개인이메일 도메인', '#userEmail2'))
-		if(!isBlank('휴대전화번호', '#userMobileNo'))
-		if(!isBlank('회사명', '#bizName'))
-		if(!isBlank('부서명', '#userDepart'))
-		if(!isBlank('직급', '#userRank'))
-		if(!isBlank('업무용이메일', '#bizEmail1'))
-		if(!isBlank('업무용이메일도메인', '#bizEmail2'))
-		if(!isBlank('회사용직통전화번호', '#bizTelNo'))
 
-		var url = "/techtalk/memberJoin.do"
-		var form = $('#frm')[0];
-		var data = new FormData(form);
-		console.log("이게왜 ? + " + idCheck + " pw + " + pwCheck)
-		/*
-			$.ajax({
-			       url : url,
-			       type: "post",
-			       processData: false,
-			       contentType: false,
-			       data: data,
-			       dataType: "json",
-			       success : function(res){
-				    	alert("성공") 
-			       },
-			       error : function(){
-			    	alert('게시판 등록에 실패했습니다.');    
-			       },
-			       complete : function(){
-			       }
-			});
-		*/
-		}
-
-	//[회원가입] - 아이디 및 사업자등록번호 중복확인 -> 2021/04/16 - 추정완
-	function fncDoubleCheck(gubun) {
-		if (gubun == 'ID') {
-			var id = $('#id').val();
-			console.log('id : ' + id);
-			if (id == '' || id == null) {
-				alert_popup_focus('아이디를 입력 후 중복확인 버튼을 클릭해주세요.', '#id');
-				return false;
-			}
-			/*if(id.length < 8){
-				alert_popup_focus('아이디를 8글자 이상 입력해 주세요.','#id');
-				return false;
-				}*/
-			$.ajax({
-				type : 'POST',
-				url : '/techtalk/memberDoubleCheck.do',
-				data : {
-					gubun : gubun,
-					id : id
-				},
-				dataType : 'json',
-				success : function(transport) {
-					var memberCount = transport.memberCount;
-					if (memberCount == '1') {
-						alert_popup_focus('중복된 아이디가 있습니다. 다른 아이디를 사용해주세요.',
-								'#id');
-						idCheck = false;
-					} else if (id.length < 3) {
-						alert_popup_focus('아이디를 3글자 이상 입력해 주세요.', '#id');
-						return false;
-					} else if (id.length >= 3) {
-						alert("여기냐")
-						changeText('사용가능한 아이디 입니다.', '#checkId');
-						idCheck = true;
-					}
-
-				},
-				error : function() {
-
-				},
-				complete : function() {
-
-=======
-			success : function(transport) {
-				var memberCount = transport.memberCount;
-				if (memberCount == '1') {
-					alert_popup_focus('중복된 아이디가 있습니다. 다른 아이디를 사용해주세요.',
-							'#id');
-					idCheck = false;
-				} else if (id.length < 3) {
-					alert_popup_focus('아이디를 3글자 이상 입력해 주세요.', '#id');
-					return false;
-				} else if (id.length >= 3) {
-					alert_popup_focus('사용가능한 아이디 입니다.', '#pwd');
-					idCheck = true;
->>>>>>> branch 'develop' of https://git.ttmsoft.co.kr/wert/tibiz.git
-				}
-
-			},
-			error : function() {
-
-			},
-			complete : function() {
-
-			}
-		});
-	}
-}
-
-//임시데이터만들기
-function fncSetData() {
-	$('#memberType').val("R");
-	$('#id').val("test");
-	$('#pw').val("test");
-	$('#passWordCk').val("test");
-	$('#userName').val("박성민");
-	$('#userEmail1').val("ghkdljtjd");
-	$('#userEmail2').val("gamkil.com");
-	$('#userMobileNo').val("01094778894");
-	$('#bizName').val("회사명");
-	$('#userDepart').val("부서");
-	$('#userRank').val("직급");
-	$('#bizEmail1').val("ozs876");
-	$('#bizEmail2').val("naver.com");
-	$('#bizTelNo').val("0200000000");
-	idCheck = true;
-	pwCheck = true;
-}
-
-function fncChangeEmail(obj) {
-	
-	var id = obj.id;
-	console.log("a" + id)
-	var selValue = obj.value;
-	if(id == "bizEmail3"){
-		console.log("여기?", selValue)
-		if (selValue == "직접입력" || selValue == "") {
-			$('#bizEmail2').val("");
-		} else {
-			$('#bizEmail2').val(selValue);
-		}
-	}
-	if(id == "userEmail3"){
-		console.log("여기?2")
-		if (selValue == "직접입력" || selValue == "") {
-			$('#userEmail2').val("");
-		} else {
-			$('#userEmail2').val(selValue);
-		}
-	}
-	var selValue = obj.value;
-	
-}
-
-//[회원가입] - 회원가입 완료 화면 이동 -> 2021/06/29 이효상
+//[회원가입] - 회원가입 완료 화면 이동 ->
 function fncCompeletePage() {
 	location.href = "/techtalk/memberJoinCompletePage.do";
 }
@@ -493,6 +173,7 @@ function changeText(text, id){
 	$(id).html(text);
 	}
 </script>
+
 <!-- compaVcContent s:  -->
 <div id="compaVcContent" class="cont_cv">
 	<div id="mArticle" class="assig_app">
