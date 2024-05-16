@@ -10,11 +10,8 @@
 	 이렇게 함으로써 MyBatis에서는 dataMap이라는 이름으로 DataMap 클래스를 사용가능
 	-->
 	<typeAliases>
-<<<<<<< HEAD
+
 		<typeAlias type="com.shoppingmall.admin.model.Member" alias="member" />
-=======
-		<typeAlias type="com.shoppingmall.member.model.Member" alias="member" />
->>>>>>> 5bb0adc72111f24c9fcda0aa112156e834d4053b
 		<typeAlias type="com.shoppingmall.toaf.object.DataMap" alias="dataMap" />
 	</typeAliases>
 
