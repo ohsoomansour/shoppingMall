@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
-<mapper namespace="AdminSQL"> 
+<mapper namespace="MemberSQL"> 
 	<select id="doGetMemberList" resultType="dataMap">
 	<!-- 회원관리, 전체 회원  -->
 		<![CDATA[
@@ -11,6 +11,21 @@
 				MEMBER		
 		]]>
 	</select>	
+	<select id="doCountMemberId" resultType="int">
+		<!-- 2021-04-21 추정완 -->
+		/*
+			SQL ID : Member_v_SQL.doCountMemberId
+			아이디 중복검사
+		*/
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBLMEMBER
+			WHERE
+				ID = #{id}
+		]]>
+	</select>
 	
 	<update id="doUpdateSignUpApproval"  parameterType="dataMap" >
 	  <![CDATA[

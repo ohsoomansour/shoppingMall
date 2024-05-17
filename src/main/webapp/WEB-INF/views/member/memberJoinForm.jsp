@@ -49,8 +49,32 @@ $(document).ready(function(){
 			$('#bizEmail3').val() !== "직접입력";
 			console.log("틀림 " + $('#bizEmail3').val());
 		}
-		
-	})
+	});
+	
+	
+	// 아이디 중복체크 클릭
+	$("#btnIdCheck").click(function(){
+		fncDoubleCheck("ID");
+	});
+	//[회원가입] - 아이디 및 사업자등록번호 중복확인 -> 추정 중 2024/05/17(수)
+	function fncDoubleCheck(gubun){
+		if(gubun == 'ID'){
+			var id = $('#id').val();
+			console.log(id);
+		}
+		if(id == '' || id == null){
+			alert_popup_focus('아이디를 입력 후 중복확인 버튼을 클릭해주세요.', '#id');
+			return false;
+	    }
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 })

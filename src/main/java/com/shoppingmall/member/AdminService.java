@@ -37,12 +37,12 @@ public class AdminService extends BaseSvc<DataMap> {
 
 	public List<DataMap> getMemberList(DataMap dataMap) {
 	
-		return this.dao.dolistQuery("AdminSQL.doGetMemberList", dataMap);
+		return this.dao.dolistQuery("MemberSQL.doGetMemberList", dataMap);
 	}
 	
 	
 	public int updateSignUpApproval(DataMap dataMap) {
-		return this.dao.updateQuery("AdminSQL.doUpdateSignUpApproval", dataMap);
+		return this.dao.updateQuery("MemberSQL.doUpdateSignUpApproval", dataMap);
 	} 
     
 	
