@@ -38,7 +38,7 @@ mybatis:
     jdbc-type-for-null: varchar
     default-fetch-size: 500
 
-  type-aliases-package: com.shoppingmall.admin.model
+  type-aliases-package: com.shoppingmall.member.model
   mapper-locations: classpath:/sqlmap/**/*.xml
 
 

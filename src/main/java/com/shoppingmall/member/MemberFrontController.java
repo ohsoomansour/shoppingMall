@@ -1,17 +1,23 @@
 package com.shoppingmall.member;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.shoppingmall.member.model.Member;
 import com.shoppingmall.toaf.object.DataMap;
 
 
 @RequestMapping("/member")
 @Controller
 public class MemberFrontController {
-
+	
+	@Autowired
+	private MemberFrontService memberFrontService;
+	
+	
 	/* 
 	 *@Author: osm
 	 *@Date: 2024.5.14
@@ -50,19 +56,7 @@ public class MemberFrontController {
 		return mav;
 	}
 	
-	/* 
-	 *@Author: osm
-	 *@Date: 2024.5.14
-	 *@Param: - 
-	 *@return: ModelAndView
-	 *@Function:회원 가입 페이지 이동
-	*/
-	@RequestMapping("/")
-	public ModelAndView doMemberJoin() {
-		ModelAndView mav = new ModelAndView("jsonView");
-		return mav;
-		
-	}
+	
 	/* 
 	 *@Author: osm
 	 *@Date: 2024.5.18
@@ -70,14 +64,50 @@ public class MemberFrontController {
 	 *@return: ModelAndView
 	 *@Function: 아이디 및 사업자등록번호 중복검사아이디 
 	*/
-	
+	 //Q. @ModelAttribute는 HTTP Body를 어떻게 받나? {gubun:'ID', id: 1}
 	@RequestMapping("/memberDoubleCheck.do")
-	public ModelAndView doMemberDoubleCheck(@ModelAttribute("dataMap") DataMap paraMap) {
+	public ModelAndView doMemberDoubleCheck(@ModelAttribute("gubun") String gubun, @ModelAttribute("id") String id) {
 		ModelAndView mav = new ModelAndView("jsonView");
-		
+
+	    DataMap paraMap = new DataMap();
+	    paraMap.put("id", id);
+	    System.out.println(gubun);
+	    System.out.println(id);
+	    try {
+	    	if(gubun.equals("ID")) {
+	    		int memberCount = memberFrontService.doCounteMemberId(paraMap);
+	    		mav.addObject("memberCount", memberCount);
+	    	}
+	    } catch (Exception e) {
+	    	System.out.println(e);
+	    	return new ModelAndView("error");
+	    }
+	    //paraMap.put("gubun", gubun);
 		return mav;
 	}
 	
+	/* 
+	 *@Author: osm
+	 *@Date: 2024.5.20 
+	 *@Param: - 
+	 *@return: ModelAndView
+	 *@Function: 비번 생성 
+	*/
+	@RequestMapping("/memberJoin.do")
+	public ModelAndView doMemberJoin(@ModelAttribute Member member) {
+		ModelAndView mav = new ModelAndView("jsonView");
+		DataMap paraMap = new DataMap();
+		try {
+			String pw = member.getPw().toString();
+			paraMap.put("pwd", pw);
+			this.memberFrontService.doInsertMember(paraMap);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ModelAndView("error");
+		}
+		
+		return mav;
+	}
 	
 	
 }

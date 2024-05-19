@@ -8,31 +8,17 @@
 			SELECT
 				*
 			FROM
-				MEMBER		
+				tb_member		
 		]]>
 	</select>	
-	<select id="doCountMemberId" resultType="int">
-		<!-- 2021-04-21 추정완 -->
-		/*
-			SQL ID : Member_v_SQL.doCountMemberId
-			아이디 중복검사
-		*/
-		<![CDATA[
-			SELECT
-				COUNT(*)
-			FROM
-				TBLMEMBER
-			WHERE
-				ID = #{id}
-		]]>
-	</select>
+	
 	
 	<update id="doUpdateSignUpApproval"  parameterType="dataMap" >
 	  <![CDATA[
-         UPDATE member
+         UPDATE tb_member
 		 	SET
 		 	  signup_approval = true
-		 WHERE id = #{seqno}::INTEGER
+		 WHERE no = #{no}::INTEGER
       ]]>
     </update>  
 </mapper>

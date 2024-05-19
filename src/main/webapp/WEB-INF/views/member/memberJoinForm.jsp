@@ -27,7 +27,7 @@
 }
 </style>
 
-<script > <!-- jsp 파일 구조를 아래와 같이 작성 시 페이지 파싱 후 script 실행-->
+<script> 
 var idCheck = false; //아이디 중복검사 체크
 var pwCheck = false; //패스워드 중복검사 체크
 const idRegex = /^[a-zA-Z0-9]{1,16}$/;//대소문자영문 숫자포함한 정규식
@@ -35,13 +35,13 @@ const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]
 
 $(document).ready(function(){
 	// 유저 이메일 주소 직접 입력이 아닌 경우 1.
-	$('userEmail2').keyup(){
-		$(this).val($(this).val().replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣\]/g, '')); //문자열을 반환 -> 그 값을 기입
+	$('#userEmail2').keyup(function(){
+		$(this).val($(this).val().replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣]/g, '')); //문자열을 반환 -> 그 값을 기입
 		if($('#userEmail3').val() !== '직접입력'){
 			$('#userEmail3').val("직접입력");
 			console.log("틀림", $('#userEmail3').val());
 		}
-	}
+	});
 	// 비즈니스 계정이 주소 직접 입력이 아닌 경우
 	$('#bizEmail2').keyup(function(){
 		$(this).val($(this).val().replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, ''));
@@ -56,31 +56,50 @@ $(document).ready(function(){
 	$("#btnIdCheck").click(function(){
 		fncDoubleCheck("ID");
 	});
-	//[회원가입] - 아이디 및 사업자등록번호 중복확인 -> 추정 중 2024/05/17(수)
+}); //ready end
+
+	//[회원가입] - 아이디 및 사업자등록번호 중복확인 -> 추정 중 2024/05/18(토)
 	function fncDoubleCheck(gubun){
 		if(gubun == 'ID'){
 			var id = $('#id').val();
-			console.log(id);
+			console.log(id)
 		}
 		if(id == '' || id == null){
 			alert_popup_focus('아이디를 입력 후 중복확인 버튼을 클릭해주세요.', '#id');
 			return false;
 	    }
+		$.ajax({
+			type : 'POST',
+			url : '/member/memberDoubleCheck.do',
+			data : {
+				gubun : gubun,
+				id : id
+			},
+			dataType : 'json',
+			success : function(data) {
+				console.log("success Data:" + data.memberCount)
+            	var memberCount = data.memberCount;
+				if(memberCount == '1'){
+					alert_popup_focus('중복된 아이디가 있습니다. 다른 아이디를 사용해주세요!', '#id');
+					idCheck = false;
+				} else if(id.length < 3){
+					alert_popup_focus('아이디를 3글자 이상 입력해주세요.', '#id');
+					return false;    //추가적인 동작을 하지 않고 함수를 종료하고자 할 때 사용될 것
+				} else if(id.length >= 3){
+					alert_popup_focus('사용가능한 아이디 입니다.', '#pwd');
+					idcheck = true;
+				}
+			},
+			error:function(){
+				console.error('응 에러야')
+			},
+			complete:function(){
+				
+			}
+	   })     
+	
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-})
-
-
-
 function alert_popup_focus(message, selector){
 	alert(message);
 	$(selector).focus();
@@ -129,7 +148,7 @@ function fncMemberJoin(){
 															if(!isBlank('업무용이메일', '#bizEmail1')){
 																if(!isBlank('업무용이메일도메인', '#bizEmail2')){
 																	if(!isBlank('회사용직통전화번호', '#bizTelNo')){
-																		var url = "/member/memberJoinConfirm.do"
+																		var url = "/member/memberJoin.do"
 																			var form = $('#frm')[0];
 																		    console.log(form); //뭐 나옴?  
 																			var data = new FormData(form);
@@ -163,10 +182,10 @@ function fncMemberJoin(){
 										}
 									}
 							}else{
-								alert_popup_focus("비밀번호와 비밀번호 확인이  일치하지않습니다.","#pw");
+								alert_popup_focus("비밀번호와 비밀번호 확인이  일치하지않습니다.","#pws");
 							}
 						}else{
-							alert_popup_focus("비밀번호는 영문, 숫자, 특수문자를 포함하여 8자이상 16자이하로 설정해주세요",'#pw');
+							alert_popup_focus("비밀번호는 영문, 숫자, 특수문자를 포함하여 8자이상 16자이하로 설정해주세요",'#pwd');
 						}
 						}
 					}
@@ -195,7 +214,8 @@ function popup() {
 function changeText(text, id){
 	$(id).empty();
 	$(id).html(text);
-	}
+}
+	
 </script>
 
 <!-- compaVcContent s:  -->
