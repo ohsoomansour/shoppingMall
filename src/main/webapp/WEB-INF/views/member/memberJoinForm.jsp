@@ -56,8 +56,10 @@ $(document).ready(function(){
 	$("#btnIdCheck").click(function(){
 		fncDoubleCheck("ID");
 	});
+	
+	
 }); //ready end
-
+	
 	//[회원가입] - 아이디 및 사업자등록번호 중복확인 -> 추정 중 2024/05/18(토)
 	function fncDoubleCheck(gubun){
 		if(gubun == 'ID'){
@@ -86,8 +88,10 @@ $(document).ready(function(){
 					alert_popup_focus('아이디를 3글자 이상 입력해주세요.', '#id');
 					return false;    //추가적인 동작을 하지 않고 함수를 종료하고자 할 때 사용될 것
 				} else if(id.length >= 3){
-					alert_popup_focus('사용가능한 아이디 입니다.', '#pwd');
-					idcheck = true;
+					console.log("idcheck = true전"+idCheck)
+					idCheck = true;
+					console.log("idcheck = true후"+idCheck)
+					alert_popup_focus('사용가능한 아이디 입니다.', '#pw');
 				}
 			},
 			error:function(){
@@ -111,21 +115,41 @@ function alert_popup(message, selector){
 }
 //빈칸 검사 
 function isBlank(message, id){
+	console.log("isBlank:"+ id); //#id
+	console.log($(id).html()); // 여기가 문제다!!! 
+	console.log($.trim($(id).html()) == '') //true
 	if($.trim($(id).html()) == ''){
+		console.log($.trim($(id).html()) == '')
 		alert(message);
+		return true;
+	} else {
+		return false;
 	}
 	
 }
 // 사용자가 클릭한 요소 $(this)
 
 
+function isBlank(message, id){
+		console.log("isBlank:"+ id); //#id
+		console.log($(id).val()); // 여기가 문제다!!!   <input> 요소에는 적용되지 않습니다.
+		if($.trim($(id).val()) == ''){
 
+			alert(message);
+			return true;
+		} else {
+			return false;
+		}
+		
+	} 
 //회원가입 -> 2024/05/16 osm  $.trim($("selector").html())
 function fncMemberJoin(){
-	//개인정보 유효성 검사
-	if(!isBlank('아이디', '#id')){
+	//개인정보 유효성 검사 
+	if(!isBlank('아이디', "#id")){ // 비어있어?true -> false 
 		var id = $('#id').val();
 		if(idRegex.test(id)){
+			//중복을 체크 안해주고 가입하면 false로 반환
+			console.log("idRegex.test"+idCheck)
 			if(!idCheck){
 				alert_popup_focus('아이디 중복확인을 해주세요.',"#id");
 				return false;
@@ -160,7 +184,7 @@ function fncMemberJoin(){
 																				       data: data,
 																				       dataType: "json",
 																				       success : function(res){
-																					       alert_popup("회원가입이 완료되었습니다. 로그인창으로 이동합니다.","/techtalk/login.do");
+																					       alert_popup("회원가입이 완료되었습니다. 로그인창으로 이동합니다.","/member/login.do");
 																					    	//alert("성공") 
 																					    	//location.href="/techtalk/login.do"
 																				       },
@@ -185,7 +209,7 @@ function fncMemberJoin(){
 								alert_popup_focus("비밀번호와 비밀번호 확인이  일치하지않습니다.","#pws");
 							}
 						}else{
-							alert_popup_focus("비밀번호는 영문, 숫자, 특수문자를 포함하여 8자이상 16자이하로 설정해주세요",'#pwd');
+							alert_popup_focus("비밀번호는 영문, 숫자, 특수문자를 포함하여 8자이상 16자이하로 설정해주세요",'#pw');
 						}
 						}
 					}

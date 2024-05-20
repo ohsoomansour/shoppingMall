@@ -99,7 +99,8 @@ public class MemberFrontController {
 		DataMap paraMap = new DataMap();
 		try {
 			String pw = member.getPw().toString();
-			paraMap.put("pwd", pw);
+			System.out.println("pw" + pw);
+			paraMap.put("pw", pw);
 			this.memberFrontService.doInsertMember(paraMap);
 		} catch(Exception e) {
 			e.printStackTrace();
