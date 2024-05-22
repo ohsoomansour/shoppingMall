@@ -31,6 +31,7 @@
 var idCheck = false; //아이디 중복검사 체크
 var pwCheck = false; //패스워드 중복검사 체크
 const idRegex = /^[a-zA-Z0-9]{1,16}$/;//대소문자영문 숫자포함한 정규식
+                       //?=.*[a-zA-Z] 적어도 하나 이상의 문자 ㄷ     
 const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,16}$/; //영문,숫자,특수문자를 포함한 8자이상 16자 이하 정규식
 
 $(document).ready(function(){
@@ -60,7 +61,7 @@ $(document).ready(function(){
 	
 }); //ready end
 	
-	//[회원가입] - 아이디 및 사업자등록번호 중복확인 -> 추정 중 2024/05/18(토)
+	//[회원가입] - 아이디 중복확인 -> 2024/05/18(토)
 	function fncDoubleCheck(gubun){
 		if(gubun == 'ID'){
 			var id = $('#id').val();
@@ -166,40 +167,31 @@ function fncMemberJoin(){
 									if(!isBlank('개인이메일', '#userEmail1')){
 										if(!isBlank('개인이메일 도메인', '#userEmail2')){
 											if(!isBlank('휴대전화번호', '#userMobileNo')){
-												if(!isBlank('회사명', '#bizName')){
-													if(!isBlank('부서명', '#userDepart')){
-														if(!isBlank('직급', '#userRank')){
-															if(!isBlank('업무용이메일', '#bizEmail1')){
-																if(!isBlank('업무용이메일도메인', '#bizEmail2')){
-																	if(!isBlank('회사용직통전화번호', '#bizTelNo')){
-																		var url = "/member/memberJoin.do"
-																			var form = $('#frm')[0];
-																		    console.log(form); //뭐 나옴?  
-																			var data = new FormData(form);
-																				$.ajax({
-																				       url : url,
-																				       type: "post",
-																				       processData: false,
-																				       contentType: false,
-																				       data: data,
-																				       dataType: "json",
-																				       success : function(res){
-																					       alert_popup("회원가입이 완료되었습니다. 로그인창으로 이동합니다.","/member/login.do");
-																					    	//alert("성공") 
-																					    	//location.href="/techtalk/login.do"
-																				       },
-																				       error : function(){
-																					       //alert_popup("에러가 발생하였습니다. 관리자에게 문의해주세요","/techtalk/memberJoinFormPage.do");
-																				    	//alert('게시판 등록에 실패했습니다.');    
-																				       },
-																				       complete : function(){
-																				       }
-																				});
-																		}
-																	}
-																}
-															}
-														}
+												var url = "/member/memberJoin.do"
+													var form = $('#frm')[0];
+													var data = new FormData(form);
+													console.log("form:" + data); 
+														$.ajax({
+														       url : url,
+														       type: "post",
+														       processData: false,
+														       contentType: false,
+														       data: data,
+														       dataType: "json",
+														       success : function(res){
+															       alert_popup("회원가입이 완료되었습니다. 로그인창으로 이동합니다.","/member/login.do");
+															    	//alert("성공") 
+															    	//location.href="/techtalk/login.do"
+														       },
+														       error : function(){
+															       //alert_popup("에러가 발생하였습니다. 관리자에게 문의해주세요","/techtalk/memberJoinFormPage.do");
+														    	//alert('게시판 등록에 실패했습니다.');    
+														       },
+														       complete : function(){
+														       }
+														});
+																		
+														
 													}
 												}
 											}
@@ -210,7 +202,6 @@ function fncMemberJoin(){
 							}
 						}else{
 							alert_popup_focus("비밀번호는 영문, 숫자, 특수문자를 포함하여 8자이상 16자이하로 설정해주세요",'#pw');
-						}
 						}
 					}
 				}
@@ -224,7 +215,7 @@ function fncMemberJoin(){
 
 //[회원가입] - 회원가입 완료 화면 이동 ->
 function fncCompeletePage() {
-	location.href = "/techtalk/memberJoinCompletePage.do";
+	location.href = "/member/memberJoinCompletePage.do";
 }
 
 
@@ -273,18 +264,18 @@ function changeText(text, id){
 										<div class="form-inline">
 											<div class="box_radioinp">
 												<input type="radio" class="inp_radio" name="member_type"
-													id="R" value="R" title="연구자" checked /><label for="R"
-													class="lab_radio"><span class="icon ico_radio"></span>연구자</label>
+													id="A" value="ADMIN" title="관리자" checked /><label for="R"
+													class="lab_radio"><span class="icon ico_radio"></span>관리자</label>
 											</div>
 											<div class="box_radioinp">
 												<input type="radio" class="inp_radio" name="member_type"
-													id="B" value="B" title="기업" /><label for="B"
-													class="lab_radio"><span class="icon ico_radio"></span>기업</label>
+													id="B" value="BIZ" title="기업" /><label for="B"
+													class="lab_radio"><span class="icon ico_radio"></span>기업 계정</label>
 											</div>
 											<div class="box_radioinp">
 												<input type="radio" class="inp_radio" name="member_type"
-													id="TLO" value="TLO" title="TLO" /><label for="TLO"
-													class="lab_radio"><span class="icon ico_radio"></span>TLO</label>
+													id="C" value="CUSTOMER" title="C" /><label for="C"
+													class="lab_radio"><span class="icon ico_radio"></span>일반 고객</label>
 											</div>
 										</div>
 									</td>
@@ -334,6 +325,9 @@ function changeText(text, id){
 									</td>
 								</tr>
 								<tr>
+								<!-- daum postal code 넣기 -->
+								</tr>
+								<tr>
 									<th scope="col">개인이메일 <span class="red">*</span></th>
 									<td class="ta_left">
 										<div class="form-inline">
@@ -353,85 +347,13 @@ function changeText(text, id){
 									<th scope="col">휴대전화 번호 <span class="red">*</span></th>
 									<td class="ta_left">
 										<div class="form-inline">
-											<input type="text" 
+											<input 
+												type="text" 
 												onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
-												class="form-control form_man_name" id="userMobileNo"
-												name="user_mobile_no" title="휴대전화">
-										</div>
-									</td>
-								</tr>
-
-							</tbody>
-							<tfoot></tfoot>
-						</table>
-					</div>
-				</div>
-				<div class="area_cont area_cont2">
-					<div class="subject_corp w_top">
-						<h4>기업정보</h4>
-						<p class="es">* 표시는 필수 입력 사항입니다.</p>
-					</div>
-					<div class="tbl_view tbl_public">
-						<table class="tbl">
-							<caption>회원가입 회원 기업정보</caption>
-							<colgroup>
-								<col style="width: 15%">
-							</colgroup>
-							<thead></thead>
-								<col>
-							<tbody class="view">
-								<tr>
-									<th scope="col">회사명 <span class="red">*</span></th>
-									<td class="ta_left">
-										<div class="form-inline">
-											<input type="text" 
-												id="bizName" name="biz_name" title="회사명">
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">부서명 <span class="red">*</span></th>
-									<td class="ta_left">
-										<div class="form-inline">
-											<input type="text" class="form-control form_dept"
-												id="userDepart" name="user_depart" maxlength="50"
-												title="담당자 부서">
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">직급 <span class="red">*</span></th>
-									<td class="ta_left">
-										<div class="form-inline">
-											<input type="text" class="form-control form_spot"
-												id="userRank" name="user_rank" maxlength="20" title="담당자 직위">
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">업무용이메일 <span class="red">*</span></th>
-									<td class="ta_left">
-										<div class="form-inline">
-											<input type="text" class="form-control form_email1"	id="bizEmail1" name="biz_email1" onkeyup="" maxlength="30" title="담당자 이메일아이디">
-											@ 
-											<input type="text" class="form-control form_email2" id="bizEmail2" name="biz_email2" maxlength="30" title="담당자 이메일 도메인 직접입력"> 
-												<select class="form-control form_email3" id="bizEmail3"name="biz_email3" onChange="fncChangeEmail(this);" title="담당자 이메일주소3">
-												<option title="직접입력">직접입력</option>
-												<option title="네이버">naver.com</option>
-												<option title="G메일">gmail.com</option>
-												<option title="다음">daum.net</option>
-											</select>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">회사용직통전화번호 <span class="red">*</span></th>
-									<td class="ta_left">
-										<div class="form-inline">
-											<input type="text"
-												onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
-												class="form-control form_man_name" id="bizTelNo" name="biz_tel_no"
-												title="회사용직통전화번호">
+												class="form-control form_man_name" 
+												id="userMobileNo"
+												name="user_mobile_no" title="휴대전화"
+											>
 										</div>
 									</td>
 								</tr>
@@ -440,6 +362,7 @@ function changeText(text, id){
 						</table>
 					</div>
 				</div>
+				
 			</form>
 			<div class="wrap_btn _center">
 				<a href="javascript:history.back();" class="btn_cancel" title="취소">취소</a>

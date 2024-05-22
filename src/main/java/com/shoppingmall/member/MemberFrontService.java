@@ -15,8 +15,18 @@ public class MemberFrontService extends BaseSvc<DataMap>{
 	public int doCounteMemberId(DataMap paraMap) {
 		return this.dao.countQuery("V_MemberSQL.doCountMemberId", paraMap);
 	}
-	
+	/* 회원 */
 	public void doInsertMember(DataMap paraMap) {
+		String userEmail = paraMap.get("user_email1").toString()
+				+ "@" + paraMap.get("user_email2").toString();
+		paraMap.put("user_email", userEmail);
+		String member_type = paraMap.getstr("member_type");
+		if(member_type.equals("CUSTOMER") || member_type.equals("BIZ")) {
+			paraMap.put("agree_flag", 'N');
+			
+		}else{
+			paraMap.put("agree_flag", 'Y');
+		}
 		
 		this.dao.insertQuery("V_MemberSQL.doInsertMember", paraMap);
 	}

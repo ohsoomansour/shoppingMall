@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.shoppingmall.member.model.Member;
 import com.shoppingmall.toaf.object.DataMap;
-
+import com.shoppingmall.toaf.util.AES256Util;
 
 @RequestMapping("/member")
 @Controller
@@ -94,14 +94,17 @@ public class MemberFrontController {
 	 *@Function: 비번 생성 
 	*/
 	@RequestMapping("/memberJoin.do")
+	//@ModelAttribute Member member
 	public ModelAndView doMemberJoin(@ModelAttribute Member member) {
+		System.out.println(member.toString());
 		ModelAndView mav = new ModelAndView("jsonView");
 		DataMap paraMap = new DataMap();
 		try {
 			String pw = member.getPw().toString();
-			System.out.println("pw" + pw);
-			paraMap.put("pw", pw);
+			System.out.println("pw:" + AES256Util.strEncode(pw));
+			paraMap.put("pw", AES256Util.strEncode(pw));
 			this.memberFrontService.doInsertMember(paraMap);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 			return new ModelAndView("error");

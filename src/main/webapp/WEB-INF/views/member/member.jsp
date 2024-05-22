@@ -23,9 +23,6 @@
 	 	}
   */
 
- 
-
-  
  function funcSignUpApproval(no){
 	 	  console.log("Sending AJAX request for id:", no);
 	 	  $.ajax({
@@ -100,7 +97,7 @@
                   <td>${member.user_email}</td>
                   <td>${member.address}</td>
                   <td>${member.created_at}</td>
-                  <td><button onClick="funcSignUpApproval('${member.no}')">가입 승인</button>${member.signup_approval}</td>
+                  <td><button onClick="funcSignUpApproval('${member.no}')">가입 승인</button>${member.agree_flag}</td>
               </tr>
           </c:forEach>
           

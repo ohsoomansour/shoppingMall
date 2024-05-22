@@ -20,16 +20,24 @@
 		<![CDATA[
 			INSERT INTO tb_member
 			(
-			 	ID,
-			 	PW,
-			 	MEMBER_TYPE,
+			 	id,
+			 	pw,
+			 	member_type,
+			 	user_name,
+			 	user_email,
+			 	address,
+			 	agree_flag
 			 	
 			)
 			VALUES
 			(
 				#{id},
 				#{pw},
-				#{member_type}
+				#{member_type},
+				#{user_name},
+				#{user_email},
+				#{address},
+				#{agree_flag}
 			)
 		]]>
 	
