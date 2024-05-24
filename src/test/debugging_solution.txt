@@ -1,0 +1,11 @@
+1.
+
+Negative matches:
+-----------------
+                              ##application.properties: server.error.whitelabel.enabled=false -> '사용자 정의 설정'
+   ErrorMvcAutoConfiguration.WhitelabelErrorViewConfiguration:
+      Did not match:
+         - ErrorTemplate Missing found template from org.springframework.boot.autoconfigure.web.servlet.JspTemplateAvailabilityProvider@6e828bf3 (ErrorMvcAutoConfiguration.ErrorTemplateMissingCondition)
+      Matched:
+         - @ConditionalOnProperty (server.error.whitelabel.enabled) matched (OnPropertyCondition)
+

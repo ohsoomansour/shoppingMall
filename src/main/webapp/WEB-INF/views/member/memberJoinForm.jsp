@@ -29,7 +29,7 @@
 </style>
 
 <script>
-function sample6_execDaumPostcode() {
+function execDaumPostcode() {
     new daum.Postcode({
         oncomplete: function(data) {
             // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
@@ -62,17 +62,18 @@ function sample6_execDaumPostcode() {
                     extraAddr = ' (' + extraAddr + ')';
                 }
                 // 조합된 참고항목을 해당 필드에 넣는다.
-                document.getElementById("sample6_extraAddress").value = extraAddr;
+                document.getElementById("extraAddress").value = extraAddr;
             
             } else {
-                document.getElementById("sample6_extraAddress").value = '';
+                document.getElementById("extraAddress").value = '';
             }
 
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
-            document.getElementById('sample6_postcode').value = data.zonecode;
-            document.getElementById("sample6_address").value = addr;
+            document.getElementById('postcode').value = data.zonecode;
+            document.getElementById("address").value = addr;
+            
             // 커서를 상세주소 필드로 이동한다.
-            document.getElementById("sample6_detailAddress").focus();
+            document.getElementById("detailAddress").focus();
         }
     }).open();
 }
@@ -163,21 +164,7 @@ function alert_popup(message, selector){
 	alert(message);
 	$(selector).focus();
 }
-//빈칸 검사 
-function isBlank(message, id){
-	console.log("isBlank:"+ id); //#id
-	console.log($(id).html()); // 여기가 문제다!!! 
-	console.log($.trim($(id).html()) == '') //true
-	if($.trim($(id).html()) == ''){
-		console.log($.trim($(id).html()) == '')
-		alert(message);
-		return true;
-	} else {
-		return false;
-	}
-	
-}
-// 사용자가 클릭한 요소 $(this)
+
 
 
 function isBlank(message, id){
@@ -199,27 +186,32 @@ function fncMemberJoin(){
 		var id = $('#id').val();
 		if(idRegex.test(id)){
 			//중복을 체크 안해주고 가입하면 false로 반환
-			console.log("idRegex.test"+idCheck)
 			if(!idCheck){
 				alert_popup_focus('아이디 중복확인을 해주세요.',"#id");
 				return false;
 			}else{
-				console.log("왜죠 " + idCheck)
 				if(!isBlank('비밀번호', '#pw')){
 					if(!isBlank('비밀번호 확인', '#passWordCk')){
 						var pw = $('#pw').val();
 						var pwChk = $('#passWordCk').val();
 						if(passwordRegex.test(pw)){
 							if(pw == pwChk){
-								console.log("왜죠 " + pw + pwChk)
 								if(!isBlank('이름', '#userName')){
 									if(!isBlank('개인이메일', '#userEmail1')){
 										if(!isBlank('개인이메일 도메인', '#userEmail2')){
 											if(!isBlank('휴대전화번호', '#userMobileNo')){
-												var url = "/member/memberJoin.do"
+												if(!isBlank('전체 주소', '#fullAddress')){
+													var address = $("#address").val();
+										            var detailAddress = $("#detailAddress").val();
+										            console.log("전체 주소:" + address + detailAddress);
+										            $("#full_addr").value(address + detailAddress);
+													
+												}				            
+													var url = "/member/memberJoin.do"
 													var form = $('#frm')[0];
 													var data = new FormData(form);
-													console.log("form:" + data); 
+													console.log("form:" + form); 
+													console.log("data:" + data); 
 														$.ajax({
 														       url : url,
 														       type: "post",
@@ -410,16 +402,14 @@ function changeText(text, id){
 								 <tr>
 									<td align="center">주소</td> <!-- onclick은 무조건 javascript와 연결. 굳이 javascript 안 적어줘도 됨 -->
 									<td>
-									<input type="text" id="sample6_postcode" placeholder="우편번호">
-									<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-									<input type="text" id="sample6_address" placeholder="주소"><br>
-									<input type="text" id="sample6_detailAddress" placeholder="상세주소">
-									<input type="text" id="sample6_extraAddress" placeholder="참고항목">
+									<input type="text" id="postcode" placeholder="우편번호">
+									<input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
+									<input type="text" id="address" placeholder="주소"><br>
+									<input type="text" id="detailAddress" placeholder="상세주소">
+									<input hidden type="text" id="fullAddress" name="address">
+									<input type="text" id="extraAddress" placeholder="참고항목">
 								  </tr>
 
-
-
-								
 							</tbody>
 							<tfoot></tfoot>
 						</table>

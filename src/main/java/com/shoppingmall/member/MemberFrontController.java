@@ -93,6 +93,7 @@ public class MemberFrontController {
 	 *@return: ModelAndView
 	 *@Function: 비번 생성 
 	*/
+	
 	@RequestMapping("/memberJoin.do")
 	//@ModelAttribute Member member
 	public ModelAndView doMemberJoin(@ModelAttribute Member member) {
@@ -100,10 +101,12 @@ public class MemberFrontController {
 		ModelAndView mav = new ModelAndView("jsonView");
 		DataMap paraMap = new DataMap();
 		try {
-			String pw = member.getPw().toString();
-			System.out.println("pw:" + AES256Util.strEncode(pw));
-			paraMap.put("pw", AES256Util.strEncode(pw));
-			this.memberFrontService.doInsertMember(paraMap);
+			String pw = AES256Util.strEncode(member.getPw().toString());
+		    
+		    
+			//paraMap.put("pw", AES256Util.strEncode(pw));
+		    member.setPw(pw);
+			this.memberFrontService.doInsertMember(member);
 			
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shoppingmall.member.model.Member;
 import com.shoppingmall.toaf.basemvc.BaseSvc;
 import com.shoppingmall.toaf.object.DataMap;
 
@@ -16,19 +17,20 @@ public class MemberFrontService extends BaseSvc<DataMap>{
 		return this.dao.countQuery("V_MemberSQL.doCountMemberId", paraMap);
 	}
 	/* 회원 */
-	public void doInsertMember(DataMap paraMap) {
-		String userEmail = paraMap.get("user_email1").toString()
-				+ "@" + paraMap.get("user_email2").toString();
-		paraMap.put("user_email", userEmail);
-		String member_type = paraMap.getstr("member_type");
+	public void doInsertMember(Member member) {
+		String userEmail = member.getUser_email1()
+				+ "@" + member.getUser_email2();
+		member.setUser_email(userEmail);
+		String member_type = member.getMember_type();
 		if(member_type.equals("CUSTOMER") || member_type.equals("BIZ")) {
-			paraMap.put("agree_flag", 'N');
+			member.setAgree_flag("N");
+			//paraMap.put("agree_flag", 'N');
 			
 		}else{
-			paraMap.put("agree_flag", 'Y');
+			member.setAgree_flag("Y");
 		}
 		
-		this.dao.insertQuery("V_MemberSQL.doInsertMember", paraMap);
+		this.dao.insertQuery("V_MemberSQL.doInsertMember", member);
 	}
 	
 }
