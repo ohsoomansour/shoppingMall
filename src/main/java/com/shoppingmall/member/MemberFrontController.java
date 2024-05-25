@@ -102,13 +102,15 @@ public class MemberFrontController {
 
 		/**/
 		try {
+
 			String id = member.getId(); 
 			String pw = AES256Util.strEncode(member.getPw().toString());
+			String member_type = member.getMember_type();
 			String user_name = member.getUser_name();
 			String user_email1 = member.getUser_email1();
 			String user_email2 = member.getUser_email2();
 			String address = member.getAddress();
-			String member_type = member.getMember_type();
+			String user_mobile_no = member.getUser_mobile_no();
 			
 			paraMap.put("id", id);
 			paraMap.put("pw", AES256Util.strEncode(pw));
@@ -117,7 +119,7 @@ public class MemberFrontController {
 			paraMap.put("user_email2", user_email2);
 			paraMap.put("address", address);
 			paraMap.put("member_type", member_type);
- 
+			paraMap.put("user_mobile_no", user_mobile_no);
 			this.memberFrontService.doInsertMember(paraMap);
 			
 		} catch(Exception e) {

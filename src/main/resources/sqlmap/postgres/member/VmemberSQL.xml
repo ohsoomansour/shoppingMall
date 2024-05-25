@@ -26,8 +26,8 @@
 			 	user_name,
 			 	user_email,
 			 	address,
-			 	agree_flag
-			 	
+			 	agree_flag,
+			 	user_mobile_no
 			)
 			VALUES
 			(
@@ -37,7 +37,8 @@
 				#{user_name},
 				#{user_email},
 				#{address},
-				#{agree_flag}
+				#{agree_flag},
+				#{user_mobile_no}
 			)
 		]]>
 	
