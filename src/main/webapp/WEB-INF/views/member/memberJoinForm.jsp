@@ -74,6 +74,8 @@ function execDaumPostcode() {
             
             // 커서를 상세주소 필드로 이동한다.
             document.getElementById("detailAddress").focus();
+            
+            
         }
     }).open();
 }
@@ -168,10 +170,8 @@ function alert_popup(message, selector){
 
 
 function isBlank(message, id){
-		console.log("isBlank:"+ id); //#id
-		console.log($(id).val()); // 여기가 문제다!!!   <input> 요소에는 적용되지 않습니다.
+		// 주의: #$(id).html()은 input 태그의 값을 가져오지 못 함 
 		if($.trim($(id).val()) == ''){
-
 			alert(message);
 			return true;
 		} else {
@@ -179,7 +179,7 @@ function isBlank(message, id){
 		}
 		
 	} 
-//회원가입 -> 2024/05/16 osm  $.trim($("selector").html())
+//회원가입 -> 2024/05/16 osm  
 function fncMemberJoin(){
 	//개인정보 유효성 검사 
 	if(!isBlank('아이디', "#id")){ // 비어있어?true -> false 
@@ -200,18 +200,23 @@ function fncMemberJoin(){
 									if(!isBlank('개인이메일', '#userEmail1')){
 										if(!isBlank('개인이메일 도메인', '#userEmail2')){
 											if(!isBlank('휴대전화번호', '#userMobileNo')){
+												// 도로 주소 + 상세 주소 = 전체 주소 
+									            var road_address = $("#address").val()
+									            var detail_address = $("#detailAddress").val()
+									            var full_address = $("#fullAddress").val(road_address + detail_address);
+												console.log(full_address);
 												if(!isBlank('전체 주소', '#fullAddress')){
 													var address = $("#address").val();
 										            var detailAddress = $("#detailAddress").val();
+										            $("#fullAddress").val(address + detailAddress);
 										            console.log("전체 주소:" + address + detailAddress);
-										            $("#full_addr").value(address + detailAddress);
 													
 												}				            
 													var url = "/member/memberJoin.do"
-													var form = $('#frm')[0];
+													var form = $('#frm')[0]; // 선택된 form 요소를 선택
 													var data = new FormData(form);
-													console.log("form:" + form); 
-													console.log("data:" + data); 
+													console.log(form); 
+													console.log(data); 
 														$.ajax({
 														       url : url,
 														       type: "post",
@@ -231,8 +236,7 @@ function fncMemberJoin(){
 														       complete : function(){
 														       }
 														});
-																		
-														
+												
 													}
 												}
 											}

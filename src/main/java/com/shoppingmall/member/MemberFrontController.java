@@ -95,18 +95,30 @@ public class MemberFrontController {
 	*/
 	
 	@RequestMapping("/memberJoin.do")
-	//@ModelAttribute Member member
 	public ModelAndView doMemberJoin(@ModelAttribute Member member) {
-		System.out.println(member.toString());
+		
 		ModelAndView mav = new ModelAndView("jsonView");
 		DataMap paraMap = new DataMap();
+
+		/**/
 		try {
+			String id = member.getId(); 
 			String pw = AES256Util.strEncode(member.getPw().toString());
-		    
-		    
-			//paraMap.put("pw", AES256Util.strEncode(pw));
-		    member.setPw(pw);
-			this.memberFrontService.doInsertMember(member);
+			String user_name = member.getUser_name();
+			String user_email1 = member.getUser_email1();
+			String user_email2 = member.getUser_email2();
+			String address = member.getAddress();
+			String member_type = member.getMember_type();
+			
+			paraMap.put("id", id);
+			paraMap.put("pw", AES256Util.strEncode(pw));
+			paraMap.put("user_name", user_name);
+			paraMap.put("user_email1", user_email1);
+			paraMap.put("user_email2", user_email2);
+			paraMap.put("address", address);
+			paraMap.put("member_type", member_type);
+ 
+			this.memberFrontService.doInsertMember(paraMap);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
