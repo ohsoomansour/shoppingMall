@@ -4,10 +4,14 @@ import lombok.Data;
 
 @Data
 public class Member {
-    private int id;
-    private String first_name;
-	private String last_name;
-    private String address;
-    private Date created_at;
-    private boolean signup_approval;
+    private String 		id;
+    private String 		pw;
+    private String 		name;
+    private String		member_type;
+    private String 		user_name;
+    private String 		user_email1;
+    private String		user_email2;
+    private String 		address;
+    private Date 		created_at;
+    private String 		agree_flag;
 }

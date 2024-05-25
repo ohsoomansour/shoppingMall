@@ -1,14 +1,23 @@
 package com.shoppingmall.member;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.shoppingmall.member.model.Member;
+import com.shoppingmall.toaf.object.DataMap;
+import com.shoppingmall.toaf.util.AES256Util;
 
 @RequestMapping("/member")
 @Controller
 public class MemberFrontController {
-
+	
+	@Autowired
+	private MemberFrontService memberFrontService;
+	
+	
 	/* 
 	 *@Author: osm
 	 *@Date: 2024.5.14
@@ -47,17 +56,77 @@ public class MemberFrontController {
 		return mav;
 	}
 	
+	
 	/* 
 	 *@Author: osm
-	 *@Date: 2024.5.14
+	 *@Date: 2024.5.18
 	 *@Param: - 
 	 *@return: ModelAndView
-	 *@Function:회원 가입 페이지 이동
+	 *@Function: 아이디 및 사업자등록번호 중복검사아이디 
 	*/
-	@RequestMapping("/")
-	public ModelAndView doMemberJoin() {
+	 //Q. @ModelAttribute는 HTTP Body를 어떻게 받나? {gubun:'ID', id: 1}
+	@RequestMapping("/memberDoubleCheck.do")
+	public ModelAndView doMemberDoubleCheck(@ModelAttribute("gubun") String gubun, @ModelAttribute("id") String id) {
 		ModelAndView mav = new ModelAndView("jsonView");
+
+	    DataMap paraMap = new DataMap();
+	    paraMap.put("id", id);
+	    System.out.println(gubun);
+	    System.out.println(id);
+	    try {
+	    	if(gubun.equals("ID")) {
+	    		int memberCount = memberFrontService.doCounteMemberId(paraMap);
+	    		mav.addObject("memberCount", memberCount);
+	    	}
+	    } catch (Exception e) {
+	    	System.out.println(e);
+	    	return new ModelAndView("error");
+	    }
+	    //paraMap.put("gubun", gubun);
 		return mav;
-		
 	}
+	
+	/* 
+	 *@Author: osm
+	 *@Date: 2024.5.20 
+	 *@Param: - 
+	 *@return: ModelAndView
+	 *@Function: 비번 생성 
+	*/
+	
+	@RequestMapping("/memberJoin.do")
+	public ModelAndView doMemberJoin(@ModelAttribute Member member) {
+		
+		ModelAndView mav = new ModelAndView("jsonView");
+		DataMap paraMap = new DataMap();
+
+		/**/
+		try {
+			String id = member.getId(); 
+			String pw = AES256Util.strEncode(member.getPw().toString());
+			String user_name = member.getUser_name();
+			String user_email1 = member.getUser_email1();
+			String user_email2 = member.getUser_email2();
+			String address = member.getAddress();
+			String member_type = member.getMember_type();
+			
+			paraMap.put("id", id);
+			paraMap.put("pw", AES256Util.strEncode(pw));
+			paraMap.put("user_name", user_name);
+			paraMap.put("user_email1", user_email1);
+			paraMap.put("user_email2", user_email2);
+			paraMap.put("address", address);
+			paraMap.put("member_type", member_type);
+ 
+			this.memberFrontService.doInsertMember(paraMap);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ModelAndView("error");
+		}
+		
+		return mav;
+	}
+	
+	
 }

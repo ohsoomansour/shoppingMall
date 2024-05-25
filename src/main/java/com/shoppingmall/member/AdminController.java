@@ -50,13 +50,13 @@ public class AdminController {
 	*/
 
 	@RequestMapping(value="/signUpApproval.do")               
-	public ModelAndView doApprovalofMembership(@ModelAttribute("seqno") String seqno) {
+	public ModelAndView doApprovalofMembership(@ModelAttribute("no") int no) {
 		ModelAndView mav = new ModelAndView("jsonView");
-		System.out.println("가입승인 id:" + seqno);
+		System.out.println("가입승인 id:" + no);
 		DataMap paraMap = new DataMap();
-		paraMap.put("seqno", seqno);
-		System.out.println("dataMap 객체:" + paraMap);
-		mav.addObject("seqno", paraMap);
+		paraMap.put("no", no);
+
+		mav.addObject("no", paraMap);
 		adminService.updateSignUpApproval(paraMap);
 		return mav;
 	}

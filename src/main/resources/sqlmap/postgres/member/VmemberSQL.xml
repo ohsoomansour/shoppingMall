@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
+<mapper namespace="V_MemberSQL"> 
+	<select id="V_MemberSQL.doCountMemberId" resultType="int">
+		/*
+		   SQL ID: V_MemberSQL.doCountMemberId
+		   아이디 중복검사
+		*/
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				tb_member
+			WHERE ID = #{id}
+		]]>
+		
+	</select>
+	<insert id="V_MemberSQL.doInsertMember" parameterType="dataMap">
+		<![CDATA[
+			INSERT INTO tb_member
+			(
+			 	id,
+			 	pw,
+			 	member_type,
+			 	user_name,
+			 	user_email,
+			 	address,
+			 	agree_flag
+			 	
+			)
+			VALUES
+			(
+				#{id},
+				#{pw},
+				#{member_type},
+				#{user_name},
+				#{user_email},
+				#{address},
+				#{agree_flag}
+			)
+		]]>
+	
+	</insert>
+</mapper>

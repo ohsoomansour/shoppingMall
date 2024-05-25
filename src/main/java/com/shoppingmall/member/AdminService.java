@@ -21,28 +21,17 @@ import com.shoppingmall.toaf.object.DataMap;
  * SQL 쿼리의 실행, 그리고 결과 매핑 등을 처리
  * */
 
-/*
-interface AdminService {
-	int updateSignUpApproval(int id);
-	Member getMember(int id);
-	List<Member> getMemberList();
-    int createMember(int id);
-    int updateMember(int id);
-    int deleteMember(int id);
-}*/
-
 @Service
 @Transactional(value="postgresqlTransactionManager", propagation= Propagation.REQUIRED, rollbackFor=Exception.class)
 public class AdminService extends BaseSvc<DataMap> {
 
 	public List<DataMap> getMemberList(DataMap dataMap) {
 	
-		return this.dao.dolistQuery("AdminSQL.doGetMemberList", dataMap);
+		return this.dao.dolistQuery("MemberSQL.doGetMemberList", dataMap);
 	}
 	
-	
 	public int updateSignUpApproval(DataMap dataMap) {
-		return this.dao.updateQuery("AdminSQL.doUpdateSignUpApproval", dataMap);
+		return this.dao.updateQuery("MemberSQL.doUpdateSignUpApproval", dataMap);
 	} 
     
 	

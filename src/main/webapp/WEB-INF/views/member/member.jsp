@@ -1,6 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
  <html>
 
 <head>
@@ -20,23 +23,19 @@
 	 	}
   */
 
- 
-
-  
- function funcSignUpApproval(seqno){
-	 	  console.log("Sending AJAX request for id:", seqno);
+ function funcSignUpApproval(no){
+	 	  console.log("Sending AJAX request for id:", no);
 	 	  $.ajax({
 	 	  	     type : 'GET',
-	 	  	     url :'/admin/signUpApproval.do?seqno='+seqno,
+	 	  	     url :'/admin/signUpApproval.do?no='+ no,
 	 	  	     headers: {
-					"Content-Type":"application/json;charset=utf-8",    
-                    
+					"Content-Type":"application/json;charset=utf-8",
 				  },			
 	 	  	     dataType:'json',
 	 	  	     contentType: 'application/json', // 요청 본문의 타입을 JSON으로 설정
 	 	  	     success: function(res){
 	                // 요청이 성공한 경우 추가적인 작업 수행
-	                console.log('Success:'+ res);
+	                console.log('Success:');
 	             },
 	 	  	     error:function(e){
 	 	  	      console.error(e);  
@@ -81,24 +80,24 @@
       <thead>
           <tr>
               <th>ID         </th>
-              <th>First Name </th>
-              <th>Last Name  </th>
+              <th>User Name  </th>
+              <th>User Email </th>
               <th>Address    </th>
-              <th>Join date  </th>
               <th>사용 승인</th>
+              <th>Join date  </th>
           </tr>
       </thead>
       <tbody>
  
           <c:forEach var="member" items="${members}">
               <tr>
-              	<td>${member.id}</td>
-                  <td>${member.first_name}</td>
-                  <td>${member.last_name}</td>
+                  <td>%{member.no}</td>
+              	  <td>${member.id}</td>
+                  <td>${member.user_name}</td>
+                  <td>${member.user_email}</td>
                   <td>${member.address}</td>
                   <td>${member.created_at}</td>
-                  <td><button onClick="funcSignUpApproval('${member.id}')">가입 승인</button>${member.signup_approval}</td>
-                  
+                  <td><button onClick="funcSignUpApproval('${member.no}')">가입 승인</button>${member.agree_flag}</td>
               </tr>
           </c:forEach>
           
