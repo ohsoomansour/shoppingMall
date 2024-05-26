@@ -178,7 +178,7 @@ function isBlank(message, id){
 			return false;
 		}
 		
-	} 
+} 
 //회원가입 -> 2024/05/16 osm  
 function fncMemberJoin(){
 	//개인정보 유효성 검사 
@@ -225,9 +225,8 @@ function fncMemberJoin(){
 														       data: data,
 														       dataType: "json",
 														       success : function(res){
-															       alert_popup("회원가입이 완료되었습니다. 로그인창으로 이동합니다.","/member/login.do");
-															    	//alert("성공") 
-															    	//location.href="/techtalk/login.do"
+															       alert("회원가입이 완료되었습니다. 로그인창으로 이동합니다.");
+															       window.location.href="/login/login.do"
 														       },
 														       error : function(){
 															       //alert_popup("에러가 발생하였습니다. 관리자에게 문의해주세요","/techtalk/memberJoinFormPage.do");

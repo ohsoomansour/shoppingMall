@@ -11,7 +11,7 @@ public class Member {
     private String 		user_name;
     private String 		user_email1;
     private String		user_email2;
-    private String		user_mobile_no ;
+    private String		user_mobile_no;
     private String 		address;
     private Date 		created_at;
     private String 		agree_flag;
