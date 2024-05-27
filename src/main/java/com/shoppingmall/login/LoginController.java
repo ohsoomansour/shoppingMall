@@ -12,8 +12,8 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
-	
-	
+
+
 	/*
 	 *@Author:osm
 	 *@Date: 2024.5.27
