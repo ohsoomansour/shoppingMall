@@ -7,7 +7,7 @@
 
 </script>
 <div class="login-box">
-	<div class="login-logo"><b>TTM University</b></div>
+	<div class="login-logo"><b>osm shoppingmall</b></div>
 	
 	<div class="login-box-body">
 		<p class="login-box-msg">로그인</p>

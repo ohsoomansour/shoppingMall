@@ -25,7 +25,7 @@ $(document).on('ready', function() {
 	}
 	//[회원가입] - 로그인 화면 이동 -> 2021/04/26 추정완
 	function fncLoginPage() {
-		location.href="/front/login.do";
+		location.href="/login/login.do";
 	}
 </script>
 <!-- compaVcContent s:  -->

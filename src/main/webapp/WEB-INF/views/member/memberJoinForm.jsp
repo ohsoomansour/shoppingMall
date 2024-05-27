@@ -225,8 +225,8 @@ function fncMemberJoin(){
 														       data: data,
 														       dataType: "json",
 														       success : function(res){
-															       alert("회원가입이 완료되었습니다. 로그인창으로 이동합니다.");
-															       window.location.href="/login/login.do"
+															       alert("회원가입이 완료되었습니다.");
+															       window.location.href="memberJoinConfirm.do" // *주의:/memberJoinConfirm.do -> /memberJoinConfirm.do
 														       },
 														       error : function(){
 															       //alert_popup("에러가 발생하였습니다. 관리자에게 문의해주세요","/techtalk/memberJoinFormPage.do");
