@@ -11,6 +11,8 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.shoppingmall.lms.cmm.intercept.SampleInterceptor;
 
+
+
 @Repository
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer{

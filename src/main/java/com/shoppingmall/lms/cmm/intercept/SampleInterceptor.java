@@ -19,7 +19,7 @@ public class SampleInterceptor implements HandlerInterceptor {
 	public boolean preHandle(jakarta.servlet.http.HttpServletRequest request,
 			jakarta.servlet.http.HttpServletResponse response, Object handler) throws Exception {
 		 log.info("preHandle");
-		// TODO Auto-generated method stub
+		// 요청 전 인터셉터
 		return HandlerInterceptor.super.preHandle(request, response, handler);
 		
 	}
@@ -27,7 +27,7 @@ public class SampleInterceptor implements HandlerInterceptor {
 	public void afterCompletion(jakarta.servlet.http.HttpServletRequest request,
 			jakarta.servlet.http.HttpServletResponse response, Object handler, Exception ex) throws Exception {
 		log.info("afterCompletion");
-		// TODO Auto-generated method stub
+		// 요청  인터셉터
 		HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
 	}
 	

@@ -19,6 +19,11 @@ spring:
   freemarker: 
     cache: false
     
+logging:
+  level:
+    ROOT: info
+    
+    
 #서버 포트
 server:
   port: 8080

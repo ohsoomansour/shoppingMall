@@ -14,6 +14,7 @@ import com.shoppingmall.toaf.util.AES256Util;
 @Controller
 public class MemberFrontController {
 	
+	
 	@Autowired
 	private MemberFrontService memberFrontService;
 	
