@@ -4,6 +4,30 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%-- --%>
+<script type="text/javascript">
+
+function alert_popup_focus(message, selector){
+	alert(message);
+	$(selector).focus();
+}
+
+function doLogin (){
+	if($.trim($('#userid').val() == ""){
+		alert_popup_focus("아이디를 입력해 주세요.","#userid")		
+		return false;
+	}else if($.trim($("userpw").val() == "" )){
+		alert_popup_focus("비밀번호를 입력해 주세요.", "#userpw")
+		return false;
+	}
+	// 실제 로그인 처리 -> addSessionLoginInfo & appendSessionInfo 
+	$.ajax({
+		url : "/login/loginx.do",
+		type : "POST"
+	})
+	
+}
+
+
 
 </script>
 <div class="login-box">
