@@ -4,15 +4,17 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%-- --%>
+<script src="/js/LocalStorageCtrl.js"></script>
 <script type="text/javascript">
+
 
 function alert_popup_focus(message, selector){
 	alert(message);
 	$(selector).focus();
 }
 
-function doLogin (){
-	if($.trim($('#userid').val() == ""){
+function doLogin(){
+	if($.trim($('#userid').val() === "")){
 		alert_popup_focus("아이디를 입력해 주세요.","#userid")		
 		return false;
 	}else if($.trim($("userpw").val() == "" )){
@@ -22,7 +24,9 @@ function doLogin (){
 	// 실제 로그인 처리 -> addSessionLoginInfo & appendSessionInfo 
 	$.ajax({
 		url : "/login/loginx.do",
-		type : "POST"
+		type : "POST", 
+		dataType: "json",
+		
 	})
 	
 }
@@ -57,8 +61,11 @@ function doLogin (){
 					</div>
 				</div>
 				<div class="col-xs-4">
-					<button id="btnLogin" class="btn btn-primary btn-block btn-flat" title="로그인">로그인</button>
+					<button id="btnLogin" class="btn btn-primary btn-block btn-flat" title="로그인">로그인</button>	
 				</div>
+
+
+				
 			</div>
 		</form>
 	</div>

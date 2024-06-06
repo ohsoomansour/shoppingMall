@@ -1,11 +1,10 @@
 package com.shoppingmall.config;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
+import org.springframework.http.CacheControl;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
@@ -65,11 +64,9 @@ public class WebMvcConfig implements WebMvcConfigurer{
         defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
     	return defaultAdvisorAutoProxyCreator;
     } 
-    /*
+    /**/
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    	registry.addResourceHandler("/img/**")
-    	.addResourceLocations("file:///"+rootPath+"/")
-    	.setCacheControl(CacheControl.noCache().cachePrivate());
-    }*/
+    	registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/**").setCachePeriod(60 * 60 * 24 * 365); 
+    }
 }

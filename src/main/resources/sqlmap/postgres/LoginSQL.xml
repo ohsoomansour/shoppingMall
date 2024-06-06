@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
+<mapper namespace="LoginSQL"> 
+	<select id="LoginSQL.countUserInfo" resultType="int" >
+		/* SQL ID : LoginSQL.countUserInfo  */
+		<![CDATA[
+			SELECT COUNT(*)
+			FROM tb_member
+			WHERE ID = #{userid} AND PW = #{userpw}
+			
+		]]>
+	</select>
+	<select id="LoginSQL.getOneUserInfo" resultType="dataMap">
+		/* SQL ID: LoginSQL.countUserInfo  */
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				tb_member
+		    WHERE
+		    	ID = #{userid} AND PW = #{userpw} 
+			
+		]]>
+		
+	</select>
+</mapper>
