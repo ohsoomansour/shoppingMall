@@ -1,13 +1,13 @@
 spring:
   profiles:
     active: local # 사용할 환경 설정
-  
+
   datasource:
     driver-class-name: org.postgresql.Driver
     jdbc-url: jdbc:postgresql://localhost:5432/postgres #jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: 284823
-    
+
   mvc:
     view: 
       prefix: /WEB-INF/views/
@@ -21,8 +21,8 @@ spring:
     
 logging:
   level:
-    ROOT: info  #DEBUG, INFO, WARN, ERROR 모두 표시 + 루트 -> 하위 패키지 상속
-    com.shoppingmall.login: debug
+    #com.shoppingmall.login: debug
+    ROOT: info #DEBUG, INFO, WARN, ERROR 모두 표시 + 루트 -> 하위 패키지 상속
    
 #서버 포트
 server:

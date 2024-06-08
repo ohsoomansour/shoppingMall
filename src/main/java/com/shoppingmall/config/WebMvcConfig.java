@@ -67,6 +67,6 @@ public class WebMvcConfig implements WebMvcConfigurer{
     /**/
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    	registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/**").setCachePeriod(60 * 60 * 24 * 365); 
+    	registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/").setCachePeriod(60 * 60 * 24 * 365); 
     }
 }

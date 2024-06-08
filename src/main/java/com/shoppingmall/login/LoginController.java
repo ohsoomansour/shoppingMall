@@ -1,10 +1,12 @@
 package com.shoppingmall.login;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.shoppingmall.toaf.object.DataMap;
@@ -49,33 +51,42 @@ public class LoginController {
 	 *@Param: 
 	 *@Return:
 	 *@Function: 로그인 
-	 *@Description: @ResponseBody
+	 *@Description: @ModelAttribute("paraMap")에서 paraMap 변수 의미는 컨트롤러에서 뷰로 전달 
+	 *doLogin(@ModelAttribute("paraMap") DataMap paraMap Map<String, Object> paraMap
 	 * */ 
 	
-    @RequestMapping(value="loginx.do", method = RequestMethod.POST)
-    public ModelAndView doLogin(@ModelAttribute("paraMap") DataMap paraMap, HttpServletRequest request) {
+	//@ResponseBody
+    @RequestMapping(value="loginx.do", method = RequestMethod.POST) 
+    public ModelAndView doLogin(@RequestParam Map<String, Object> paraMap, HttpServletRequest request) {
     	
     	ModelAndView mav = new ModelAndView("jsonView");
     	log.info("login's dataMap:" + paraMap);
     	String error_code = "1";
     	String error_mesg = "로그인 실패 했습니다.";
+    	DataMap dataMap = new DataMap();
+    	
     	try {
+    		dataMap.put("id", paraMap.get("userid")); 
+        	dataMap.put("pw", paraMap.get("userpw"));
+    		boolean loginResult = this.loginService.login(dataMap);
+    		log.info("good");
+    		//log.info("login result ===>" + loginResult);
     		HttpSession session = request.getSession();
+    		/*
     		if(log.isDebugEnabled()) {
-    			log.debug("로그인 ==" + paraMap.get("userid") +  " | " + paraMap.getint("userpw"));
+    			log.debug("로그인 ==" + paraMap.get("userid") +  " | " );
     		}
     		if(loginService.countUserInfo(paraMap) == 0) {
     			error_code = "2";
     			error_mesg = "아이디와 비밀번호를 다시 한 번 확인해주세요."; throw new Exception();
-    		}
-    	   DataMap userMap = this.loginService.getOneUserInfo(paraMap);
-    	   if(log.isDebugEnabled()) {
-    		   log.debug("로그인 RESULT ===> " + userMap.toString());
-    	   }
-    		
+    		}*/
+    	   
+    	   
+    	   
     	   //세션을 담는 부분
     	   
     	} catch(Exception e) {
+    		System.out.println(e);
     		mav.addObject("result_code", error_code);
     		mav.addObject("result_mesg", error_mesg );
     	}

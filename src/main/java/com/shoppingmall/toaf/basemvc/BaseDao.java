@@ -13,10 +13,10 @@ import com.shoppingmall.toaf.object.DataMap;
  * <PRE>
  * 기  능	: Spring의 MyBatis 연동 지원 공통 parent DAO 클래스
  * 파일명	: BaseDao.java
- * 패키지	: com.shoppingmall.toaf.basemvc
+ * 패키지	: com.ttmsoft.toaf.basemvc
  * 설  명	: 
- * 변경이력	: 24.6.6 osm 작성
- * 
+ * 변경이력	: 
+ * 2015 .07 .20.	[sgchoi] - 최초작성
  * </PRE>
  * 
  * @param <D> - VO, DataMap 클래스

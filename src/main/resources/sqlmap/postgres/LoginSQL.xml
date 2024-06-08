@@ -11,7 +11,7 @@
 			
 		]]>
 	</select>
-	<select id="LoginSQL.getOneUserInfo" resultType="dataMap">
+	<select id="LoginSQL.getOneUserInfo" parameterType="dataMap"  resultType="dataMap">
 		/* SQL ID: LoginSQL.countUserInfo  */
 		<![CDATA[
 			SELECT 
@@ -19,7 +19,7 @@
 			FROM 
 				tb_member
 		    WHERE
-		    	ID = #{userid} AND PW = #{userpw} 
+		    	ID = #{id}
 			
 		]]>
 		

@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.shoppingmall.member.model.Member;
 import com.shoppingmall.toaf.object.DataMap;
+
 import com.shoppingmall.toaf.util.AES256Util;
 
 @RequestMapping("/member")
@@ -105,7 +106,8 @@ public class MemberFrontController {
 		try {
 
 			String id = member.getId(); 
-			String pw = AES256Util.strEncode(member.getPw().toString());
+
+			String pw =  member.getPw().toString();;    
 			String member_type = member.getMember_type();
 			String user_name = member.getUser_name();
 			String user_email1 = member.getUser_email1();
