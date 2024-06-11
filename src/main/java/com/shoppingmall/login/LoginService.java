@@ -34,6 +34,12 @@ public class LoginService extends BaseSvc<DataMap>  {
 	   //String loginPw = (String) dataMap.get("pw"); 
 	   
 	    try {
+	     //1.admin이 인정? -> 메뉴권한을 가지고 들어가고 	
+	     
+	     //2.접속 로그 기록
+	    	
+	    //3. 유저 세션 정보기록
+	    	
 	      DataMap userMap =  this.dao.selectQuery("LoginSQL.getOneUserInfo", dataMap);
 	  	  log.info("login'service dataMap  ===:" + userMap); 	
 	  	  log.info("db 암호화된 비번 :" + userMap.getstr("pw"));
