@@ -1,7 +1,10 @@
 package com.shoppingmall.login;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.map.ListOrderedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,13 +66,35 @@ public class LoginController {
     	log.info("login's dataMap:" + paraMap);
     	String error_code = "1";
     	String error_mesg = "로그인 실패 했습니다.";
+    	String result;
+    	String resultMsg;
+    	
+    	
     	DataMap dataMap = new DataMap();
     	
     	try {
+    		
     		dataMap.put("id", paraMap.get("userid")); 
         	dataMap.put("pw", paraMap.get("userpw"));
     		boolean loginResult = this.loginService.login(dataMap);
-    		log.info("good");
+    		if(loginResult) {
+    			result = "SUCCESS";
+    			DataMap userInfo = this.loginService.getOneUserInfo(dataMap);
+    			dataMap.put("member_type", userInfo.get("member_type"));
+    			List<DataMap> listUserMenuAttr = loginService.getUserMenuByMembertype(dataMap);
+    			for(DataMap list : listUserMenuAttr) {
+    				DataMap resultMapSub = new DataMap();
+    				resultMapSub.put("id", userInfo.get("id"));
+    				resultMapSub.put("parent_menu_id", list.get("menu_id"));  //0depth - 예)A100 / A110 / A140
+    				resultMapSub.put("member_type", userInfo.get("member_type"));
+    				//1depth 가 저장될 공간 어떻게?! 모델을 쓸지 아니면 적절한 자료구조를 사용할 지
+    			   Map<String, Object> res = (Map<String, Object>) loginService.getUserChildMenuByMembertype(resultMapSub);
+    				ListOrderedMap.listOrderedMap(res);
+    				
+    			}
+    			
+    			
+    		}
     		//log.info("login result ===>" + loginResult);
     		HttpSession session = request.getSession();
     		/*
