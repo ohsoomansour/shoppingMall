@@ -81,15 +81,18 @@ public class LoginController {
     			result = "SUCCESS";
     			DataMap userInfo = this.loginService.getOneUserInfo(dataMap);
     			dataMap.put("member_type", userInfo.get("member_type"));
+    			/*##List 객체는 순서가 있는 컬랙션 + 자동 조정
+    			 * 다형성 :  상위 클래스 타입의 참조 변수를 통해서 하위 클래스의 객체를 참조할 수 있도록 허용
+    			 * 
+    			*/
     			List<DataMap> listUserMenuAttr = loginService.getUserMenuByMembertype(dataMap);
     			for(DataMap list : listUserMenuAttr) {
     				DataMap resultMapSub = new DataMap();
     				resultMapSub.put("id", userInfo.get("id"));
     				resultMapSub.put("parent_menu_id", list.get("menu_id"));  //0depth - 예)A100 / A110 / A140
     				resultMapSub.put("member_type", userInfo.get("member_type"));
-    				//1depth 가 저장될 공간 어떻게?! 모델을 쓸지 아니면 적절한 자료구조를 사용할 지
-    			   Map<String, Object> res = (Map<String, Object>) loginService.getUserChildMenuByMembertype(resultMapSub);
-    				ListOrderedMap.listOrderedMap(res);
+    				// 예를 parent_menu_id : A100(list)  -> A180/A190  "list의 노드 리스트로 디자인"  
+				    list.put("childMenu", loginService.getUserChildMenuByMembertype(resultMapSub));
     				
     			}
     			

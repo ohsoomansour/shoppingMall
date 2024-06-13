@@ -27,6 +27,7 @@ public class BaseDao <D> extends SqlSessionDaoSupport {
 	/*
 	 * @Resource (name = "sqlSession") public void setSqlSessionFactory
 	 * (SqlSessionFactory sqlSession) { super.setSqlSessionFactory(sqlSession); }
+	 * 
 	 */
 	
 	@Resource (name="postgresqlSession")
