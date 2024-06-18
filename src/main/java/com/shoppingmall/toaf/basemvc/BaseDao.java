@@ -141,7 +141,7 @@ public class BaseDao <D> extends SqlSessionDaoSupport {
 	public D selectQuery (DataMap map) {
 		return (D) getSqlSession().selectOne((String) map.get("sqlid"), map);
 	}
-	
+	/**/
 	@SuppressWarnings ({ "unchecked" })
 	public List<D> selectListQuery (String queryId, D vo) {
 		return getSqlSession().selectList(queryId, vo);

@@ -2,6 +2,8 @@ package com.shoppingmall.login;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.shoppingmall.toaf.basemvc.BaseSvc;
 import com.shoppingmall.toaf.object.DataMap;
 import com.shoppingmall.toaf.util.AES256Util;
@@ -19,13 +21,14 @@ public class LoginService extends BaseSvc<DataMap>  {
 		return this.dao.selectQuery("LoginSQL.getOneUserInfo", paraMap); 
 		
 	}
+	
 	// 6.12 사용자 메뉴 권한 (+Tbiz 참조)
 	public List<DataMap> getUserMenuByMembertype(DataMap paraMap) {
-		return this.dao.selectListQuery("LoinSQL.getUserMenuByUsertype", paraMap);
+		return this.dao.selectListQuery("LoginSQL.getUserMenuByMembertype", paraMap);
 	}
 	// 6.12 사용자 자식 메뉴 권한 (+Tbiz 참조)
 	public List<DataMap> getUserChildMenuByMembertype(DataMap paraMap) {
-		return this.dao.selectListQuery("LoinSQL.getUserChildMenuByMembertype", paraMap);
+		return this.dao.selectListQuery("LoginSQL.getUserChildMenuByMembertype", paraMap);
 	}
 	public boolean login(DataMap dataMap)  {
 	  

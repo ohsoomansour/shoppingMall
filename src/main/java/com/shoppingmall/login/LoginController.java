@@ -1,10 +1,8 @@
 package com.shoppingmall.login;
 
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.collections4.map.ListOrderedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.shoppingmall.toaf.basemvc.BaseAct;
 import com.shoppingmall.toaf.object.DataMap;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,9 +18,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequestMapping("login")
 @Controller
-public class LoginController {
+@RequestMapping("login")
+public class LoginController extends BaseAct {
 	//private final Logger log = LoggerFactory.getLogger(this.getClass()); // 부트는 기본 내장
 	
 	
@@ -80,12 +79,15 @@ public class LoginController {
     		if(loginResult) {
     			result = "SUCCESS";
     			DataMap userInfo = this.loginService.getOneUserInfo(dataMap);
+    			log.info("userInfo:"+userInfo);
     			dataMap.put("member_type", userInfo.get("member_type"));
     			/*##List 객체는 순서가 있는 컬랙션 + 자동 조정
     			 * 다형성 :  상위 클래스 타입의 참조 변수를 통해서 하위 클래스의 객체를 참조할 수 있도록 허용
     			 * 
     			*/
+    			
     			List<DataMap> listUserMenuAttr = loginService.getUserMenuByMembertype(dataMap);
+    			log.info("listUserMenuAttr:"+listUserMenuAttr);
     			for(DataMap list : listUserMenuAttr) {
     				DataMap resultMapSub = new DataMap();
     				resultMapSub.put("id", userInfo.get("id"));
@@ -93,7 +95,7 @@ public class LoginController {
     				resultMapSub.put("member_type", userInfo.get("member_type"));
     				// 예를 parent_menu_id : A100(list)  -> A180/A190  "list의 노드 리스트로 디자인"  
 				    list.put("childMenu", loginService.getUserChildMenuByMembertype(resultMapSub));
-    				
+    				log.info("LoginController-list:" + list);
     			}
     			
     			

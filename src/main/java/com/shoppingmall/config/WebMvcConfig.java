@@ -64,7 +64,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
         defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
     	return defaultAdvisorAutoProxyCreator;
     } 
-    /**/
+    */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/").setCachePeriod(60 * 60 * 24 * 365); 
