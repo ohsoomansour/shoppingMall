@@ -6,22 +6,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import jakarta.servlet.http.HttpSession;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 
 
 @Slf4j
-@Component
-public class SampleInterceptor implements HandlerInterceptor {
+@Component   					//implements HandlerInterceptor
+public class DefaultCheck implements HandlerInterceptor {
 	
 	@Override
 	public boolean preHandle(jakarta.servlet.http.HttpServletRequest request,
 			jakarta.servlet.http.HttpServletResponse response, Object handler) throws Exception {
-		 log.info("preHandle");
-		// 요청 전 인터셉터
-		return HandlerInterceptor.super.preHandle(request, response, handler);
-		
+		log.info("preHandle");	
+		HttpSession sesssion = request.getSession();
+			
+		//return HandlerInterceptor.super.preHandle(request, response, handler);
+		return true;
 	}
 	@Override
 	public void afterCompletion(jakarta.servlet.http.HttpServletRequest request,

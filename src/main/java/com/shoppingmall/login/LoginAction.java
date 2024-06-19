@@ -20,15 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequestMapping("login")
-public class LoginController extends BaseAct {
+public class LoginAction  extends BaseAct {
 	//private final Logger log = LoggerFactory.getLogger(this.getClass()); // 부트는 기본 내장
 	
 	
 	@Autowired
 	private LoginService loginService;
 
-
-	/*
+   /**
 	 *@Author:osm
 	 *@Date: 2024.6.5
 	 *@Param: 
@@ -47,7 +46,7 @@ public class LoginController extends BaseAct {
 		
 		return mav;
 	}
-	/*
+   /**
 	 *@Author:osm
 	 *@Date: 2024.6.5
 	 *@Param: 
@@ -55,7 +54,7 @@ public class LoginController extends BaseAct {
 	 *@Function: 로그인 
 	 *@Description: @ModelAttribute("paraMap")에서 paraMap 변수 의미는 컨트롤러에서 뷰로 전달 
 	 *doLogin(@ModelAttribute("paraMap") DataMap paraMap Map<String, Object> paraMap
-	 * */ 
+	 */ 
 	
 	//@ResponseBody
     @RequestMapping(value="loginx.do", method = RequestMethod.POST) 
@@ -89,23 +88,30 @@ public class LoginController extends BaseAct {
     			List<DataMap> listUserMenuAttr = loginService.getUserMenuByMembertype(dataMap);
     			log.info("listUserMenuAttr:"+listUserMenuAttr);
     			for(DataMap list : listUserMenuAttr) {
+    				log.info("list-test:" + list);
     				DataMap resultMapSub = new DataMap();
     				resultMapSub.put("id", userInfo.get("id"));
-    				resultMapSub.put("parent_menu_id", list.get("menu_id"));  //0depth - 예)A100 / A110 / A140
-    				resultMapSub.put("member_type", userInfo.get("member_type"));
-    				// 예를 parent_menu_id : A100(list)  -> A180/A190  "list의 노드 리스트로 디자인"  
-				    list.put("childMenu", loginService.getUserChildMenuByMembertype(resultMapSub));
+    				resultMapSub.put("parent_menu_id", list.get("menu_id"));  //0depth - 예)A0
+    				resultMapSub.put("member_type", userInfo.get("member_type")); //ADMIN		    
+				    list.put("childmenu", loginService.getUserChildMenuByMembertype(resultMapSub));
     				log.info("LoginController-list:" + list);
+    				
+    				@SuppressWarnings("unchecked")
+					List<DataMap> childList = (List<DataMap>) list.get("childmenu");
+    			    for(DataMap child: childList ) {
+    					log.info("childList:"+ child);
+    				}
     			}
-    			
+    			mav.addObject("listUserMenuAttr", listUserMenuAttr);
     			
     		}
     		//log.info("login result ===>" + loginResult);
     		HttpSession session = request.getSession();
-    		/*
+    		/**/
     		if(log.isDebugEnabled()) {
     			log.debug("로그인 ==" + paraMap.get("userid") +  " | " );
     		}
+    		/*
     		if(loginService.countUserInfo(paraMap) == 0) {
     			error_code = "2";
     			error_mesg = "아이디와 비밀번호를 다시 한 번 확인해주세요."; throw new Exception();

@@ -19,7 +19,6 @@ public class MemberFrontController {
 	@Autowired
 	private MemberFrontService memberFrontService;
 	
-	
 	/* 
 	 *@Author: osm
 	 *@Date: 2024.5.14

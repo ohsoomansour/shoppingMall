@@ -8,7 +8,6 @@
 			SELECT COUNT(*)
 			FROM tb_member
 			WHERE ID = #{userid} AND PW = #{userpw}
-			
 		]]>
 	</select>
 	<select id="LoginSQL.getOneUserInfo" parameterType="dataMap"  resultType="dataMap">
@@ -50,7 +49,7 @@
 		]]>
 	</select>
 	<!--  사용자 자식 메뉴 권한 -->
-	<select id="LoginSQL.getUserChildMenuByMembertype" >
+	<select id="LoginSQL.getUserChildMenuByMembertype" parameterType="dataMap" resultType="dataMap" >
 	/* SQL ID: LoginSQL.getUserChildMenuByMembertype  */
 		<![CDATA[
 			SELECT  tm.menu_id
@@ -66,8 +65,8 @@
 							WHERE 	tm.menu_id = tma.menu_id AND tma.member_type = #{member_type}
 						)
 				AND depth = 1
-				AND parent_menu_id = #{parent_menu_id}
-			ORDER BY menu_seqno				
+				AND tm.parent_menu_id = #{parent_menu_id}
+			ORDER BY tm.menu_seqno				
 		
 		]]>
 	</select>
