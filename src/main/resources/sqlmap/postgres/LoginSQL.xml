@@ -7,7 +7,9 @@
 		<![CDATA[
 			SELECT COUNT(*)
 			FROM tb_member
-			WHERE ID = #{userid} AND PW = #{userpw}
+			WHERE ID = #{userid} 
+			  AND PW = #{userpw}
+			  AND AGREE_FLAG <> 'N'
 		]]>
 	</select>
 	<select id="LoginSQL.getOneUserInfo" parameterType="dataMap"  resultType="dataMap">
@@ -19,9 +21,7 @@
 				tb_member
 		    WHERE
 		    	ID = #{id}
-			
 		]]>
-		
 	</select>
 	<!--사용자 메뉴 권한 -->
 	<select id="LoginSQL.getUserMenuByMembertype" parameterType="dataMap" resultType="dataMap">

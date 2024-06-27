@@ -5,14 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-
 import jakarta.servlet.http.HttpSession;
 
 
 
 
-@Slf4j
-@Component   					//implements HandlerInterceptor
+@Slf4j							// HandlerInterceptor
+@Component   					//implements HandlerInterceptorAdapter
 public class DefaultCheck implements HandlerInterceptor {
 	
 	@Override
@@ -21,8 +20,8 @@ public class DefaultCheck implements HandlerInterceptor {
 		log.info("preHandle");	
 		HttpSession sesssion = request.getSession();
 			
-		//return HandlerInterceptor.super.preHandle(request, response, handler);
-		return true;
+		return HandlerInterceptor.super.preHandle(request, response, handler);
+		//return true;
 	}
 	@Override
 	public void afterCompletion(jakarta.servlet.http.HttpServletRequest request,

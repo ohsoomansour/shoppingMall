@@ -44,9 +44,10 @@ mybatis:
     call-setters-on-nulls: true
     jdbc-type-for-null: varchar
     default-fetch-size: 500
-
+    
   type-aliases-package: com.shoppingmall.member.model
-  mapper-locations: classpath:/sqlmap/**/*.xml
+  mapper-locations: 
+   - classpath:/sqlmap/**/*SQL.xml
 
 
 
