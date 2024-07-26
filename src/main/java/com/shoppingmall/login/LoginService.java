@@ -2,7 +2,6 @@ package com.shoppingmall.login;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.shoppingmall.toaf.basemvc.BaseSvc;
 import com.shoppingmall.toaf.object.DataMap;

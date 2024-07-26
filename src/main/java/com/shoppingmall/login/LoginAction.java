@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.shoppingmall.toaf.basemvc.BaseAct;
 import com.shoppingmall.toaf.object.DataMap;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +36,7 @@ public class LoginAction  extends BaseAct {
 	 * */ 
 	@RequestMapping("/login.do")
 	public ModelAndView doFormLogin( HttpServletRequest request) {
-		
+		log.debug("login debug test");
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("/common/login");
 		//24.6.4 세션 테스트 
@@ -86,6 +85,7 @@ public class LoginAction  extends BaseAct {
     			*/
     			
     			List<DataMap> listUserMenuAttr = loginService.getUserMenuByMembertype(dataMap);
+    			
     			log.info("listUserMenuAttr:"+listUserMenuAttr);
     			for(DataMap list : listUserMenuAttr) {
     				log.info("list-test:" + list);

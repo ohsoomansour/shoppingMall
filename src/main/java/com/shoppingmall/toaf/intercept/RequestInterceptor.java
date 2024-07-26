@@ -60,11 +60,11 @@ public class RequestInterceptor implements MethodInterceptor {
 					
 				Enumeration<String> enumeration = request.getParameterNames();
 				while (enumeration.hasMoreElements()) {
-					String name = enumeration.nextElement();
+					String name = enumeration.nextElement(); //HTTP 요청에서 파라미터 이름을 읽어오는 코드
 					String[] vals = request.getParameterValues(name); //HttpServletRequest 객체를 사용하여 요청 파라미터를 읽어와
 
 					if (vals == null) continue;
-					//HTTP 요청 파라미터 처리: 요청 파라미터를 읽어와 DataMap 객체에 저장
+					//HTTP 요청 파라미터 처리: 요청 파라미터의 이름이 "models"의 경우, models에 json ArrayList<DataMap> 객체 저장
 					if ("models".equals(name)) {
 						JSONArray jsonList = (JSONArray) JSONSerializer.toJSON(request.getParameter(name));
 						List<DataMap> gridList = new ArrayList<DataMap>();
@@ -77,6 +77,7 @@ public class RequestInterceptor implements MethodInterceptor {
 						}
 						dataMap.putorg(name, gridList);
 					}
+					//json 제외 파라미터는 보통 아래의 로직에서 처리, 정규 표현식([]와 빈 값은 ""로 대체) 
 					else {
 						dataMap.putorg(name.replaceAll("[\\[\\] ]", ""), (vals.length > 1 || name.indexOf("[") > 0) ? vals : request.getParameter(name));
 
@@ -86,7 +87,7 @@ public class RequestInterceptor implements MethodInterceptor {
 						}
 					}
 				}
-
+						
 				if (request instanceof MultipartHttpServletRequest) {
 					MultipartHttpServletRequest mprequest = (MultipartHttpServletRequest) request;
 

@@ -21,8 +21,8 @@ spring:
     
 logging:
   level:
-    #com.shoppingmall.login: debug
-    ROOT: info #DEBUG, INFO, WARN, ERROR 모두 표시 + 루트 -> 하위 패키지 상속
+    ROOT: info #INFO, WARN, ERROR, FATAL 모두 표시 -> 하위 패키지 상속
+    com.shoppingmall.login : debug #특정 패키지 경로
    
 #서버 포트
 server:

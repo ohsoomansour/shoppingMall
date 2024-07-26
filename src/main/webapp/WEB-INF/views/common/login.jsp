@@ -49,6 +49,15 @@ $(document).ready(function(){
 	})
 })
 
+/*
+$(document).ready(function(){
+		$("#getHtml").click(function() {
+			var htmlContent = $("#content").html();
+			alert("HTML Content:" + htmlContent);
+		})
+})
+*/
+
 </script>
 <div class="login-box">
 	<div class="login-logo"><b>osm shoppingmall</b></div>
@@ -83,5 +92,10 @@ $(document).ready(function(){
 
 			</div>
 		</form>
+		<div id="content">
+        <p>Hello, World!</p>
+	    </div>
+	    <button id="getHtml">Get HTML</button>
+		
 	</div>
 </div>
