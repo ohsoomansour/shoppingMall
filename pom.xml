@@ -55,12 +55,7 @@
 		    <version>1.2</version>
 		</dependency>
 		<!-- SpringBoot 3.0이상 jsp 사용법 End -->
-	    <!-- JSP Compiler -->
-	    <dependency>
-	      <groupId>org.apache.tomcat.embed</groupId>
-	      <artifactId>tomcat-embed-jasper</artifactId>
-	    </dependency>
-          
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -140,12 +135,8 @@
 		</dependency>
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-databind</artifactId>
-	
+		    <artifactId>jackson-databind</artifactId>	
 		</dependency>
-
-
-	   
 	</dependencies>
 
 	<build>

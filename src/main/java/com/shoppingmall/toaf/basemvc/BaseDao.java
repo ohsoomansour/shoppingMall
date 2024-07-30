@@ -13,10 +13,18 @@ import com.shoppingmall.toaf.object.DataMap;
  * <PRE>
  * 기  능	: Spring의 MyBatis 연동 지원 공통 parent DAO 클래스
  * 파일명	: BaseDao.java
- * 패키지	: com.ttmsoft.toaf.basemvc
- * 설  명	: 
+ * 패키지	: com.shoppingmall.toaf.basemvc
+ * 설  명	: @Repository 어노테이션은 Spring의 @Component의 특수화된 형태로, '데이터 액세스 계층의 컴포넌트로 등록'
+ *        
+ *        @Resouce : 어노테이션은 BaseDao 컴포넌트가 초기화 될 때 요청된 리소스 postgresqlSession @Bean 을 주입 
+ *        *the container will inject an instance of the requested resource 
+ *        into the application component when the component is initialized.
+ *        -> SqlSessionDaoSupport에서 상속받고 
+ *        -> 언제? BaseDao 컴포넌트가 초기화 될 때 자원으로 주입 -> SqlSessionFactory를 설정, SqlSession template 설정
+ *        -> getSqlSession() -> 반환: this.sqlSessionTemplate; -> DB에 SQL CRUD 쿼리 실행   
+ *         
  * 변경이력	: 
- * 2015 .07 .20.	[sgchoi] - 최초작성
+ * d
  * </PRE>
  * 
  * @param <D> - VO, DataMap 클래스
