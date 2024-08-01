@@ -4,13 +4,13 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres #jdbc-url: jdbc:postgresql://localhost:5432/postgres 
+    jdbc-url: jdbc:postgresql://localhost:5432/postgres #jdbc-url: jdbc:postgresql://localhost:5432/postgres 
     username: postgres
     password: 284823
 
   mvc:
     view: 
-      prefix: /WEB-INF/views/
+      prefix: /WEB-INF/views
       suffix: .jsp
       
   devtools:
@@ -23,7 +23,7 @@ logging:
   level:
     ROOT: info #INFO, WARN, ERROR, FATAL 모두 표시 -> 하위 패키지 상속
     com.shoppingmall.login : debug #특정 패키지 경로
-   
+ 
 #서버 포트
 server:
   port: 8080
