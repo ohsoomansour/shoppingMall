@@ -3,9 +3,20 @@
 <!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
 <mapper namespace="PostSQL"> 
 	<select id="getAllPostsList" resultType="dataMap">
-
+    <!-- u_id 서브 쿼리 작성 join --> 
 		<![CDATA[
-			SELECT * FROM POST
+			SELECT p.p_id
+			   , tu.u_name
+			   , tu.u_type
+			   , p.p_title
+			   , p.p_desc
+			   , p.p_contents
+			   , p.p_view
+			   , p.created_at
+			   , p.updated_at
+
+			FROM POST p LEFT JOIN tb_user tu ON p.u_id = tu.u_id;   
+			
 		]]>
 	</select>	
 	

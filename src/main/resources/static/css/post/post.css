@@ -1,0 +1,16 @@
+
+/*테이블 전체 스타일 */
+#p_table{
+ width: 50%;
+ border-collapse: collapse;
+ margin : 20px auto;
+}
+
+#p_table th, #p_table td, #p_table tr {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+
+
+

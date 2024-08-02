@@ -9,36 +9,91 @@
 <script src="/js/lms/control/LocalStorageCtrl.js"></script> 
 <title>게시판</title>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
- 
+<!-- jsTree -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/post/post.css">
+
 <script type="text/javascript">
+ 
+$(document).ready(function() {
+        $('#jstree').jstree({
+            'core' : {
+				'themes' : {
+					'responsive': false
+				},
+				'types' : {
+					'default' : {
+						'icon' : false
+					},
+					'file' : {
+						icon : 'fa fa-file'
+					}
+				},
+                'data' : [
+                    { "text" : "Root node 1", "children" : [
+                        { "text" : "Child node 1" },
+                        { "text" : "Child node 2" }
+                    ]},
+                    { "text" : "Root node 2", "children" : [
+                        { "text" : "Child node 3" },
+                        { "text" : "Child node 4" }
+                    ]}
+                ],
+				'plugins' : ['types']
+            }
+        }).on("changed.jstree", function (e, data){
+			console.log(data.selected) //목록 클릭 원소 
+			// data 받아오는 DB에서 URL 경로를 받아와서 클릭시 이동 
+			if(data.selected[0] === "j1_1"){
+				window.location.href = "/"
+			}
+		}).on("loaded.jstree", function(event, data){
+			$("#jstree").jstree('open_all')
+		})
+    });
 
-
-$(document).ready(function(){
-	/**/
-	$('#zstree').jstree({ 
-		'core' : {
-			'data' : [
-				{ "id" : "ajson1", "parent" : "#", "text" : "Simple root node" },
-				{ "id" : "ajson2", "parent" : "#", "text" : "Root node 2" },
-				{ "id" : "ajson3", "parent" : "ajson2", "text" : "Child 1" },
-				{ "id" : "ajson4", "parent" : "ajson2", "text" : "Child 2" }
-			]
-		}
-   	});
-})
 
 </script>
 
-	<body>
-		<div id="zstree"></div>
-		<div class="board">	
-			<p> 게시판 </p>
-			<ul> 
-				<c:forEach var="post" items="${posts}"> 
-					<li>${post.p_id}</li>	
-				</c>					
-			</ul>
-		</div>	
-		
-	</body> 
+<body>        
+	<div id="jstree"></div>
+	<div class="post">	
+		<table id="p_table"> 
+		  <tr>
+  		  <th>no</th>
+  			<th>제목</th>
+  			<th>작성자</th>
+        <th>사용자 구분</th>
+  			<th>내용</th>
+  			<th>작성시간</th>
+        <th>조회수</th>
+		  </tr>
+			<c:forEach var="post" items="${posts}" > 
+				<tr>
+					<td>${post.p_id}</td>
+					<td>${post.p_title}</td>
+					<td>${post.u_name}</td>
+           <c:choose>
+            <c:when test="${post.u_type == 'G'}" >
+               <td>고객</td>  
+            </c:when>
+            <c:when test="${post.u_type == 'A'}" >
+              <td>관리자</td>  
+            </c:when>
+            <c:otherwise>
+              <td>-</td>          
+            </c:otherwise>
+           </c:choose>
+            
+					<td>${post.p_contents}</td>
+					<td>${post.created_at}</td>
+					<td>${post.p_view}</td>
+          
+        </tr>	
+			</c:forEach>					
+		</table>
+	</div>	
+    
+</body> 
 		
