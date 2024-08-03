@@ -8,7 +8,7 @@
 			SELECT
 				*
 			FROM
-				tb_member		
+				tb_user;		
 		]]>
 	</select>	
 	
@@ -17,8 +17,8 @@
 	  <![CDATA[
          UPDATE tb_member
 		 	SET
-		 	  signup_approval = true
-		 WHERE no = #{no}::INTEGER
+		 	  agee_flag = true
+		 WHERE u_id = #{u_id}::INTEGER
       ]]>
     </update>  
 </mapper>

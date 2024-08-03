@@ -18,14 +18,14 @@ public class MemberFrontService extends BaseSvc<DataMap>{
 	}
 	/* 회원 */
 	public void doInsertMember(DataMap paraMap) {
-		String userEmail = paraMap.getstr("user_email1")
-				+ "@" + paraMap.getstr("user_email2");
-		paraMap.put("user_email", userEmail);
+		String bizEmail = paraMap.getstr("biz_email1")
+				+ "@" + paraMap.getstr("biz_email2");
+		paraMap.put("biz_email", bizEmail);
 		String member_type = paraMap.getstr("member_type");
-		if(member_type.equals("CUSTOMER") || member_type.equals("BIZ")) {
-			paraMap.put("agree_flag", "N");
+		if(member_type.equals("G") ||  member_type.equals("A")) {
+			paraMap.put("agree_flag", false);
 		}else{
-			paraMap.put("agree_flag", "Y");
+			paraMap.put("agree_flag", true);
 		}
 		
 		this.dao.insertQuery("V_MemberSQL.doInsertMember", paraMap);

@@ -30,16 +30,19 @@ import com.shoppingmall.toaf.object.DataMap;
  * @Author   : osm
  * @Date	 : 2024.6.19
  * @Explain  : 요청 인터셉터
- *
+ *  - 조인 포인트(=*Action 클래스 실행 ) : 특정 지점, *Action 클래스 또는 메서드 호출 시점
+ *  - Q. invoke 메서드는 언제 호출? A. 정된 조인 포인트(Join Point)에 해당하는 메소드가 호출될 때 자동으로 호출
+ *  - MethodInvocation 객체를 매개변수로 받아들이며, 이 객체는 호출되는 메소드에 대한 정보'를 포함
+ *  - invocation.proceed() : 실제 메소드 호출을 대리하여 실행
  */
 @Component
 public class RequestInterceptor implements MethodInterceptor {
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    
 	public Object invoke (MethodInvocation invocation) throws Throwable {
 
 		logger.info("RequestInterceptor start");
-		//#Joint Point:메서드 호출
+		//#Joint Point: 실제 타겟 메서드 호출
 		if (invocation.getMethod().getReturnType().equals(ModelAndView.class) ||
 			invocation.getMethod().getReturnType().equals(String.class) ||
 			invocation.getMethod().getReturnType().equals(Object.class)) {

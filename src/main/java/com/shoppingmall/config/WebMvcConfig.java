@@ -40,15 +40,17 @@ public class WebMvcConfig implements WebMvcConfigurer{
     public RegexpMethodPointcutAdvisor requestValueAdvisor() {  	
     	RegexpMethodPointcutAdvisor requestValueAdvisor = new RegexpMethodPointcutAdvisor();
     /** 
+     * @Advice: 특정 조인 포인트(Join Point)에서 수행하는 실제 동작을 정의
+     * @Joinpoint: 조인 포인트는 애스펙트가 적용될 수 있는 프로그램 실행 지점(예: 메소드 호출, 객체 생성 등)을 의미
      * @Explain1: 어드바이스(처리 방법)를 설정 :  이 어드바이스는 특정 관점에서 '메소드를 가로채 실행 전후에 실행될 코드'를 담고 있음
-	 * @Explain2: 어떤 포인트 커트(=requestValueAdvisor): 조인 포인트(requestInterceptor-invoke)와 어떤 어드 바이스(=requestInterceptor) 
+	 * @Explain2: 어떤 포인트 커트(=requestValueAdvisor): 조인 포인트(*Action.*)와 어떤 어드 바이스(=requestInterceptor) 
 	     		  어떤 지점에 결합 할지를  결정하는 필터
 	 * @Explain3: .*: 어떤 문자나 문자열˙이든 (빈 문자열 포함) 0회 이상 반복될 수 있음 -> Action 포함된 경우 매칭 
 	 */
     	requestValueAdvisor.setAdvice(requestInterceptor);
-    	//*포인트 커트, 패턴 해석:.모든 Action클래스.모든 메서드: 
+    	//* @조인 포인트 설정 역할 *패턴 해석:.모든 Action클래스.모든 메서드: 
     	requestValueAdvisor.setPattern(".*Action.*"); //
-    	return requestValueAdvisor;
+    	return requestValueAdvisor; 
     }
     
     @Override

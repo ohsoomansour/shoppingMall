@@ -30,13 +30,13 @@ public class AdminController {
 	 *@return: ModelAndView
 	 *@Function: 회원 리스트 조회
 	*/
-	@GetMapping("/memberList.do")
+	@GetMapping("/userList.do")
 	public ModelAndView getMembers(@ModelAttribute ("paraMap") DataMap paraMap, HttpServletRequest request, HttpServletResponse response) {
 		log.info("admin/memberList");
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("/member/member");
 		//System.out.println(this.adminServiceImpl.getMemberList());
-		mav.addObject("members", this.adminService.getMemberList(paraMap));
+		mav.addObject("users", this.adminService.getMemberList(paraMap));
 		return mav;
 	}
 	
@@ -54,9 +54,9 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView("jsonView");
 		System.out.println("가입승인 id:" + no);
 		DataMap paraMap = new DataMap();
-		paraMap.put("no", no);
+		paraMap.put("u_id", no);
 
-		mav.addObject("no", paraMap);
+		mav.addObject("u_id", paraMap);
 		adminService.updateSignUpApproval(paraMap);
 		return mav;
 	}

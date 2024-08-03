@@ -17,11 +17,11 @@ function alert_popup_focus(message, selector){
 }
 var LoginCtrl = {
 	doLogin : function(){
-		if($.trim($("#userid").val()) == ""){
-			alert_popup_focus("아이디를 입력해 주세요.","#userid")		
+		if($.trim($("#u_email").val()) == ""){
+			alert_popup_focus("아이디를 입력해 주세요.","#u_email")		
 			return false;
-		}else if($.trim($("#userpw").val()) == "" ){
-			alert_popup_focus("비밀번호를 입력해 주세요.", "#userpw")
+		}else if($.trim($("#u_pw").val()) == "" ){
+			alert_popup_focus("비밀번호를 입력해 주세요.", "#u_pw")
 			return false;
 		}
 		// 실제 로그인 처리 -> addSessionLoginInfo & appendSessionInfo 
@@ -70,11 +70,11 @@ $(document).ready(function(){
 
 			
 			<div class="form-group has-feedback">
-				<input type="text" id="userid" name="userid" class="form-control" placeholder="아이디" title="아이디">
+				<input type="text" id="u_email" name="u_email" class="form-control" placeholder="아이디" title="아이디">
 				<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 			</div>
 			<div class="form-group has-feedback">
-				<input type="password" id="userpw" name="userpw" class="form-control" placeholder="비밀번호" title="비밀번호">
+				<input type="password" id="u_pw" name="u_pw" class="form-control" placeholder="비밀번호" title="비밀번호">
 				<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 			</div>
 			<div class="row">

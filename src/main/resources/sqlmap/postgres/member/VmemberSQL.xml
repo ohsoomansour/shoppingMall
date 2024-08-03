@@ -12,34 +12,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 			SELECT
 				COUNT(*)
 			FROM
-				tb_member
-			WHERE ID = #{id}
+				tb_user
+			WHERE u_email = #{u_email}
 		]]>
 		
 	</select>
 	<insert id="V_MemberSQL.doInsertMember" parameterType="dataMap">
 		<![CDATA[
-			INSERT INTO tb_member
+			INSERT INTO tb_user
 			(
-			 	id,
-			 	pw,
-			 	member_type,
-			 	user_name,
-			 	user_email,
-			 	address,
+			 	u_email,
+			 	u_pw,
+			 	u_type,
+			 	u_name,
+			 	biz_email,
+			 	u_address,
 			 	agree_flag,
-			 	user_mobile_no
+			 	u_ph
 			)
 			VALUES
 			(
-				#{id},
-				#{pw},
-				#{member_type},
-				#{user_name},
-				#{user_email},
-				#{address},
+				#{u_email},
+				#{u_pw},
+				#{u_type},
+				#{u_name},
+				#{biz_email},
+				#{u_address},
 				#{agree_flag},
-				#{user_mobile_no}
+				#{u_ph}
 			)
 		]]>
 	

@@ -28,7 +28,8 @@ public class LoginAction  extends BaseAct {
 
    /**
 	 *@Author:osm
-	 *@Date: 2024.6.5
+	 *@Date: 2024.6.4 
+	 *@UpdateDate : 2024.8.3 (tb_member.sql -> tb_user.sql)
 	 *@Param: 
 	 *@Return:
 	 *@Function: 
@@ -48,14 +49,15 @@ public class LoginAction  extends BaseAct {
    /**
 	 *@Author:osm
 	 *@Date: 2024.6.5
+	 *@UpdateDate : 2024.8.3 (tb_member.sql -> tb_user.sql)
 	 *@Param: 
 	 *@Return:
 	 *@Function: 로그인 
 	 *@Description: @ModelAttribute("paraMap")에서 paraMap 변수 의미는 컨트롤러에서 뷰로 전달 
-	 *doLogin(@ModelAttribute("paraMap") DataMap paraMap Map<String, Object> paraMap
+	 *   doLogin(@ModelAttribute("paraMap") DataMap paraMap Map<String, Object> paraMap
 	 */ 
 	
-	//@ResponseBody
+	//dataMap :
     @RequestMapping(value="loginx.do", method = RequestMethod.POST) 
     public ModelAndView doLogin(@RequestParam Map<String, Object> paraMap, HttpServletRequest request) {
     	
@@ -71,14 +73,14 @@ public class LoginAction  extends BaseAct {
     	
     	try {
     		
-    		dataMap.put("id", paraMap.get("userid")); 
-        	dataMap.put("pw", paraMap.get("userpw"));
+    		dataMap.put("u_email", paraMap.get("u_email")); 
+        	dataMap.put("u_pw", paraMap.get("u_pw"));
     		boolean loginResult = this.loginService.login(dataMap);
     		if(loginResult) {
     			result = "SUCCESS";
     			DataMap userInfo = this.loginService.getOneUserInfo(dataMap);
     			log.info("userInfo:"+userInfo);
-    			dataMap.put("member_type", userInfo.get("member_type"));
+    			dataMap.put("u_type", userInfo.get("u_type"));
     			/*##List 객체는 순서가 있는 컬랙션 + 자동 조정
     			 * 다형성 :  상위 클래스 타입의 참조 변수를 통해서 하위 클래스의 객체를 참조할 수 있도록 허용
     			 * 
@@ -90,7 +92,7 @@ public class LoginAction  extends BaseAct {
     			for(DataMap list : listUserMenuAttr) {
     				log.info("list-test:" + list);
     				DataMap resultMapSub = new DataMap();
-    				resultMapSub.put("id", userInfo.get("id"));
+    				resultMapSub.put("u_email", userInfo.get("id"));
     				resultMapSub.put("parent_menu_id", list.get("menu_id"));  //0depth - 예)A0
     				resultMapSub.put("member_type", userInfo.get("member_type")); //ADMIN		    
 				    list.put("childmenu", loginService.getUserChildMenuByMembertype(resultMapSub));

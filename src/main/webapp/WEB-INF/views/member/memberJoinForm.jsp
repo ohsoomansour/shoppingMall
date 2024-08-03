@@ -70,11 +70,10 @@ function execDaumPostcode() {
 
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
             document.getElementById('postcode').value = data.zonecode;
-            document.getElementById("address").value = addr;
+            document.getElementById("u_address").value = addr;
             
             // 커서를 상세주소 필드로 이동한다.
             document.getElementById("detailAddress").focus();
-            
             
         }
     }).open();
@@ -82,17 +81,18 @@ function execDaumPostcode() {
 	
 var idCheck = false; //아이디 중복검사 체크
 var pwCheck = false; //패스워드 중복검사 체크
-const idRegex = /^[a-zA-Z0-9]{1,16}$/;//대소문자영문 숫자포함한 정규식
+//   /^[a-zA-Z0-9]{1,20}$/
+const idRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,20}$/;//대소문자영문 숫자포함한 정규식
                        //?=.*[a-zA-Z] 적어도 하나 이상의 문자 ㄷ     
 const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,16}$/; //영문,숫자,특수문자를 포함한 8자이상 16자 이하 정규식
 
 $(document).ready(function(){
 	// 유저 이메일 주소 직접 입력이 아닌 경우 1.
-	$('#userEmail2').keyup(function(){
+	$('#bizEmail2').keyup(function(){
 		$(this).val($(this).val().replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣]/g, '')); //문자열을 반환 -> 그 값을 기입
-		if($('#userEmail3').val() !== '직접입력'){
-			$('#userEmail3').val("직접입력");
-			console.log("틀림", $('#userEmail3').val());
+		if($('#bizEmail3').val() !== '직접입력'){
+			$('#bizEmail3').val("직접입력");
+			console.log("틀림", $('#bizEmail3').val());
 		}
 	});
 	// 비즈니스 계정이 주소 직접 입력이 아닌 경우
@@ -113,19 +113,20 @@ $(document).ready(function(){
 	
 }); //ready end
 	
-	//[회원가입] - 아이디 중복확인 -> 2024/05/18(토)
+	//[회원가입] - 아이디 중복확인 -> 2024/05/18(토) -> 2024/08/02 
 	function fncDoubleCheck(gubun){
+		var id = '';
 		if(gubun == 'ID'){
-			var id = $('#id').val();
-			console.log(id)
+			id = $("#u_email").val();
+			console.log(id)  //undefined
 		}
 		if(id == '' || id == null){
-			alert_popup_focus('아이디를 입력 후 중복확인 버튼을 클릭해주세요.', '#id');
+			alert_popup_focus('아이디를 입력 후 중복확인 버튼을 클릭해주세요.', '#u_email');
 			return false;
 	    }
 		$.ajax({
 			type : 'POST',
-			url : '/member/memberDoubleCheck.do',
+			url : '/member/userDoubleCheck.do',
 			data : {
 				gubun : gubun,
 				id : id
@@ -135,16 +136,16 @@ $(document).ready(function(){
 				console.log("success Data:" + data.memberCount)
             	var memberCount = data.memberCount;
 				if(memberCount == '1'){
-					alert_popup_focus('중복된 아이디가 있습니다. 다른 아이디를 사용해주세요!', '#id');
+					alert_popup_focus('중복된 아이디가 있습니다. 다른 아이디를 사용해주세요!', '#u_email');
 					idCheck = false;
 				} else if(id.length < 3){
-					alert_popup_focus('아이디를 3글자 이상 입력해주세요.', '#id');
+					alert_popup_focus('아이디를 3글자 이상 입력해주세요.', '#u_email');
 					return false;    //추가적인 동작을 하지 않고 함수를 종료하고자 할 때 사용될 것
 				} else if(id.length >= 3){
 					console.log("idcheck = true전"+idCheck)
 					idCheck = true;
 					console.log("idcheck = true후"+idCheck)
-					alert_popup_focus('사용가능한 아이디 입니다.', '#pw');
+					alert_popup_focus('사용가능한 아이디 입니다.', '#u_pw');
 				}
 			},
 			error:function(){
@@ -179,44 +180,44 @@ function isBlank(message, id){
 		}
 		
 } 
-//회원가입 -> 2024/05/16 osm  
+//회원가입 -> 2024/05/16 osm  -> 업데이트 날짜 2024/08/03
 function fncMemberJoin(){
 	//개인정보 유효성 검사 
-	if(!isBlank('아이디', "#id")){ // 비어있어?true -> false 
-		var id = $('#id').val();
+	if(!isBlank('아이디', "#u_email")){ // 비어있어?true -> false 
+		var id = $("#u_email").val();
 		if(idRegex.test(id)){
 			//중복을 체크 안해주고 가입하면 false로 반환
 			if(!idCheck){
-				alert_popup_focus('아이디 중복확인을 해주세요.',"#id");
+				alert_popup_focus('아이디 중복확인을 해주세요.',"#u_email");
 				return false;
 			}else{
-				if(!isBlank('비밀번호', '#pw')){
+				if(!isBlank('비밀번호', '#u_pw')){
 					if(!isBlank('비밀번호 확인', '#passWordCk')){
-						var pw = $('#pw').val();
+						var pw = $('#u_pw').val();
 						var pwChk = $('#passWordCk').val();
 						if(passwordRegex.test(pw)){
 							if(pw == pwChk){
-								if(!isBlank('이름', '#userName')){
-									if(!isBlank('개인이메일', '#userEmail1')){
-										if(!isBlank('개인이메일 도메인', '#userEmail2')){
-											if(!isBlank('휴대전화번호', '#userMobileNo')){
+								if(!isBlank('이름', '#u_name')){
+									if(!isBlank('개인이메일', '#bizEmail1')){
+										if(!isBlank('개인이메일 도메인', '#bizEmail2')){
+											if(!isBlank('휴대전화번호', '#u_ph')){
 												// 도로 주소 + 상세 주소 = 전체 주소 
-									            var road_address = $("#address").val()
+									            var road_address = $("#u_address").val()
 									            var detail_address = $("#detailAddress").val()
 									            var full_address = $("#fullAddress").val(road_address + detail_address);
-												console.log(full_address);
+												
 												if(!isBlank('전체 주소', '#fullAddress')){
-													var address = $("#address").val();
+													var address = $("#u_address").val();
+													console.log('u_address:'+ address)
 										            var detailAddress = $("#detailAddress").val();
-										            $("#fullAddress").val(address + detailAddress);
+										            $("#fullAddress").val(address + " " + detailAddress);
 										            console.log("전체 주소:" + address + detailAddress);
 													
 												}				            
-													var url = "/member/memberJoin.do"
+													var url = "/member/signUp.do"
 													var form = $('#frm')[0]; // 선택된 form 요소를 선택
 													var data = new FormData(form);
-													console.log(form); 
-													console.log(data); 
+													 
 														$.ajax({
 														       url : url,
 														       type: "post",
@@ -225,12 +226,11 @@ function fncMemberJoin(){
 														       data: data,
 														       dataType: "json",
 														       success : function(res){
-															       alert("회원가입이 완료되었습니다.");
-															       window.location.href="memberJoinConfirm.do" // *주의:/memberJoinConfirm.do -> /memberJoinConfirm.do
+															       alert("회원가입이 완료되었습니다."); 
+															       window.location.href="signUpConfirm.do" // *주의:/signUpConfirm.do -> /signUpConfirm.do
 														       },
 														       error : function(){
-															       //alert_popup("에러가 발생하였습니다. 관리자에게 문의해주세요","/techtalk/memberJoinFormPage.do");
-														    	//alert('게시판 등록에 실패했습니다.');    
+														    	alert('회원 등록에 실패했습니다.');    
 														       },
 														       complete : function(){
 														       }
@@ -242,15 +242,15 @@ function fncMemberJoin(){
 										}
 									}
 							}else{
-								alert_popup_focus("비밀번호와 비밀번호 확인이  일치하지않습니다.","#pws");
+								alert_popup_focus("비밀번호와 비밀번호 확인이  일치하지않습니다.","#u_pw");
 							}
 						}else{
-							alert_popup_focus("비밀번호는 영문, 숫자, 특수문자를 포함하여 8자이상 16자이하로 설정해주세요",'#pw');
+							alert_popup_focus("비밀번호는 영문, 숫자, 특수문자를 포함하여 8자이상 20자이하로 설정해주세요",'#u_pw');
 						}
 					}
 				}
 		}else{
-			alert_popup_focus("아이디는 영문, 숫자를 포함하여 16자 이하로 설정해주세요",'#id');
+			alert_popup_focus("아이디는 영문, 숫자를 포함하여 20자 이하로 설정해주세요",'#u_email');
 		}
 	}
 }
@@ -307,18 +307,18 @@ function changeText(text, id){
 									<td class="ta_left">
 										<div class="form-inline">
 											<div class="box_radioinp">
-												<input type="radio" class="inp_radio" name="member_type"
-													id="A" value="ADMIN" title="관리자" checked /><label for="R"
+												<input type="radio" class="inp_radio" name="u_type"
+													id="A" value="A" title="관리자" checked /><label for="A"
 													class="lab_radio"><span class="icon ico_radio"></span>관리자</label>
 											</div>
 											<div class="box_radioinp">
-												<input type="radio" class="inp_radio" name="member_type"
+												<input type="radio" class="inp_radio" name="u_type"
 													id="B" value="BIZ" title="기업" /><label for="B"
 													class="lab_radio"><span class="icon ico_radio"></span>기업 계정</label>
 											</div>
 											<div class="box_radioinp">
-												<input type="radio" class="inp_radio" name="member_type"
-													id="C" value="CUSTOMER" title="C" /><label for="C"
+												<input type="radio" class="inp_radio" name="u_type"
+													id="G" value="CUSTOMER" title="G" /><label for="G"
 													class="lab_radio"><span class="icon ico_radio"></span>일반 고객</label>
 											</div>
 										</div>
@@ -328,12 +328,12 @@ function changeText(text, id){
 									<th scope="col">아이디 <span class="red">*</span></th>
 									<td class="ta_left">
 										<div class="form-inline">
-											<input type="text" class="form-control form_id" id="id"
-												name="id"
+											<input type="text" class="form-control form_id" id="u_email"
+												name="u_email"
 												onkeyup="this.value=this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');"
 												title="아이디"> <a href="javascript:void;"
 												class="btn_step2" title="중복확인" id="btnIdCheck">중복확인</a> <span
-												style="margin-left: 10px;">아이디는 영문, 숫자를 포함하여 16자 이하로 설정 </span>
+												style="margin-left: 10px;">아이디는 영문, 숫자를 포함하여 20자 이하로 설정 </span>
 										</div>
 										<div>
 											<p id="idCheck" />
@@ -344,8 +344,8 @@ function changeText(text, id){
 									<th scope="col">비밀번호 <span class="red">*</span></th>
 									<td class="ta_left">
 										<div class="form-inline">
-											<input type="password" class="form-control form_pw" id="pw"
-												name="pw" title="비밀번호"> <span
+											<input type="password" class="form-control form_pw" id="u_pw"
+												name="u_pw" title="비밀번호"> <span
 												style="margin-left: 125px;">비밀번호는 영문, 숫자, 특수문자를 포함하여 8자이상 16자이하로 설정.</span>
 										</div>
 									</td>
@@ -364,7 +364,7 @@ function changeText(text, id){
 									<td class="ta_left">
 										<div class="form-inline">
 											<input type="text" class="form-control form_man_name"
-												id="userName" name="user_name" maxlength="20" title="이름">
+												id="u_name" name="u_name" maxlength="20" title="이름">
 										</div>
 									</td>
 								</tr>
@@ -375,10 +375,10 @@ function changeText(text, id){
 									<th scope="col">개인이메일 <span class="red">*</span></th>
 									<td class="ta_left">
 										<div class="form-inline">
-											<input type="text" class="form-control form_email1" id="userEmail1" name="user_email1" onkeyup="this.value=this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');" maxlength="30" title="담당자 이메일아이디">
+											<input type="text" class="form-control form_email1" id="bizEmail1" name="biz_email1" onkeyup="this.value=this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');" maxlength="30" title="담당자 이메일아이디">
 											@ 
-											<input type="text" class="form-control form_email2" id="userEmail2" name="user_email2" maxlength="30" title="담당자 이메일 도메인 직접입력"> 
-											<select class="form-control form_email3" id="userEmail3" name="user_email3" onChange="fncChangeEmail(this);" title="담당자 이메일주소3">
+											<input type="text" class="form-control form_email2" id="bizEmail2" name="biz_email2" maxlength="30" title="담당자 이메일 도메인 직접입력"> 
+											<select class="form-control form_email3" id="bizEmail3" name="biz_email3" onChange="fncChangeEmail(this);" title="담당자 이메일주소3">
 												<option title="직접입력">직접입력</option>
 												<option title="네이버">naver.com</option>
 												<option title="G메일">gmail.com</option>
@@ -395,8 +395,8 @@ function changeText(text, id){
 												type="text" 
 												onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
 												class="form-control form_man_name" 
-												id="userMobileNo"
-												name="user_mobile_no" 
+												id="u_ph"
+												name="u_ph" 
 												title="휴대전화"
 											>
 										</div>
@@ -407,7 +407,7 @@ function changeText(text, id){
 									<td>
 									<input type="text" id="postcode" placeholder="우편번호">
 									<input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
-									<input type="text" id="address" placeholder="주소"><br>
+									<input type="text" id="u_address" placeholder="주소"><br>
 									<input type="text" id="detailAddress" placeholder="상세주소">
 									<input hidden type="text" id="fullAddress" name="address">
 									<input type="text" id="extraAddress" placeholder="참고항목">

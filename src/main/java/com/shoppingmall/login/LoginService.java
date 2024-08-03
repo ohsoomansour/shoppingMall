@@ -42,12 +42,11 @@ public class LoginService extends BaseSvc<DataMap>  {
 	    	
 	      DataMap userMap =  this.dao.selectQuery("LoginSQL.getOneUserInfo", dataMap);
 	  	  log.info("login'service dataMap  ===:" + userMap); 	
-	  	  log.info("db 암호화된 비번 :" + userMap.getstr("pw"));
-	  	  log.info("현재 로그인 비번: " + dataMap.getstr("pw")); 
-	  	
-	  	  log.info("복호화된 비번:"  +  AES256Util.strDecode(userMap.getstr("pw")) ); 
+	  	  log.info("db 암호화된 비번 :" + userMap.getstr("u_pw"));
+	  	  log.info("현재 로그인 비번: " + dataMap.getstr("u_pw")); 
+	  	  log.info("복호화된 비번:"  +  AES256Util.strDecode(userMap.getstr("u_pw")) ); 
 	  	  
-			boolean result = AES256Util.strDecode(userMap.getstr("pw")).equals(dataMap.getstr("pw"));
+			boolean result = AES256Util.strDecode(userMap.getstr("u_pw")).equals(dataMap.getstr("u_pw"));
 			log.info("login service result=== " + result);
 			if (result) {
 				log.info("성공적으로 복호화 되었습니다!");

@@ -1,4 +1,4 @@
-package com.shoppingmall.board;
+package com.shoppingmall.post;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import com.shoppingmall.toaf.object.DataMap;
 
 @Service
 @Transactional(value="postgresqlTransactionManager", propagation= Propagation.REQUIRED, rollbackFor=Exception.class)
-public class BoardService extends BaseSvc<DataMap> {
+public class PostService extends BaseSvc<DataMap> {
 	
-	public List<DataMap> getAllBoardsList(){
-		return this.dao.selectListQuery("BoardSQL.getAllBoardsList", null);
+	public List<DataMap> getAllPostsList(){
+		return this.dao.selectListQuery("PostSQL.getAllPostsList", null);
 	}
 }

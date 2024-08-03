@@ -6,9 +6,9 @@
 		/* SQL ID : LoginSQL.countUserInfo  */
 		<![CDATA[
 			SELECT COUNT(*)
-			FROM tb_member
-			WHERE ID = #{userid} 
-			  AND PW = #{userpw}
+			FROM tb_user
+			WHERE u_email = #{userid} 
+			  AND u_pw = #{userpw}
 			  AND AGREE_FLAG <> 'N'
 		]]>
 	</select>
@@ -18,9 +18,9 @@
 			SELECT 
 				*
 			FROM 
-				tb_member
+				tb_user
 		    WHERE
-		    	ID = #{id}
+		    	u_email = #{u_email}
 		]]>
 	</select>
 	<!--사용자 메뉴 권한 -->
@@ -40,7 +40,7 @@
 			WHERE EXISTS(
 							SELECT 1
 							FROM tb_menu_auth tma
-							WHERE tm.menu_id = tma.menu_id AND tma.member_type = #{member_type}
+							WHERE tm.menu_id = tma.menu_id AND tma.member_type = #{u_type}
 									 	
 						) 
 				AND tm.depth = 0
@@ -62,7 +62,7 @@
 			WHERE EXISTS(
 							SELECT 1
 							FROM 	tb_menu_auth tma
-							WHERE 	tm.menu_id = tma.menu_id AND tma.member_type = #{member_type}
+							WHERE 	tm.menu_id = tma.menu_id AND tma.member_type = #{u_type}
 						)
 				AND depth = 1
 				AND tm.parent_menu_id = #{parent_menu_id}
