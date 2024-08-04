@@ -23,14 +23,14 @@
 		    	u_email = #{u_email}
 		]]>
 	</select>
+	
 	<!--사용자 메뉴 권한 -->
 	<select id="LoginSQL.getUserMenuByMembertype" parameterType="dataMap" resultType="dataMap">
 		/* SQL ID: LoginSQL.getUserMenuByMembertype */
 
 		<![CDATA[
 			SELECT	tm.menu_id
-				, 	tm.menu_name
-				,	tm.menu_name
+				, 	tm.menu_name AS text
 				,	tm.parent_menu_id
 				,	tm.menu_url
 				,	tm.depth
@@ -39,21 +39,25 @@
 			FROM tb_menu tm
 			WHERE EXISTS(
 							SELECT 1
-							FROM tb_menu_auth tma
-							WHERE tm.menu_id = tma.menu_id AND tma.member_type = #{u_type}
-									 	
+	                        FROM tb_menu_auth tma
+	                        WHERE tma.menu_id = tm.menu_id
+	                          AND (
+	                              (#{u_type} = 'A' AND tma.member_type IN ('A', 'G'))
+	                              OR tma.member_type = #{u_type}
+	                          )		 	
 						) 
 				AND tm.depth = 0
-			ORDER BY tm.menu_seqno
+			ORDER BY tm.menu_seqno 
 			
 		]]>
 	</select>
+	
 	<!--  사용자 자식 메뉴 권한 -->
 	<select id="LoginSQL.getUserChildMenuByMembertype" parameterType="dataMap" resultType="dataMap" >
 	/* SQL ID: LoginSQL.getUserChildMenuByMembertype  */
 		<![CDATA[
 			SELECT  tm.menu_id
-				,	tm.menu_name
+				,	tm.menu_name AS text
 				,	tm.menu_url
 				,	tm.depth
 				,	tm.auth_seqno
@@ -62,8 +66,13 @@
 			WHERE EXISTS(
 							SELECT 1
 							FROM 	tb_menu_auth tma
-							WHERE 	tm.menu_id = tma.menu_id AND tma.member_type = #{u_type}
-						)
+							WHERE 	tma.menu_id = tm.menu_id 
+							  AND 
+							  (
+							  	(#{u_type} = 'A' AND tma.member_type IN ('A', 'G'))
+							  	 OR tma.member_type = #{u_type} 
+							  )
+						)	  
 				AND depth = 1
 				AND tm.parent_menu_id = #{parent_menu_id}
 			ORDER BY tm.menu_seqno				

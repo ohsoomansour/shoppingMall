@@ -21,6 +21,7 @@ public class LoginService extends BaseSvc<DataMap>  {
 		
 	}
 	
+
 	// 6.12 사용자 메뉴 권한 (+Tbiz 참조)
 	public List<DataMap> getUserMenuByMembertype(DataMap paraMap) {
 		return this.dao.selectListQuery("LoginSQL.getUserMenuByMembertype", paraMap);

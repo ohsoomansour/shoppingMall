@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
 <mapper namespace="PostSQL"> 
-	<select id="getAllPostsList" resultType="dataMap">
+	<select id="PostSQL.getAllPostsList" resultType="dataMap">
     <!-- u_id 서브 쿼리 작성 join --> 
 		<![CDATA[
 			SELECT p.p_id
@@ -21,7 +21,7 @@
 	</select>	
 	
 	
-	<update id="doUpdateContent"  parameterType="dataMap" >
+	<update id="PostSQL.doUpdateContent"  parameterType="dataMap" >
 	  <![CDATA[
 
       ]]>

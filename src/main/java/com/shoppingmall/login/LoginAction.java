@@ -1,6 +1,7 @@
 package com.shoppingmall.login;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,38 +88,30 @@ public class LoginAction  extends BaseAct {
     			*/
     			
     			List<DataMap> listUserMenuAttr = loginService.getUserMenuByMembertype(dataMap);
-    			
+    			List<DataMap> loginMenu = new ArrayList<DataMap>();
     			log.info("listUserMenuAttr:"+listUserMenuAttr);
     			for(DataMap list : listUserMenuAttr) {
-    				log.info("list-test:" + list);
+    				log.info("list:" + list);
     				DataMap resultMapSub = new DataMap();
-    				resultMapSub.put("u_email", userInfo.get("id"));
+    				resultMapSub.put("u_email", userInfo.get("u_email"));
     				resultMapSub.put("parent_menu_id", list.get("menu_id"));  //0depth - 예)A0
-    				resultMapSub.put("member_type", userInfo.get("member_type")); //ADMIN		    
-				    list.put("childmenu", loginService.getUserChildMenuByMembertype(resultMapSub));
-    				log.info("LoginController-list:" + list);
+    				resultMapSub.put("u_type", userInfo.get("u_type")); //A		    
+				    list.put("children", loginService.getUserChildMenuByMembertype(resultMapSub));
+				    /* 2024.08.04 적합 
+				     * list:{menu_id=A0, text=회원관리, parent_menu_id=A0, menu_url=/admin/memberList.do, depth=0, auth_seqno=1,
+				     *      children=[{menu_id=A1, text=회원 정보 수정, menu_url=/admin/AeditMember.do, depth=1, auth_seqno=2}, {menu_id=A2, text=포인트 얻기, menu_url=/admin/getPoint.do, depth=1, auth_seqno=3}]}
+    				 * ##menuList로 변경
+    				 * 
+    				*/
     				
-    				@SuppressWarnings("unchecked")
-					List<DataMap> childList = (List<DataMap>) list.get("childmenu");
-    			    for(DataMap child: childList ) {
-    					log.info("childList:"+ child);
-    				}
+    				loginMenu.add(list);
+    				log.info("LoginController-loginMenu:" + loginMenu);
+    				mav.addObject("loginMenu", loginMenu);
+    			
     			}
-    			mav.addObject("listUserMenuAttr", listUserMenuAttr);
     			
     		}
-    		//log.info("login result ===>" + loginResult);
-    		HttpSession session = request.getSession();
-    		/**/
-    		if(log.isDebugEnabled()) {
-    			log.debug("로그인 ==" + paraMap.get("userid") +  " | " );
-    		}
-    		/*
-    		if(loginService.countUserInfo(paraMap) == 0) {
-    			error_code = "2";
-    			error_mesg = "아이디와 비밀번호를 다시 한 번 확인해주세요."; throw new Exception();
-    		}*/
-    	   
+    
     	   
     	   
     	   //세션을 담는 부분

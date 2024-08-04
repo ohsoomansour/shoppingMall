@@ -15,39 +15,31 @@
 <link rel="stylesheet" type="text/css" href="/css/post/post.css">
 
 <script type="text/javascript">
+/*
+ var data = 
  
+ */
+
+
 $(document).ready(function() {
+	/*sessionStorage에서 get 가져와서 -> data */
+		var data = sessionStorage.getItem('loginMenu');
+		console.log(data);
+		if (data) {
+	        data = JSON.parse(data);
+	    } else {
+	        data = []; // 기본값 설정 (데이터가 없을 경우 빈 배열)
+	    }
         $('#jstree').jstree({
             'core' : {
-				'themes' : {
-					'responsive': false
-				},
-				'types' : {
-					'default' : {
-						'icon' : false
-					},
-					'file' : {
-						icon : 'fa fa-file'
-					}
-				},
-                'data' : [
-                    { "text" : "Root node 1", "children" : [
-                        { "text" : "Child node 1" },
-                        { "text" : "Child node 2" }
-                    ]},
-                    { "text" : "Root node 2", "children" : [
-                        { "text" : "Child node 3" },
-                        { "text" : "Child node 4" }
-                    ]}
-                ],
-				'plugins' : ['types']
+                'data' : data
             }
         }).on("changed.jstree", function (e, data){
 			console.log(data.selected) //목록 클릭 원소 
-			// data 받아오는 DB에서 URL 경로를 받아와서 클릭시 이동 
+			/* data 받아오는 DB에서 URL 경로를 받아와서 클릭시 이동 
 			if(data.selected[0] === "j1_1"){
 				window.location.href = "/"
-			}
+			} */
 		}).on("loaded.jstree", function(event, data){
 			$("#jstree").jstree('open_all')
 		})

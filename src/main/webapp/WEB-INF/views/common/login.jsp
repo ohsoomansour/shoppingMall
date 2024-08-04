@@ -30,9 +30,11 @@ var LoginCtrl = {
 			data: $("#frm_login").serialize(),
 			type : "POST", 
 			dataType: "json",
-			success: function(res){
+			success: function(result){
 				console.log("로그인 성공 ===" );
-				console.log(res);
+				console.log(result);
+				//결과 값 -> sessionStorage에 저장
+				 sessionStorage.setItem('loginMenu', JSON.stringify(result.loginMenu))
 			},
 			error:function(e){
 				console.log(e);

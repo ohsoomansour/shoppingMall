@@ -29,6 +29,7 @@ import com.shoppingmall.toaf.object.DataMap;
  * @File	 : RequestInterceptor.java
  * @Author   : osm
  * @Date	 : 2024.6.19
+ * @UpdatedDate : 2024.08.04
  * @Explain  : 요청 인터셉터
  *  - 조인 포인트(=*Action 클래스 실행 ) : 특정 지점, *Action 클래스 또는 메서드 호출 시점
  *  - Q. invoke 메서드는 언제 호출? A. 정된 조인 포인트(Join Point)에 해당하는 메소드가 호출될 때 자동으로 호출

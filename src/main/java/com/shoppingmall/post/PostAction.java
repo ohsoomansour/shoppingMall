@@ -41,7 +41,7 @@ public class PostAction {
 	 * @Description : *Action 클래스 또는 메서드는 AOP로 인해 인터 셉트
 	 * */
 	// 매핑 되는 지 확인!!
-	@RequestMapping("/Contents")
+	@RequestMapping("/writing")
 	public void doWriteContents(@ModelAttribute("paraMap") DataMap dataMap ) {
 		
 	}
