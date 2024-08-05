@@ -5,6 +5,11 @@
  border-collapse: collapse;
  margin : 20px auto;
 }
+#writing{
+ width: 50%;
+ margin : 5px auto;
+}
+
 
 #p_table th, #p_table td, #p_table tr {
   border: 1px solid black;

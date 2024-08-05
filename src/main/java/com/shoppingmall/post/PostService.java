@@ -16,4 +16,9 @@ public class PostService extends BaseSvc<DataMap> {
 	public List<DataMap> getAllPostsList(){
 		return this.dao.selectListQuery("PostSQL.getAllPostsList", null);
 	}
+	
+	public int doPublishPost(DataMap dataMap) {
+	  return this.dao.updateQuery("PostSQL.doPublishPost", dataMap);
+	}
+	
 }

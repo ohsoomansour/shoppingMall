@@ -50,7 +50,7 @@ public class AdminController {
 	*/
 
 	@RequestMapping(value="/signUpApproval.do")               
-	public ModelAndView doApprovalofMembership(@ModelAttribute("no") int no) {
+	public ModelAndView doApprovalofMembership(@ModelAttribute("u_id") int no) {
 		ModelAndView mav = new ModelAndView("jsonView");
 		System.out.println("가입승인 id:" + no);
 		DataMap paraMap = new DataMap();

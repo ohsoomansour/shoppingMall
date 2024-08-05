@@ -3,6 +3,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -14,39 +16,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/post/post.css">
 
-<script type="text/javascript">
-/*
- var data = 
- 
- */
 
-
-$(document).ready(function() {
-	/*sessionStorage에서 get 가져와서 -> data */
-		var data = sessionStorage.getItem('loginMenu');
-		console.log(data);
-		if (data) {
-	        data = JSON.parse(data);
-	    } else {
-	        data = []; // 기본값 설정 (데이터가 없을 경우 빈 배열)
-	    }
-        $('#jstree').jstree({
-            'core' : {
-                'data' : data
-            }
-        }).on("changed.jstree", function (e, data){
-			console.log(data.selected) //목록 클릭 원소 
-			/* data 받아오는 DB에서 URL 경로를 받아와서 클릭시 이동 
-			if(data.selected[0] === "j1_1"){
-				window.location.href = "/"
-			} */
-		}).on("loaded.jstree", function(event, data){
-			$("#jstree").jstree('open_all')
-		})
-    });
-
-
-</script>
 
 <body>        
 	<div id="jstree"></div>
@@ -77,14 +47,18 @@ $(document).ready(function() {
               <td>-</td>          
             </c:otherwise>
            </c:choose>
-            
 					<td>${post.p_contents}</td>
 					<td>${post.created_at}</td>
-					<td>${post.p_view}</td>
-          
+					<td>${post.p_view}</td>    
         </tr>	
-			</c:forEach>					
+      
+			</c:forEach>
 		</table>
+    <div id="writing">
+       <button>
+         <a href="/post/writing.do" id="writing_a" >글 작성</a>        
+       </button>
+    </div>  
 	</div>	
     
 </body> 

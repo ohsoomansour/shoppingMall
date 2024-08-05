@@ -2,23 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
 <mapper namespace="MemberSQL"> 
-	<select id="doGetMemberList" resultType="dataMap">
-	<!-- 회원관리, 전체 회원  -->
+	<select id="MemberSQL.doGetMemberList" resultType="dataMap">
+	<!-- 회원관리, 전체 회원 -->
 		<![CDATA[
 			SELECT
 				*
 			FROM
-				tb_user;		
+				tb_user	
+			ORDER BY u_id ASC;
 		]]>
 	</select>	
 	
 	
-	<update id="doUpdateSignUpApproval"  parameterType="dataMap" >
+	<update id="MemberSQL.doUpdateSignUpApproval"  parameterType="dataMap" >
 	  <![CDATA[
-         UPDATE tb_member
+    UPDATE tb_user
 		 	SET
-		 	  agee_flag = true
-		 WHERE u_id = #{u_id}::INTEGER
-      ]]>
+		 	  agree_flag = true,
+		 	  agree_flag_date = NOW()
+		WHERE u_id = #{u_id}::INTEGER
+     ]]>
     </update>  
 </mapper>

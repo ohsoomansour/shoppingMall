@@ -16,18 +16,12 @@
  <script>
 
 
-  /* 
- member_type이 ADMIN의 경우 가입  가능
- if(member_type === 'ADMIN'){
-	 	  
-	 	}
-  */
 
  function funcSignUpApproval(no){
 	 	  console.log("Sending AJAX request for id:", no);
 	 	  $.ajax({
 	 	  	     type : 'GET',
-	 	  	     url :'/admin/signUpApproval.do?no='+ no,
+	 	  	     url :'/admin/signUpApproval.do?u_id='+ no,
 	 	  	     headers: {
 					"Content-Type":"application/json;charset=utf-8",
 				  },			
@@ -46,62 +40,37 @@
 	 	  })
 	 	
  	}
- 	/**/
- function funcTest(){
-	 	  
-	 	  $.ajax({
-	 	  	     type : 'POST',
-	 	  	     url :'/admin/doTest.do',
-	 	  	     data: {
-			        key1: "SUCCESS",
-			        key2: "SUCCESS",
-			     },
-	 	  	     dataType : 'json',
-	 	  	     success: function(res){
-	                // 요청이 성공한 경우 추가적인 작업 수행
-	                console.log('Success: ' + res);
-	             },
-	 	  	     error:function(){
-	 	  	      
-	 	  	     },
-	 	  })
-	 	
- }	
-
- 
-
-
 
 </script>
 
   <h1>Members</h1>
-  <button onClick='funcTest()'>테스트</button>  
   <table border="1">
       <thead>
           <tr>
               <th>ID         </th>
-              <th>User Name  </th>
-              <th>User Email </th>
-              <th>Address    </th>
+              <th>이름</th>
+              <th>아이디</th>
+              <th>주소</th>
               <th>사용 승인</th>
-              <th>Join date  </th>
+              <th>가입 날짜</th>
           </tr>
       </thead>
       <tbody>
  
-          <c:forEach var="member" items="${members}">
+          <c:forEach var="user" items="${users}">
               <tr>
-                  <td>%{member.no}</td>
-              	  <td>${member.id}</td>
-                  <td>${member.user_name}</td>
-                  <td>${member.user_email}</td>
-                  <td>${member.address}</td>
-                  <td>${member.created_at}</td>
-                  <td><button onClick="funcSignUpApproval('${member.no}')">가입 승인</button>${member.agree_flag}</td>
+                  <td>${user.u_id}</td>
+                  <td>${user.u_name}</td>
+              	  <td>${user.u_email}</td>
+                  <td>${user.u_address}</td>
+                  <td>${user.agree_flag_date}</td>   
+                  <td>${user.created_at}</td>
+                  <td><button onClick="funcSignUpApproval('${user.u_id}')">${user.agree_flag ? '승인완료' : '비승인'}</button></td>
               </tr>
           </c:forEach>
           
       </tbody>
+      
   </table>
 
  </body>   

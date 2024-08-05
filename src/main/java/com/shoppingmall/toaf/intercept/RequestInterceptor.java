@@ -1,11 +1,13 @@
 package com.shoppingmall.toaf.intercept;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletRequest; 2024.08.05 수정
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -48,21 +50,35 @@ public class RequestInterceptor implements MethodInterceptor {
 			invocation.getMethod().getReturnType().equals(String.class) ||
 			invocation.getMethod().getReturnType().equals(Object.class)) {
 
+		  logger.info("invocation.getMethod():" + invocation.getMethod()); //PostAction.doWriteContentsAction
 			Class<?>[] params = invocation.getMethod().getParameterTypes();
-
+			logger.info("params:"+ Arrays.toString(params)); // 배열  [] 타입
+			//[com.shoppingmall.toaf.object.DataMap dataMap, jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response]
+			logger.info("actual params"+Arrays.toString(invocation.getMethod().getParameters()));
+			logger.info("invocation.getMethod().getParameterTypes()"+invocation.getMethod().getReturnType().equals(ModelAndView.class));
+			logger.info("invocation.getMethod().getParameterTypes()"+invocation.getMethod().getReturnType().equals(String.class));
+			logger.info("invocation.getMethod().getParameterTypes()"+invocation.getMethod().getReturnType().equals(Object.class));
 			int mapIndex = -1;
 			int reqIndex = -1;
 			for (int idx = 0; idx < params.length; idx++) {
-			//System.out.println("===> ["+idx+"]"+params[idx]);
-				if (params[idx].equals(DataMap.class)) mapIndex = idx;
-				if (params[idx].equals(HttpServletRequest.class)) reqIndex = idx;
+			/*
+			 * ===> [0]class com.shoppingmall.toaf.object.DataMap
+         ===> [1]interface jakarta.servlet.http.HttpServletRequest
+         ===> [2]interface jakarta.servlet.http.HttpServletResponse
+			 * */		
+			System.out.println("===> ["+idx+"]"+params[idx]);
+				if (params[idx].equals(DataMap.class)) mapIndex = idx; // 여기에 주목!!
+				if (params[idx].equals(HttpServletRequest.class)) reqIndex = idx;  // 0 1
 			}
+			
 
 			if (mapIndex >= 0 && reqIndex >= 0) {
 				HttpServletRequest request = (HttpServletRequest) invocation.getArguments()[reqIndex];
+				logger.info("invocation.getArguments():"+invocation.getArguments());
 				DataMap dataMap = new DataMap();
 					
 				Enumeration<String> enumeration = request.getParameterNames();
+				logger.info("enumeration ===>" + enumeration);
 				while (enumeration.hasMoreElements()) {
 					String name = enumeration.nextElement(); //HTTP 요청에서 파라미터 이름을 읽어오는 코드
 					String[] vals = request.getParameterValues(name); //HttpServletRequest 객체를 사용하여 요청 파라미터를 읽어와
@@ -83,6 +99,7 @@ public class RequestInterceptor implements MethodInterceptor {
 					}
 					//json 제외 파라미터는 보통 아래의 로직에서 처리, 정규 표현식([]와 빈 값은 ""로 대체) 
 					else {
+						logger.info("============ RequestInterceptor-dataMap설정 ============");
 						dataMap.putorg(name.replaceAll("[\\[\\] ]", ""), (vals.length > 1 || name.indexOf("[") > 0) ? vals : request.getParameter(name));
 
 						if (logger.isDebugEnabled()) {
@@ -93,6 +110,7 @@ public class RequestInterceptor implements MethodInterceptor {
 				}
 						
 				if (request instanceof MultipartHttpServletRequest) {
+				  logger.info("============ RequestInterceptor - Multipart request 설정 ============");	
 					MultipartHttpServletRequest mprequest = (MultipartHttpServletRequest) request;
 
 					Iterator<String> iterator = mprequest.getFileNames();

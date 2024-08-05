@@ -336,7 +336,7 @@ function changeText(text, id){
 												style="margin-left: 10px;">아이디는 영문, 숫자를 포함하여 20자 이하로 설정 </span>
 										</div>
 										<div>
-											<p id="idCheck" />
+											<p id="idCheck" ></p>
 										</div>
 									</td>
 								</tr>
