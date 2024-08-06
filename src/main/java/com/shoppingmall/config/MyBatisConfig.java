@@ -35,7 +35,7 @@ public class MyBatisConfig {
     }
 
     @Bean(name="postgresqlSession")
-	public SqlSessionFactory sqlSessionFactory(@Qualifier("postgresqlDataSource") DataSource dataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("postgresqlDataSource") DataSource dataSource) throws Exception {
 		
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
 		sqlSessionFactory.setDataSource(dataSource);
@@ -44,7 +44,12 @@ public class MyBatisConfig {
 		
 		return sqlSessionFactory.getObject();
 	}
-    
+    /**
+     * @SqlSessionFactory : SqlSession 객체를 생성, SqlSessionTemplate을 생성하기도 한다. 
+     * @SqlSession : 'MyBatis와 데이터베이스 간의 모든 상호작용'을 처리하는 객체
+     * @SqlSessionTemplate : SqlSessionFactory를 사용하여 내부적으로 SqlSession을 생성
+     *  -  간편하게 MyBatis 기능을 사용, 프로젝트에서 BaseDao 클래스가 SqlSessionDaoSupport의 sqlsession 
+     * */
     @Bean(name = "postgresqlSessionTemplate")
     public SqlSessionTemplate firstSqlSessionTemplate(@Qualifier("postgresqlSession") SqlSessionFactory firstSqlSessionFactory) {
         return new SqlSessionTemplate(firstSqlSessionFactory);

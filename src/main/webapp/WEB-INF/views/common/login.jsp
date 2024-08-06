@@ -33,7 +33,9 @@ var LoginCtrl = {
 				console.log("로그인 성공 ===" );
 				console.log(result);
 				//결과 값 -> sessionStorage에 저장
-				 sessionStorage.setItem('loginMenu', JSON.stringify(result.loginMenu))
+				 sessionStorage.setItem('loginMenu', JSON.stringify(result.loginMenu));
+         sessionStorage.setItem('u_id', result.u_id);
+         sessionStorage.setItem('u_email', result.u_email);
 			},
 			error:function(e){
 				console.log(e);

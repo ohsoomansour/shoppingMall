@@ -56,7 +56,7 @@
 		</table>
     <div id="writing">
        <button>
-         <a href="/post/writing.do" id="writing_a" >글 작성</a>        
+         <a href="/post/getBulletinBoardTopub.do" id="writing_a" >글 작성</a>        
        </button>
     </div>  
 	</div>	

@@ -118,7 +118,7 @@ public class RequestInterceptor implements MethodInterceptor {
 						String name = iterator.next();
 						List<MultipartFile> values = mprequest.getFiles(name);
 						if (values == null || values.isEmpty()) continue;
-
+						
 						dataMap.putorg(name.replaceAll("[\\[\\] ]", ""), values);
 
 						if (logger.isDebugEnabled()) {

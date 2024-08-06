@@ -1,21 +1,15 @@
 package com.shoppingmall.post;
 import java.util.List;
-
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.shoppingmall.toaf.object.DataMap;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
+
 @Slf4j
 @Controller
 @RequestMapping("post")
@@ -65,9 +59,8 @@ public class PostAction {
 		//log.info("file ====> " + file);
 		log.info("paraMap ====> " + dataMap);
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("/post/list.do");
-			//int result = postService.doPublishPost(dataMap);
-		//log.info("result ====> " + result);
+		mav.setViewName("/post/list");
+
 		return mav;
 	}
 	

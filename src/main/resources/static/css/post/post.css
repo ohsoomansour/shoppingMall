@@ -17,5 +17,37 @@
   text-align: center;
 }
 
+.writing_post{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+}
+#writing_post_frm{
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* 요소들 사이의 간격 */
+  max-width: calc(100% - 500px); /* 폼의 최대 너비 */
+  margin: 0 auto; /* 폼을 가운데 정렬 */
+  
+}
+
+#writing_post_frm > div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#writing_post_frm > div > label{
+
+  width: 100px;
+  display: block;
+  text-align: center;
+}
+#writing_post_frm > div > input, textarea{
+  width: calc( 80% );
+  
+}
+
 
 

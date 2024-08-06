@@ -18,7 +18,7 @@ public class PostService extends BaseSvc<DataMap> {
 	}
 	
 	public int doPublishPost(DataMap dataMap) {
-	  return this.dao.updateQuery("PostSQL.doPublishPost", dataMap);
+	  return this.dao.insertQuery("PostSQL.doPublishPost", dataMap);
 	}
 	
 }

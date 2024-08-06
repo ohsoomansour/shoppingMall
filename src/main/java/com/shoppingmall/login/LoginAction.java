@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.shoppingmall.toaf.basemvc.BaseAct;
 import com.shoppingmall.toaf.object.DataMap;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -82,6 +80,8 @@ public class LoginAction  extends BaseAct {
     			DataMap userInfo = this.loginService.getOneUserInfo(dataMap);
     			log.info("userInfo:"+userInfo);
     			dataMap.put("u_type", userInfo.get("u_type"));
+    			mav.addObject("u_id", userInfo.get("u_id"));
+    			mav.addObject("u_email", userInfo.get("u_email"));
     			/*##List 객체는 순서가 있는 컬랙션 + 자동 조정
     			 * 다형성 :  상위 클래스 타입의 참조 변수를 통해서 하위 클래스의 객체를 참조할 수 있도록 허용
     			 * 
@@ -107,6 +107,9 @@ public class LoginAction  extends BaseAct {
     				loginMenu.add(list);
     				log.info("LoginController-loginMenu:" + loginMenu);
     				mav.addObject("loginMenu", loginMenu);
+
+    				
+    				//mav.addObject("no")
     			
     			}
     			

@@ -21,9 +21,26 @@
 	</select>	
 	
 	
-	<update id="PostSQL.doUpdateContent"  parameterType="dataMap" >
+	<insert id="PostSQL.doPublishPost"  parameterType="dataMap" >
 	  <![CDATA[
-
+        INSERT INTO 
+        (
+          u_id,
+          p_title,
+          p_desc,
+          p_img_url,
+          p_contents,
+          p_view
+        ) 
+        VALUES
+        (
+          u_id,
+          p_title,
+          p_desc,
+          p_img_url,
+          p_contents,
+          p_view 
+        )
       ]]>
-   </update>  
+   </insert>  
 </mapper>

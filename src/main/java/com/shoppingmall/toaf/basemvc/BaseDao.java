@@ -16,9 +16,10 @@ import com.shoppingmall.toaf.object.DataMap;
  * 패키지	: com.shoppingmall.toaf.basemvc
  * 설  명	: @Repository 어노테이션은 Spring의 @Component의 특수화된 형태로, '데이터 액세스 계층의 컴포넌트로 등록'
  *        
- *        @Resouce : 어노테이션은 BaseDao 컴포넌트가 초기화 될 때 요청된 리소스 postgresqlSession @Bean 을 주입 
+ *        @Resouce : 어노테이션은 BaseDao 컴포넌트가 초기화 될 때 요청된 리소스 'postgresqlSession' SqlSessionFactory
+ *        @Bean 을 주입 
  *        *the container will inject an instance of the requested resource 
- *        into the application component when the component is initialized.
+ *        into the application component(=@Repository) when the component is initialized.
  *        -> SqlSessionDaoSupport에서 상속받고 
  *        -> 언제? BaseDao 컴포넌트가 초기화 될 때 자원으로 주입 -> SqlSessionFactory를 설정, SqlSession template 설정
  *        -> getSqlSession() -> 반환: this.sqlSessionTemplate; -> DB에 SQL CRUD 쿼리 실행   
@@ -29,13 +30,14 @@ import com.shoppingmall.toaf.object.DataMap;
  * 
  * @param <D> - VO, DataMap 클래스
  */
+//@Repository=컴포넌트 
 @Repository
 public class BaseDao <D> extends SqlSessionDaoSupport {
 
-	/*
-	 * @Resource (name = "sqlSession") public void setSqlSessionFactory
-	 * (SqlSessionFactory sqlSession) { super.setSqlSessionFactory(sqlSession); }
-	 * 
+	/**
+	 * @(MyBatisConfig.java)의 postgresqlSession 소스를 SqlSessionFactory에 주입한다. 
+	 *  언제 ? BaseDao 컴포넌트가 초기화 될 때 
+	 *  목적은? sqlSessionTemplate을 생성하여 MyBatis 기능을 사용
 	 */
 	
 	@Resource (name="postgresqlSession")
