@@ -8,7 +8,10 @@ import org.springframework.web.servlet.ModelAndView;
 import jakarta.servlet.http.HttpSession;
 
 
-
+/**
+ * @WebMvcConfig : 여기에서 설정
+ * @참고 : AOP와별개 
+ * */
 
 @Slf4j							// HandlerInterceptor
 @Component   					//implements HandlerInterceptorAdapter

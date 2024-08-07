@@ -13,8 +13,37 @@
     <title>Members List</title>
 </head>
 <body>
- <script>
-
+ <script type="text/javascript">
+ function doReturnTest(e){
+    e.preventDefault();
+    /*
+    var form = $('#testt_frm')[0]; 
+    var data = new FormData(form);
+    */
+    let data ={
+      key1: "test@naver.com",
+      key2: "test2@google.com"
+    }
+    $.ajax({
+       url :'/admin/doTest.do',
+       type: "POST",
+       headers: {
+        "Content-Type":"application/json",
+       },
+       dataType:"json",
+       data: JSON.stringify(data),  
+       success: function(res){
+            // 요청이 성공한 경우 추가적인 작업 수행
+            console.log('result:'+ JSON.stringify(res));
+         },
+       error:function(e){
+        console.error(e);  
+       },
+       complete : function() {
+                
+       }
+   })
+ }
 
 
  function funcSignUpApproval(no){
@@ -23,8 +52,8 @@
 	 	  	     type : 'GET',
 	 	  	     url :'/admin/signUpApproval.do?u_id='+ no,
 	 	  	     headers: {
-					"Content-Type":"application/json;charset=utf-8",
-				  },			
+    					"Content-Type":"application/json;charset=utf-8",
+    				  },			
 	 	  	     dataType:'json',
 	 	  	     contentType: 'application/json', // 요청 본문의 타입을 JSON으로 설정
 	 	  	     success: function(res){
@@ -69,8 +98,9 @@
               </tr>
           </c:forEach>
           
-      </tbody>
-      
+      </tbody>        
+
+      <button onclick="doReturnTest(event);">리턴 타입 테스트</button>
   </table>
 
  </body>   

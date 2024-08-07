@@ -29,15 +29,16 @@
   console.log(form);
   console.log(data); //FormData {}라고 출력되는 것은 정상, 브라우저 콘솔에서 FormData 객체의 내용을 직접 표시할 수 없기 때문입니다.
   $.ajax({
-    url: "/post/pubPost.do",
+    url: "/vuePost/pubPost.do",
     type: "POST",
     enctype : 'multipart/form-data',
     processData: false,
     contentType : false,
     cache : false,
     data: data,
-    dataType: "json",
+    //dataType: "json",
     sucess: function(res){
+      console.log(res)
       alert('글 등록 성공!')
     },
     error: function(e){

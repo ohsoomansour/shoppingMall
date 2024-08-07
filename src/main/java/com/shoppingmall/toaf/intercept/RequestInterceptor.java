@@ -45,19 +45,23 @@ public class RequestInterceptor implements MethodInterceptor {
 	public Object invoke (MethodInvocation invocation) throws Throwable {
 
 		logger.info("RequestInterceptor start");
+		//invocation.getMethod().getReturnType().equals(DataMap.class)
 		//#Joint Point: 실제 타겟 메서드 호출
 		if (invocation.getMethod().getReturnType().equals(ModelAndView.class) ||
 			invocation.getMethod().getReturnType().equals(String.class) ||
-			invocation.getMethod().getReturnType().equals(Object.class)) {
+			invocation.getMethod().getReturnType().equals(Object.class) ||
+			invocation.getMethod().getReturnType().equals(DataMap.class)
+			) {
 
-		  logger.info("invocation.getMethod():" + invocation.getMethod()); //PostAction.doWriteContentsAction
+		  logger.info("invocation.getMethod():" + invocation.getMethod()); //AdminAction.doReturnTestAction
 			Class<?>[] params = invocation.getMethod().getParameterTypes();
 			logger.info("params:"+ Arrays.toString(params)); // 배열  [] 타입
 			//[com.shoppingmall.toaf.object.DataMap dataMap, jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response]
 			logger.info("actual params"+Arrays.toString(invocation.getMethod().getParameters()));
-			logger.info("invocation.getMethod().getParameterTypes()"+invocation.getMethod().getReturnType().equals(ModelAndView.class));
-			logger.info("invocation.getMethod().getParameterTypes()"+invocation.getMethod().getReturnType().equals(String.class));
-			logger.info("invocation.getMethod().getParameterTypes()"+invocation.getMethod().getReturnType().equals(Object.class));
+			logger.info("invocation.getMethod().getReturnType().equals(ModelAndView.class)"+invocation.getMethod().getReturnType().equals(ModelAndView.class));
+			logger.info("invocation.getMethod().getReturnType().equals(String.class)"+invocation.getMethod().getReturnType().equals(String.class));
+			logger.info("invocation.getMethod().getReturnType().equals(Object.class)"+invocation.getMethod().getReturnType().equals(Object.class));
+			logger.info("invocation.getMethod().getReturnType().equals(DataMap.class)"+invocation.getMethod().getReturnType().equals(DataMap.class));
 			int mapIndex = -1;
 			int reqIndex = -1;
 			for (int idx = 0; idx < params.length; idx++) {
@@ -82,8 +86,9 @@ public class RequestInterceptor implements MethodInterceptor {
 				while (enumeration.hasMoreElements()) {
 					String name = enumeration.nextElement(); //HTTP 요청에서 파라미터 이름을 읽어오는 코드
 					String[] vals = request.getParameterValues(name); //HttpServletRequest 객체를 사용하여 요청 파라미터를 읽어와
-
-					if (vals == null) continue;
+          
+					if (vals == null) continue; 
+				// ==================== 여기에서 컷  ===================
 					//HTTP 요청 파라미터 처리: 요청 파라미터의 이름이 "models"의 경우, models에 json ArrayList<DataMap> 객체 저장
 					if ("models".equals(name)) {
 						JSONArray jsonList = (JSONArray) JSONSerializer.toJSON(request.getParameter(name));
@@ -108,11 +113,11 @@ public class RequestInterceptor implements MethodInterceptor {
 						}
 					}
 				}
-						
+				// @Explain : 주로 폼 데이터에서 파일 업로드, 멀티파트 요청 		
 				if (request instanceof MultipartHttpServletRequest) {
 				  logger.info("============ RequestInterceptor - Multipart request 설정 ============");	
 					MultipartHttpServletRequest mprequest = (MultipartHttpServletRequest) request;
-
+					// 	`ArrayList`, `LinkedList`, `HashSet에서 컬렉션 사용 가능 
 					Iterator<String> iterator = mprequest.getFileNames();
 					while (iterator.hasNext()) {
 						String name = iterator.next();

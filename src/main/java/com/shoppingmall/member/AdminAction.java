@@ -1,11 +1,18 @@
 package com.shoppingmall.member;
+
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.shoppingmall.toaf.object.DataMap;
@@ -16,14 +23,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RequestMapping(value="/admin")
 @Controller
-public class AdminController {
+public class AdminAction {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	private AdminService adminService;
 	
 	
-	/* 
+	/** 
 	 *@Author: osm
 	 *@Date: 2024.5.9
 	 *@Param: - 
@@ -40,7 +47,7 @@ public class AdminController {
 		return mav;
 	}
 	
-	/* 
+	/** 
 	 *@Author: osm
 	 *@Date: 2024.5.12
 	 *@Param:  방법1. @ModelAttribute("seqno"):'일반 HTTP 요청 파라미터', 'seqno'은 실제 HTTP 요청의 파라미터 이름과는 다르며
@@ -61,17 +68,46 @@ public class AdminController {
 		return mav;
 	}
 	
+  /**
+   * @Date: 2024.08.07
+   * @Target : 반환 값이 ModelAndView에서 'jsonView' 또는 DataMap 가능   
+   * @Param  : @ModelAttribute ("paraMap") DataMap paraMap
+   *           @RequestParam Map<String, Object> paramMap
+   *             - GET 요청, URL 쿼리 스트링의 경우 매핑된다.
+   *             - 
+   *           @RequestBody Map<String, Object> paramMap
+   *             
+   *             - POST 요청, Request BODY 
+   *             - 헤더의 content-type : 
+   *               <data가javascript객체경우>
+   *               headers: {
+                    "Content-Type": "application/json", 
+                   },
+                   
+                   <form의경우>
+                   heasers: {
+                   	"Content-Type" : 'multipart/form-data'
+                   }
+                    
+   *           @RequestBody DataMap<String, Object> paramMap
+   *            - 개념: parameter(=paraMap) should be bound to the body of the web request 
 
-	@RequestMapping(value="/doTest.do") // HTTP 요청 파라미터를 객체로 바인딩
-	public ModelAndView doTest(@ModelAttribute ("paraMap") DataMap paraMap, HttpServletRequest request, HttpServletResponse response) {   //int seqno
-	
+   * @ReturnType1 :  @ResponseBody + DataMap (toaf)
+   * @ReturnType2 :  
+   * */
+	@RequestMapping("/doTest.do") // HTTP 요청 파라미터를 객체로 바인딩
+	@ResponseBody
+	public DataMap doReturnTestAction(@RequestBody DataMap paramMap, HttpServletRequest request, HttpServletResponse response) {   //int seqno
+		//방법1.	
 		ModelAndView mav = new ModelAndView("jsonView");
-		System.out.println("doTest:" + paraMap);
 		mav.addObject("status", "success");
-        mav.addObject("message", "This is a JSON response!");
-		//data.put("id", 'A');
-		//mav.addObject("id", data);
-		return mav;
+		mav.addObject("message", "This is a JSON response!");
+		//방법2.
+		log.info("parameter ======>"+ paramMap);
+		DataMap resultMap = new DataMap();
+		resultMap.put("test", "OK");
+	
+		return resultMap;
 	}
 	
 }
