@@ -85,25 +85,24 @@
         <artifactId>mybatis-spring-boot-starter</artifactId>
         <version>3.0.1</version>
     </dependency>
-    <!-- Mysql -->
+    <!-- Mysql Driver 제공(JDBC를 통해 MYSQL과 연결) -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>8.0.33</version>
     </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
-		
-        <dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-test</artifactId>
-		    <scope>test</scope>
-		    <exclusions>
-		      <exclusion>
-		       <groupId>org.junit.vintage</groupId>
-		       <artifactId>junit-vintage-engine</artifactId>
-		  	  </exclusion>
-		    </exclusions>
+		<!-- 스프링 부트, junit Test  -->
+    <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+    <exclusions>
+      <exclusion>
+       <groupId>org.junit.vintage</groupId>
+       <artifactId>junit-vintage-engine</artifactId>
+  	  </exclusion>
+    </exclusions>
 		</dependency> 
 		<dependency>
 		   <groupId>org.springframework.boot</groupId>

@@ -2,12 +2,26 @@
 spring:
   profiles:
     active: local # 사용할 환경 설정
+  
   datasource:
-    jdbcUrl: jdbc:mariadb://localhost:3306/maria
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: root
+    driverClassName: org.postgresql.Driver
+    jdbcUrl: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
     password: 284823
- 
+    
+  #datasource:
+    #jdbcUrl : jdbc:mysql://localhost:3307/mysql
+    #driver-class-name : com.mysql.cj.jdbc.Driver
+    #username: root
+    #password: 284823
+  #datasource:
+    #jdbcUrl: jdbc:mariadb://localhost:3306/maria
+    #driver-class-name: org.mariadb.jdbc.Driver
+    #username: root
+    #password: 284823
+    
+    
+     
   mvc:
     view: 
       prefix: /WEB-INF/views

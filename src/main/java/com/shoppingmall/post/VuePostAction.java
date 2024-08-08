@@ -1,5 +1,9 @@
 package com.shoppingmall.post;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +21,32 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 public class VuePostAction {
-
+	 
+		
+	 @Autowired
+	 PostService postService;
+	
+	 /**
+	 * @Function : 게시판 리스트 조회
+	 * @Param : - 
+	 * @Return : view()
+	 * */
+		
+		@GetMapping("/vuePost/list")
+		public Object getContentAction() {
+			List<DataMap> postList = postService.getAllPostsList();
+			log.info("postList" + postList);
+			DataMap postResult = new DataMap();
+			postResult.put("postList", postList);				
+			return postResult;
+		}
+		
+		/**
+		 * @Function : 게시판 리스트 조회
+		 * @Param : p_title, p_contents,  
+		 * @Return : - 
+		 * */
+		
 		@PostMapping("/vuePost/pubPost.do")
 		public Object postData(@ModelAttribute("paraMap") DataMap paraMap, HttpServletRequest request, HttpServletResponse response){
 				log.info("paraMap ====> " + paraMap);
@@ -26,4 +55,6 @@ public class VuePostAction {
 				result.put("key1", "아나! 성공!!");
 				return result;
 		}
+		
+		
 }
