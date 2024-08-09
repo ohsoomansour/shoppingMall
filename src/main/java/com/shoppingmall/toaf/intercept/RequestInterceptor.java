@@ -6,9 +6,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
-//import javax.servlet.http.HttpServletRequest; 2024.08.05 수정
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang.StringUtils;
@@ -19,10 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.shoppingmall.toaf.object.DataMap;
+
+//import javax.servlet.http.HttpServletRequest; 2024.08.05 수정
+import jakarta.servlet.http.HttpServletRequest;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
-import com.shoppingmall.toaf.object.DataMap;
 
 
 /**
@@ -50,7 +50,8 @@ public class RequestInterceptor implements MethodInterceptor {
 		if (invocation.getMethod().getReturnType().equals(ModelAndView.class) ||
 			invocation.getMethod().getReturnType().equals(String.class) ||
 			invocation.getMethod().getReturnType().equals(Object.class) ||
-			invocation.getMethod().getReturnType().equals(DataMap.class)
+			invocation.getMethod().getReturnType().equals(DataMap.class)||
+			invocation.getMethod().getReturnType().equals(void.class)
 			) {
 
 		  logger.info("invocation.getMethod():" + invocation.getMethod()); //AdminAction.doReturnTestAction
@@ -120,8 +121,10 @@ public class RequestInterceptor implements MethodInterceptor {
 					// 	`ArrayList`, `LinkedList`, `HashSet에서 컬렉션 사용 가능 
 					Iterator<String> iterator = mprequest.getFileNames();
 					while (iterator.hasNext()) {
+					logger.info("===========  mprequest.getFileNames() OK ========= ");
 						String name = iterator.next();
 						List<MultipartFile> values = mprequest.getFiles(name);
+						logger.info("========== name:" + name+ "========== ");
 						if (values == null || values.isEmpty()) continue;
 						
 						dataMap.putorg(name.replaceAll("[\\[\\] ]", ""), values);

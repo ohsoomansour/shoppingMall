@@ -38,11 +38,14 @@ spring:
       max-file-size: 2MB 
       max-request-size: 2MB
   
-    
+
+#오류 : this key is used in a map and contains special characters. it is recommended to escape it by surrounding it with '[]    
 logging:
   level:
-    ROOT: info #INFO, WARN, ERROR, FATAL 모두 표시 -> 하위 패키지 상속
-    com.shoppingmall.login : debug #특정 패키지 경로
+    root: INFO  #INFO, WARN, ERROR, FATAL 모두 표시 -> 하위 패키지 상속
+    '[com.shoppingmall.login]': DEBUG #특정 패키지 경로
+    '[com.shoppingmall.post]': DEBUG
+    '[com.shoppingmall.toaf.intercept]': debug
  
 #서버 포트
 server:
@@ -69,6 +72,8 @@ mybatis:
   mapper-locations: 
    - classpath:/sqlmap/**/*SQL.xml
 
+file: 
+  upload-dir: C:/Users/USER/Desktop/osm/file_upload
 
 
 

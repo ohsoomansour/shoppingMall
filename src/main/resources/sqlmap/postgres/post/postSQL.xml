@@ -9,7 +9,6 @@
 			   , tu.u_name
 			   , tu.u_type
 			   , p.p_title
-			   , p.p_desc
 			   , p.p_contents
 			   , p.p_view
 			   , p.created_at
@@ -20,26 +19,23 @@
 		]]>
 	</select>	
 	
-	
+	<!-- Postgresql -->
 	<insert id="PostSQL.doPublishPost"  parameterType="dataMap" >
 	  <![CDATA[
-        INSERT INTO 
+        INSERT INTO post
         (
-          u_id,
+          p_id
+          u_email,
           p_title,
-          p_desc,
-          p_img_url,
-          p_contents,
-          p_view
+          p_contents          
         ) 
         VALUES
         (
-          u_id,
-          p_title,
-          p_desc,
-          p_img_url,
-          p_contents,
-          p_view 
+          #{p_id}
+          #{u_email},
+          #{p_title},
+          #{p_contents}
+        
         )
       ]]>
    </insert>  

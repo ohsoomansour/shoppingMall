@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PostAction {
 	
 	@Autowired
-	PostService postService;
+	VuePostService postService;
 	
 	/**
 	 * @Function : 게시판 리스트 조회
@@ -67,6 +67,7 @@ public class PostAction {
           ) {
 		//log.info("u_email ====> " + u_email);
 		//log.info("file ====> " + file);
+		log.debug("pubPost debug");
 		log.info("paraMap ====> " + dataMap);
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("/post/list");
