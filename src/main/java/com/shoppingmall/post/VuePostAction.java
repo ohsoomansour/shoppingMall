@@ -71,39 +71,49 @@ public class VuePostAction {
 		
 		@PostMapping("/vuePost/pubPost.do")
 		public void postData(@ModelAttribute("paraMap") DataMap articleMap, HttpServletRequest request, HttpServletResponse response) throws IOException{
-				log.info("===== pubPost's Controller - paraMap ====> " + articleMap + "===============");
-				String realPath = "C:\\Users\\USER\\Desktop\\osm\\file_upload";
-			  String today = new SimpleDateFormat("yyMMdd").format(new Date());
-			  File folder = new File(realPath);
-			  if(!folder.exists()) {
-			  		folder.mkdirs();
-			  }
-			  boolean isList = articleMap.get("files") instanceof List;
-			  if(isList) {
-			  		@SuppressWarnings("unchecked")
-			  		List<MultipartFile> files  =   (List<MultipartFile>) articleMap.get("files");
-			  		List<Map<?, ?>> fileInfos = new ArrayList<Map<?, ?>>();
-			  		for(MultipartFile mfile: files) {
-			  				Map<String, Object> fileInfo = new HashMap<>();
-			  				String originalFileName = mfile.getOriginalFilename();
-			  				
-			  				if(!originalFileName.isEmpty()) {
-			  						String saveFileName = UUID.randomUUID().toString()
-			  										+ originalFileName.substring(originalFileName.lastIndexOf('.'));
-			  						fileInfo.put("regDate", today);
-			  						fileInfo.put("originalFileName", originalFileName);
-			  						fileInfo.put("saveFileName", saveFileName);
-			  						mfile.transferTo(new File(folder, saveFileName)); // 지정된 경로로 파일 이동
-			  				}
-			  				log.info("fileInfo =====================>" + fileInfo);
-			  				fileInfos.add(fileInfo);
-			  				log.info("fileInfos =====================>" + fileInfos); 
-			  		}
-			  		articleMap.putorg("fileInfos", fileInfos);
-			  }
-			  int cnt = postService.doPublishPost(articleMap);
-	
-		}
-		
-		
+		  //이미 로그인 후 u_email & u_id가 sessionStorage 에 저장 -> u_id & u_email를 post 작성 시 입력
+		  log.info("===== pubPost's Controller - paraMap ====> " + articleMap );
+	      
+	     
+		  int p_cnt = postService.doPublishPost(articleMap);
+		  log.debug("p_cnt ============> " + p_cnt);
+		  if(p_cnt > 0) {
+		  	int u_id = articleMap.getint("u_id");
+		  	String w_realPath = "C:\\Users\\USER\\Desktop\\osm\\file_upload\\" + u_id;
+		  	String m_realPath = "/Users/osoomansour/Desktop/sjht/files/u_id/" + u_id;
+		  	String today = new SimpleDateFormat("yyMMdd").format(new Date());
+		  	File folder = new File(m_realPath);
+		  	if(!folder.exists()) {
+		  		folder.mkdirs();
+		  	} 		 					
+		  	boolean isList = articleMap.get("files") instanceof List;
+		  	if(isList) {
+		  		// 파일 원본을 꺼내서 original / 저장 파일 이름으로 변경
+		  		@SuppressWarnings("unchecked")
+		  		List<MultipartFile> files  =   (List<MultipartFile>) articleMap.get("files");
+		  		List<Map<?, ?>> fileInfos = new ArrayList<>();
+		  		for(MultipartFile mfile: files) {
+		  			Map<String, Object> fileInfo = new HashMap<>();
+		  			String originalFileName = mfile.getOriginalFilename();
+		  			
+		  			if(!originalFileName.isEmpty()) {
+		  				String saveFileName = UUID.randomUUID().toString()
+		  						+ originalFileName.substring(originalFileName.lastIndexOf('.'));
+		  				fileInfo.put("regDate", today);
+		  				fileInfo.put("originalFileName", originalFileName);
+		  				fileInfo.put("saveFileName", saveFileName);
+		  				mfile.transferTo(new File(folder, saveFileName)); // 지정된 경로로 파일 이동
+		  			}
+		  			log.info("fileInfo =====================>" + fileInfo);
+		  			fileInfos.add(fileInfo);
+		  			log.info("fileInfos =====================>" + fileInfos); 
+		  		}
+		  		//
+		  		articleMap.putorg("fileInfos", fileInfos);
+		  	}
+		  	int f_cnt = postService.doSaveFile(articleMap);
+		  	log.info("게시 글 작성 cnt ======> " + f_cnt);
+		  }
+		  	
+		  }
 }

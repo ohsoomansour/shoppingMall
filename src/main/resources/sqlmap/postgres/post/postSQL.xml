@@ -19,24 +19,72 @@
 		]]>
 	</select>	
 	
-	<!-- Postgresql -->
+	<!-- Postgresql, 게시판 데이터 입 -->
 	<insert id="PostSQL.doPublishPost"  parameterType="dataMap" >
+	  /* ===== PostSQL.doPublishPost ===== */
 	  <![CDATA[
         INSERT INTO post
         (
-          p_id
+          p_id, 
+          u_id,
+          f_id,
           u_email,
           p_title,
           p_contents          
         ) 
         VALUES
         (
-          #{p_id}
-          #{u_email},
-          #{p_title},
-          #{p_contents}
-        
-        )
+            #{u_id}::INT
+          , #{u_id}::INT
+          , #{u_id}::INT  
+          , #{u_email}
+          , #{p_title}
+          , #{p_contents}
+        ) 
       ]]>
    </insert>  
+   <insert id = "PostSQL.doSaveFile" parameterType="dataMap">
+     /* ===== PostSQL.doSaveFile ===== */
+		<![CDATA[
+			INSERT INTO file_info
+			(
+			   p_id
+			  ,u_id
+				,reg_date
+				,original_file
+				,save_file
+	       
+			) 
+		  VALUES
+		  (  
+		      #{u_id}::INT
+		    , #{u_id}::INT
+		  	, #{reg_date}
+		  	, #{original_file}
+		  	, #{save_file}
+		  )
+		]]>   
+   </insert>
+   <insert id="PostSQL.doSaveFiles" parameterType="dataMap" >
+     /* collection은 parameter 안에 fileInfos 키 값이 존재해야 한다. */
+       <foreach collection="fileinforms" item="item" separator=";" > 
+	       INSERT INTO file_info
+	       (
+	          p_id
+	         ,u_id
+	         ,reg_date
+	         ,original_file
+	         ,save_file
+	       )
+	       VALUES
+	         (
+		         #{u_id}::INT,
+	           #{u_id}::INT,
+	           #{item.regDate},
+	           #{item.originalFileName},
+	           #{item.saveFileName} 
+	         )
+       </foreach>
+   </insert>
+   
 </mapper>
