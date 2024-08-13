@@ -51,7 +51,9 @@ public class RequestInterceptor implements MethodInterceptor {
 			invocation.getMethod().getReturnType().equals(String.class) ||
 			invocation.getMethod().getReturnType().equals(Object.class) ||
 			invocation.getMethod().getReturnType().equals(DataMap.class)||
-			invocation.getMethod().getReturnType().equals(void.class)
+			invocation.getMethod().getReturnType().equals(void.class) || 
+			invocation.getMethod().getReturnType().equals(int.class) 
+			
 			) {
 
 		  logger.info("invocation.getMethod():" + invocation.getMethod()); //AdminAction.doReturnTestAction

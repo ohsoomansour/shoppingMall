@@ -1,21 +1,13 @@
 package com.shoppingmall.post;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.shoppingmall.toaf.basemvc.BaseSvc;
 import com.shoppingmall.toaf.object.DataMap;
-
 import lombok.extern.slf4j.Slf4j;
-
-
 
 @Slf4j
 @Service
@@ -39,7 +31,7 @@ public class VuePostService extends BaseSvc<DataMap> {
     	//[파일 테이블] 
     	Object filesObject = articleMap.get("fileInfos");
 			if(filesObject instanceof Object) {
-				log.info("================ isObjecT?" + filesObject+ "==========================="); 
+				log.info("================ isObjecT?" + filesObject + "==========================="); 
 				
 			  int u_id = articleMap.getint("u_id");
 			  log.info("u_id ===========================> " + u_id);

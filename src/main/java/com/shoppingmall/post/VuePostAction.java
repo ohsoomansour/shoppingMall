@@ -73,8 +73,6 @@ public class VuePostAction {
 		public void postData(@ModelAttribute("paraMap") DataMap articleMap, HttpServletRequest request, HttpServletResponse response) throws IOException{
 		  //이미 로그인 후 u_email & u_id가 sessionStorage 에 저장 -> u_id & u_email를 post 작성 시 입력
 		  log.info("===== pubPost's Controller - paraMap ====> " + articleMap );
-	      
-	     
 		  int p_cnt = postService.doPublishPost(articleMap);
 		  log.debug("p_cnt ============> " + p_cnt);
 		  if(p_cnt > 0) {

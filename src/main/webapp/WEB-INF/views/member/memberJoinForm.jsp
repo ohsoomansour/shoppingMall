@@ -96,15 +96,7 @@ $(document).ready(function(){
 		}
 	});
 	// 비즈니스 계정이 주소 직접 입력이 아닌 경우
-	$('#bizEmail2').keyup(function(){
-		$(this).val($(this).val().replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, ''));
-		if($('#bizEmail3').val() !== "직접입력"){
-			$('#bizEmail3').val() !== "직접입력";
-			console.log("틀림 " + $('#bizEmail3').val());
-		}
-	});
-	
-	
+
 	// 아이디 중복체크 클릭
 	$("#btnIdCheck").click(function(){
 		fncDoubleCheck("ID");
@@ -318,7 +310,7 @@ function changeText(text, id){
 											</div>
 											<div class="box_radioinp">
 												<input type="radio" class="inp_radio" name="u_type"
-													id="G" value="CUSTOMER" title="G" /><label for="G"
+													id="CUSTOMER" value="CUSTOMER" title="CUSTOMER" /><label for="CUSTOMER"
 													class="lab_radio"><span class="icon ico_radio"></span>일반 고객</label>
 											</div>
 										</div>

@@ -8,6 +8,8 @@ import com.shoppingmall.member.model.Member;
 import com.shoppingmall.toaf.basemvc.BaseSvc;
 import com.shoppingmall.toaf.object.DataMap;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service       //REQUIRED: 현재 트랜잭션이 존재하면 그 트랜잭션 내에서 실행하고, 존재하지 않으면 새로운 트랜잭션을 시작 즉, 메소드가 항상 트랜잭션 내에서 실행되도록 보장
 @Transactional(value="postgresqlTransactionManager", propagation= Propagation.REQUIRED, rollbackFor=Exception.class)
 public class MemberFrontService extends BaseSvc<DataMap>{ 
@@ -17,18 +19,22 @@ public class MemberFrontService extends BaseSvc<DataMap>{
 		return this.dao.countQuery("V_MemberSQL.doCountMemberId", paraMap);
 	}
 	/* 회원 */
-	public void doInsertMember(DataMap paraMap) {
+	public int doInsertMember(DataMap paraMap) {
 		String bizEmail = paraMap.getstr("biz_email1")
 				+ "@" + paraMap.getstr("biz_email2");
 		paraMap.put("biz_email", bizEmail);
-		String member_type = paraMap.getstr("member_type");
-		if(member_type.equals("G") ||  member_type.equals("A")) {
-			paraMap.put("agree_flag", false);
-		}else{
+
+		String u_type = paraMap.getstr("u_type");
+		log.info("u_type ===========>"+ u_type);
+		if(u_type.equals("CUSTOMER")) {
+			 paraMap.put("agree_flag", false);
+			 log.info("agree_flag==============>" + paraMap);
+		}else if(u_type.equals("A")){
 			paraMap.put("agree_flag", true);
+			log.info("agree_flag==============>" + paraMap);
 		}
 		
-		this.dao.insertQuery("V_MemberSQL.doInsertMember", paraMap);
+		return this.dao.insertQuery("V_MemberSQL.doInsertMember", paraMap);
 	}
 	
 }
