@@ -1,24 +1,28 @@
 package com.shoppingmall.login;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.shoppingmall.toaf.object.DataMap;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
 @RestController
 public class VueLoginAction {
+		
 		@Autowired
 		private LoginService loginService;
 
@@ -47,16 +51,25 @@ public class VueLoginAction {
 		 *@Param: 
 		 *@Return:
 		 *@Function: 로그인 
+		 *@ModelAttribute HTTP 요청 파라미터를 자바 객체에 바인딩
 		 *@Test1 : 반환 갑이 ModelAndView 형태는 REST API에서 적절하지 않음 
-		 *@Test2 : Map<String, Object> 또는 DataMap 형태가 적절 
-		 */ 
+		 *@Test2 : request body 값(= FormData) => @RequestBody Map<String, Object> userMap (O)
+		 * - Annotation indicating a method parameter should be bound to the body of the web 
+		 * - HTTP 요청 본문을 메서드의 파라미터로 지적된 자바 객체애 바인딩
+		 *
+		  @Test3 : 클라이언트, request body 값 => @RequestBody DataMap userMap (x)
+		  -> DataMap userMap은 (사용자 정의)모델이다. 따라서 요청 body에 바인딩이 안됨 그러나 Map<String, Object> userMap은 가능
+		           클라이언트, request body 값({u_email:this.u_email, u_pw:this.p_pw}) => @ModelAttribute  DataMap userMap (x)
+		 					 					request body 값(= FormData) => @ModelAttribute  DataMap userMap (O)
+		 					 					->Annotation that binds a method parameter (or method return value )to a named 'model attribute'
+		 					 					-> @
+		 */   
 		
 		//dataMap :
-	    @RequestMapping(value="loginx.do", method = RequestMethod.POST) 
-	    public ModelAndView doLogin(@RequestBody DataMap userMap) {
+	    @PostMapping("/login/Vueloginx.do")
+	    public int doLogin(@RequestBody Map<String, Object> userMap,  HttpServletRequest request, HttpServletResponse response) throws IOException {
 	    	
-	    	ModelAndView mav = new ModelAndView("jsonView");
-	    	log.info("login's userMap:" + userMap);
+	    	log.info("login's userMap =============>" + userMap);
 	    	String error_code = "1";
 	    	String error_mesg = "로그인 실패 했습니다.";
 	    	String result;
@@ -77,8 +90,8 @@ public class VueLoginAction {
 	    			DataMap userInfo = this.loginService.getOneUserInfo(dataMap);
 	    			log.info("userInfo:"+userInfo);
 	    			dataMap.put("u_type", userInfo.get("u_type"));
-	    			mav.addObject("u_id", userInfo.get("u_id"));
-	    			mav.addObject("u_email", userInfo.get("u_email"));
+	    		  //mav.addObject("u_id", userInfo.get("u_id"));
+	    			//mav.addObject("u_email", userInfo.get("u_email"));
 
 	    			List<DataMap> listUserMenuAttr = loginService.getUserMenuByMembertype(dataMap);
 	    			List<DataMap> loginMenu = new ArrayList<DataMap>();
@@ -99,7 +112,7 @@ public class VueLoginAction {
 	    				
 	    				loginMenu.add(list);
 	    				log.info("LoginController-loginMenu:" + loginMenu);
-	    				mav.addObject("loginMenu", loginMenu);
+	    				//mav.addObject("loginMenu", loginMenu);
 
 	    				
 	    				//mav.addObject("no")
@@ -110,11 +123,11 @@ public class VueLoginAction {
 	    
 	    	} catch(Exception e) {
 	    		System.out.println(e);
-	    		mav.addObject("result_code", error_code);
-	    		mav.addObject("result_mesg", error_mesg );
+	    		//mav.addObject("result_code", error_code);
+	    		//mav.addObject("result_mesg", error_mesg );
 	    	}
 	    	
-	    	return mav;
+	    	return 1;
 	    }
 	    
 		

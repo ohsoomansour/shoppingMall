@@ -37,7 +37,19 @@ spring:
       enabled: true
       max-file-size: 2MB 
       max-request-size: 2MB
-  
+      
+  mail:
+      host: smtp.gmail.com
+      port: 587
+      username: ceoosm
+      password:        # 앱 비밀번호는 구글 계정, 16자리 설정 
+      properties:
+        mail:
+          smtp:
+            auth: true
+            timeout : 5000
+            starttls:
+              enable: true
 
 #오류 : this key is used in a map and contains special characters. it is recommended to escape it by surrounding it with '[]    
 logging:
@@ -76,6 +88,7 @@ file:
   upload-dir: C:/Users/USER/Desktop/osm/file_upload
 
 
+# application.properties
 
 
             
