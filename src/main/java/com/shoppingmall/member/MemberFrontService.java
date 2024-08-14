@@ -36,5 +36,10 @@ public class MemberFrontService extends BaseSvc<DataMap>{
 		
 		return this.dao.insertQuery("V_MemberSQL.doInsertMember", paraMap);
 	}
+	//2024.08.14 작성 : 비밀번호 변경 요청 사용자 계정, 인증 번호 - String u_email, String authNum
+	public int setTempPassword(DataMap userMap) {
+			//유저 아이디로 찾아서 임시 패스워드 컬럼에 끼워 넣고
+			return this.dao.insertQuery("V_MemberSQL.doSetTempPassword", userMap);
+	}
 	
 }

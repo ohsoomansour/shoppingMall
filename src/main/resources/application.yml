@@ -19,14 +19,13 @@ spring:
     #driver-class-name: org.mariadb.jdbc.Driver
     #username: root
     #password: 284823
-    
-    
-     
+       
   mvc:
     view: 
       prefix: /WEB-INF/views
       suffix: .jsp
-      
+    static-path-pattern: /static/** #spring mvc 정적경로 변경  
+    
   devtools:
     livereload: # 서버 자동 재가동: JSP수정시 서버 재시작없이 바로 적용될 수 있게 설정
       enabled: true
@@ -39,17 +38,27 @@ spring:
       max-request-size: 2MB
       
   mail:
-      host: smtp.gmail.com
-      port: 587
-      username: ceoosm
-      password:        # 앱 비밀번호는 구글 계정, 16자리 설정 
+      host: smtp.gmail.com #SMTP 서버 호스트
+      port: 587 #SMTP 서버 포트 
+      username: ceoosm # SMTP 서버 로그인 아이디: 발신자 (ceoosm@gmail.com)
+      password: syyj qhda wsgv gqdr # 앱 비밀번호는 구글 계정, 16자리 자동 설정 됨 
       properties:
         mail:
           smtp:
-            auth: true
-            timeout : 5000
+            auth: true #사용자 인증 시도 여부
+            timeout : 5000 #Socekt Reaad Time out 
             starttls:
               enable: true
+              
+  thymeleaf:
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+
+    
+    
+                  
 
 #오류 : this key is used in a map and contains special characters. it is recommended to escape it by surrounding it with '[]    
 logging:

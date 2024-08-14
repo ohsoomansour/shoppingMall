@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="VueLoginSQL"> 
+    <!-- SQL ID : LoginSQL.countUserInfo -->
+    <select id="VueLoginSQL.countUserInfo" resultType="int">
+        <![CDATA[
+            SELECT COUNT(*)
+            FROM tb_user
+            WHERE u_email = #{userid} 
+              AND u_pw = #{userpw}
+              AND AGREE_FLAG <> 'N'
+        ]]>
+    </select>
+
+    <!-- SQL ID: LoginSQL.getOneUserInfo -->
+    <select id="VueLoginSQL.getOneUserInfo" parameterType="dataMap" resultType="dataMap">
+        <![CDATA[
+            SELECT  
+                u_id
+               ,u_email
+               ,u_pw
+               ,u_type
+                 
+            FROM 
+                tb_user
+            WHERE
+                u_email = #{u_email}
+        ]]>
+    </select>
+    
+    <!-- 사용자 메뉴 권한 -->
+    <!-- SQL ID: LoginSQL.getUserMenuByMembertype -->
+    <select id="VueLoginSQL.getUserMenuByMembertype" parameterType="dataMap" resultType="dataMap">
+        <![CDATA[
+            SELECT  tm.menu_id AS id,
+                    tm.menu_name AS name,
+                    tm.parent_menu_id,
+                    tm.menu_url,
+                    tm.depth,
+                    tm.auth_seqno
+            FROM tb_menu tm
+            WHERE EXISTS(
+                    SELECT 1
+                    FROM tb_menu_auth tma
+                    WHERE tma.menu_id = tm.menu_id
+                      AND (
+                          (#{u_type} = 'A' AND tma.member_type IN ('A', 'CUSTOMER'))
+                          OR tma.member_type = #{u_type}
+                      )
+                ) 
+                AND tm.depth = 0
+            ORDER BY tm.menu_seqno 
+        ]]>
+    </select>
+    
+    <!-- 사용자 자식 메뉴 권한 -->
+    <!-- SQL ID: LoginSQL.getUserChildMenuByMembertype -->
+    <select id="VueLoginSQL.getUserChildMenuByMembertype" parameterType="dataMap" resultType="dataMap">
+        <![CDATA[
+            SELECT  tm.menu_id AS id,
+                    tm.menu_name AS name,
+                    tm.menu_url,
+                    tm.depth,
+                    tm.auth_seqno
+            FROM tb_menu tm
+            WHERE EXISTS(
+                    SELECT 1
+                    FROM tb_menu_auth tma
+                    WHERE tma.menu_id = tm.menu_id 
+                      AND (
+                          (#{u_type} = 'A' AND tma.member_type IN ('A', 'CUSTOMER'))
+                          OR tma.member_type = #{u_type}
+                      )
+                ) 
+                AND depth = 1
+                AND tm.parent_menu_id = #{parent_menu_id}
+            ORDER BY tm.menu_seqno
+        ]]>
+    </select>
+</mapper>

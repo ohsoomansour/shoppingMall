@@ -153,6 +153,19 @@
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>	
 		</dependency>
+		<!-- smtp -->
+		<dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-mail</artifactId>
+        <version>3.3.2</version>
+    </dependency>
+    <!-- thymeleaf-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        <version>3.0.0</version>
+    </dependency>
+
 	</dependencies>
 
 	<build>

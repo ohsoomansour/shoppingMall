@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.shoppingmall.toaf.object.DataMap;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class VueLoginAction {
 		
 		@Autowired
-		private LoginService loginService;
+		private VueLoginService vueLoginService;
 
 	   /**
 		 *@Author:osm
@@ -67,69 +67,70 @@ public class VueLoginAction {
 		
 		//dataMap :
 	    @PostMapping("/login/Vueloginx.do")
-	    public int doLogin(@RequestBody Map<String, Object> userMap,  HttpServletRequest request, HttpServletResponse response) throws IOException {
-	    	
-	    	log.info("login's userMap =============>" + userMap);
-	    	String error_code = "1";
-	    	String error_mesg = "로그인 실패 했습니다.";
-	    	String result;
-	    	String resultMsg;
-	    	
-	    	
-	    	DataMap dataMap = new DataMap();
-	    	
-	    	try {
-	    		
-	    		dataMap.put("u_email", userMap.get("u_email")); 
-	        dataMap.put("u_pw", userMap.get("u_pw"));
-	    		boolean loginResult = this.loginService.login(dataMap);
+	    public DataMap doLogin(@RequestBody Map<String, Object> userMap,  HttpServletRequest request, HttpSession session) throws IOException {
+	    		log.info("login's userMap =============>" + userMap);
+
+  	    	
+  	    	//로그인 역할에 따른 메뉴 대시보드
+  	    	
+  	    	
+  	    	String error_code = "1";
+  	    	String error_mesg = "로그인 실패 했습니다.";
+  	    	String result;
+  	    	String resultMsg;
+  	    	
+  	   try {
+  	  		List<DataMap> loginMenu = new ArrayList<DataMap>();
+     	    DataMap dataMap = new DataMap();
+     	    log.info("u_email ======>" +  userMap.get("u_email"));
+     	    log.info("u_pw ======>" +  userMap.get("u_pw"));
+     	    
+         	dataMap.put("u_email", userMap.get("u_email")); 
+         	dataMap.put("u_pw", userMap.get("u_pw"));
+         	DataMap userInfo = this.vueLoginService.getOneUserInfo(dataMap); //userInfo는 u_pw를 가져와서 안됨
+	        session.setAttribute("u_email", dataMap.get("u_email"));
+	    		boolean loginResult = this.vueLoginService.login(dataMap);
+	    		log.info("loginResult=========>" + loginResult);
 	    		log.info("loginResult===============>" +  loginResult);
 	    		if(loginResult) {
 	    			result = "SUCCESS";
-	    			
-	    			DataMap userInfo = this.loginService.getOneUserInfo(dataMap);
-	    			log.info("userInfo:"+userInfo);
 	    			dataMap.put("u_type", userInfo.get("u_type"));
-	    		  //mav.addObject("u_id", userInfo.get("u_id"));
-	    			//mav.addObject("u_email", userInfo.get("u_email"));
+	    			dataMap.put("u_id", userInfo.get("u_id"));
+	    			session.setAttribute("u_type", userInfo.get("u_type"));
+	    			session.setAttribute("u_id", userInfo.get("u_id"));
 
-	    			List<DataMap> listUserMenuAttr = loginService.getUserMenuByMembertype(dataMap);
-	    			List<DataMap> loginMenu = new ArrayList<DataMap>();
+	    			List<DataMap> listUserMenuAttr = vueLoginService.getUserMenuByMembertype(dataMap);
+	    			
 	    			log.info("listUserMenuAttr:"+listUserMenuAttr);
 	    			for(DataMap list : listUserMenuAttr) {
-	    				log.info("list:" + list);
-	    				DataMap resultMapSub = new DataMap();
-	    				resultMapSub.put("u_email", userInfo.get("u_email"));
-	    				resultMapSub.put("parent_menu_id", list.get("menu_id"));  //0depth - 예)A0
-	    				resultMapSub.put("u_type", userInfo.get("u_type")); //A		    
-					    list.put("children", loginService.getUserChildMenuByMembertype(resultMapSub));
-					    /* 2024.08.04 적합 
-					     * list:{menu_id=A0, text=회원관리, parent_menu_id=A0, menu_url=/admin/memberList.do, depth=0, auth_seqno=1,
-					     *      children=[{menu_id=A1, text=회원 정보 수정, menu_url=/admin/AeditMember.do, depth=1, auth_seqno=2}, {menu_id=A2, text=포인트 얻기, menu_url=/admin/getPoint.do, depth=1, auth_seqno=3}]}
+	    				
+	    				/* ##################### 08.14 확인 중 ##########################################
+	    				 * list:{id=A0, name=회원관리, parent_menu_id=A0, menu_url=/admin/memberList.do, depth=0, auth_seqno=1,
+	    				 *      children=[{id=A1, name=회원 정보 수정, menu_url=/admin/AeditMember.do, depth=1, auth_seqno=2}, {menu_id=A2, text=포인트 얻기, menu_url=/admin/getPoint.do, depth=1, auth_seqno=3}]}
 	    				 * ##menuList로 변경
-	    				 * 
-	    				*/
-	    				
+	    				 * */
+	    				DataMap resultMapSub = new DataMap();
+	    				log.info("list.get(\"u_email\") ======> + userInfo.get(\"u_email\")");
+	    				resultMapSub.put("u_email", userInfo.get("u_email"));
+	    				log.info("list.get(\"id\") ======> " + list.get("id"));
+	    				resultMapSub.put("parent_menu_id", list.get("id"));  //0depth - 예)A0
+	    				log.info("userInfo.get(\"u_type\") ====>" + userInfo.get("u_type"));
+	    				resultMapSub.put("u_type", userInfo.get("u_type")); //A		    
+					    list.put("children", vueLoginService.getUserChildMenuByMembertype(resultMapSub));
+					    log.info("list ============> :" + list);
 	    				loginMenu.add(list);
-	    				log.info("LoginController-loginMenu:" + loginMenu);
-	    				//mav.addObject("loginMenu", loginMenu);
-
-	    				
-	    				//mav.addObject("no")
-	    			
-	    			}
-	    			
-	    		}
-	    
-	    	} catch(Exception e) {
+	    				session.setAttribute("loginMenu", loginMenu);			
+	    			} 
+	    			dataMap.put("loginMenu", loginMenu);
+	    			log.info("catch =========");
+	    			return dataMap;
+	    		} 
+	    	} catch (Exception e) {
 	    		System.out.println(e);
-	    		//mav.addObject("result_code", error_code);
-	    		//mav.addObject("result_mesg", error_mesg );
 	    	}
-	    	
-	    	return 1;
-	    }
-	    
-		
-		
+  	    log.info("here================");
+  	    DataMap failMap = new DataMap();
+  			return failMap;
+	   }
+	   
 }

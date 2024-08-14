@@ -44,4 +44,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 		]]>
 	
 	</insert>
+	<update id="V_MemberSQL.doSetTempPassword" parameterType="dataMap">
+  	 <!-- 임시 비밀번호가 현재 비밀번호로 설정 -> 로그인 가능-->
+  	 UPDATE tb_user
+  	 SET u_pw = #{auth_num}
+  	 WHERE biz_email = #{biz_email}
+	</update>
+	
 </mapper>
