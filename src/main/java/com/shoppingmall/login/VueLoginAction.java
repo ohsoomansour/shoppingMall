@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.shoppingmall.toaf.object.DataMap;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,6 +49,7 @@ public class VueLoginAction {
 	   /**
 		 *@Author:osm
 		 *@Date: 2024.08.13
+		 *@UpdatedDate: 2024.08.14 
 		 *@Param: 
 		 *@Return:
 		 *@Function: 로그인 
@@ -62,24 +64,21 @@ public class VueLoginAction {
 		           클라이언트, request body 값({u_email:this.u_email, u_pw:this.p_pw}) => @ModelAttribute  DataMap userMap (x)
 		 					 					request body 값(= FormData) => @ModelAttribute  DataMap userMap (O)
 		 					 					->Annotation that binds a method parameter (or method return value )to a named 'model attribute'
-		 					 					-> @
+		 					 					, HttpSession session
+		 					 					 					
 		 */   
 		
-		//dataMap :
 	    @PostMapping("/login/Vueloginx.do")
-	    public DataMap doLogin(@RequestBody Map<String, Object> userMap,  HttpServletRequest request, HttpSession session) throws IOException {
-	    		log.info("login's userMap =============>" + userMap);
-
-  	    	
-  	    	//로그인 역할에 따른 메뉴 대시보드
-  	    	
-  	    	
+	    public void doLogin(@RequestBody Map<String, Object> userMap, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    	try {	
+	    	log.info("login's userMap =============>" + userMap);
+	    		
   	    	String error_code = "1";
   	    	String error_mesg = "로그인 실패 했습니다.";
   	    	String result;
   	    	String resultMsg;
   	    	
-  	   try {
+  	   
   	  		List<DataMap> loginMenu = new ArrayList<DataMap>();
      	    DataMap dataMap = new DataMap();
      	    log.info("u_email ======>" +  userMap.get("u_email"));
@@ -88,7 +87,7 @@ public class VueLoginAction {
          	dataMap.put("u_email", userMap.get("u_email")); 
          	dataMap.put("u_pw", userMap.get("u_pw"));
          	DataMap userInfo = this.vueLoginService.getOneUserInfo(dataMap); //userInfo는 u_pw를 가져와서 안됨
-	        session.setAttribute("u_email", dataMap.get("u_email"));
+	        //session.setAttribute("u_email", dataMap.get("u_email"));
 	    		boolean loginResult = this.vueLoginService.login(dataMap);
 	    		log.info("loginResult=========>" + loginResult);
 	    		log.info("loginResult===============>" +  loginResult);
@@ -96,8 +95,8 @@ public class VueLoginAction {
 	    			result = "SUCCESS";
 	    			dataMap.put("u_type", userInfo.get("u_type"));
 	    			dataMap.put("u_id", userInfo.get("u_id"));
-	    			session.setAttribute("u_type", userInfo.get("u_type"));
-	    			session.setAttribute("u_id", userInfo.get("u_id"));
+	    			//session.setAttribute("u_type", userInfo.get("u_type"));
+	    			//session.setAttribute("u_id", userInfo.get("u_id"));
 
 	    			List<DataMap> listUserMenuAttr = vueLoginService.getUserMenuByMembertype(dataMap);
 	    			
@@ -119,18 +118,18 @@ public class VueLoginAction {
 					    list.put("children", vueLoginService.getUserChildMenuByMembertype(resultMapSub));
 					    log.info("list ============> :" + list);
 	    				loginMenu.add(list);
-	    				session.setAttribute("loginMenu", loginMenu);			
+	    				//session.setAttribute("loginMenu", loginMenu);			
 	    			} 
 	    			dataMap.put("loginMenu", loginMenu);
 	    			log.info("catch =========");
-	    			return dataMap;
+	    			//return dataMap;
 	    		} 
 	    	} catch (Exception e) {
 	    		System.out.println(e);
 	    	}
   	    log.info("here================");
   	    DataMap failMap = new DataMap();
-  			return failMap;
+  			//return failMap;
 	   }
 	   
 }

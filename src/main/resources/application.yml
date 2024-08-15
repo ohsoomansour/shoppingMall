@@ -41,7 +41,7 @@ spring:
       host: smtp.gmail.com #SMTP 서버 호스트
       port: 587 #SMTP 서버 포트 
       username: ceoosm # SMTP 서버 로그인 아이디: 발신자 (ceoosm@gmail.com)
-      password: syyj qhda wsgv gqdr # 앱 비밀번호는 구글 계정, 16자리 자동 설정 됨 
+      password:  # 앱 비밀번호는 구글 계정, 16자리 자동 설정 됨 
       properties:
         mail:
           smtp:
