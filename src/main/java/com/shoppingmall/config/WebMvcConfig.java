@@ -25,14 +25,21 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	@Autowired
 	private RequestInterceptor requestInterceptor;
 	
-
+	/**
+	 * @UpdatedDate: 2024.08.15 localhost:8080에서 *(전체)로 변경
+	 * @addMapping : 모든 경 서브 경로를 포함
+	 *  - 예) /send-mail/email
+	 * @allowedOrigins : 모든 출처(=도메인) localhost:8080를 의미
+	 * @alloowedMethods : GET, POST, PUT, DELETE를 의미
+	 * @allowCreddentials: true와 false 의미 - 쿠키나 인증 헤더를 포함하는 허용하고 싶다면 'true' 그리고 allowedOrigins에 특정 출처를 설정 
+	 * */
   @Override
   public void addCorsMappings(CorsRegistry registry) {
       registry.addMapping("/**")
-              .allowedOrigins("http://localhost:8088")
-              .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+              .allowedOrigins("*") 
+              .allowedMethods("*") //GET", "POST", "PUT", "DELETE", "OPTIONS
               .allowedHeaders("*")
-              .allowCredentials(true);
+              .allowCredentials(false);
   }
 	// 가로채는 경로 설정 가능
     @Override
