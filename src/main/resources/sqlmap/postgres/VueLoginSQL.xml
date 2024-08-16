@@ -33,7 +33,7 @@
     <select id="VueLoginSQL.getUserMenuByMembertype" parameterType="dataMap" resultType="dataMap">
         <![CDATA[
             SELECT  tm.menu_id AS id,
-                    tm.menu_name AS name,
+                    tm.menu_name AS title,
                     tm.parent_menu_id,
                     tm.menu_url,
                     tm.depth,
@@ -58,7 +58,7 @@
     <select id="VueLoginSQL.getUserChildMenuByMembertype" parameterType="dataMap" resultType="dataMap">
         <![CDATA[
             SELECT  tm.menu_id AS id,
-                    tm.menu_name AS name,
+                    tm.menu_name AS title,
                     tm.menu_url,
                     tm.depth,
                     tm.auth_seqno
