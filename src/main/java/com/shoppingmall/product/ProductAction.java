@@ -17,7 +17,7 @@ public class ProductAction {
 		
 		@GetMapping("/products")
 		public List<DataMap> doGetProduct(){
-				Map<String, Object> result = new HashMap<>();
+
 			  List<DataMap> products = this.productService.getProducts();
 				
 				return products;
