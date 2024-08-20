@@ -1,6 +1,9 @@
 package com.shoppingmall.websocket;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
@@ -8,6 +11,10 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shoppingmall.toaf.object.DataMap;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,17 +63,43 @@ public class SalesWebSocketHandler extends TextWebSocketHandler  {
 		@Override
 		protected void handleTextMessage(WebSocketSession session, TextMessage msg) throws Exception 
 		{
+
+				ObjectMapper objectMapper = new ObjectMapper(); //ObjectMapper를 사용하여 적절히 파싱
+				String id = session.getId();
+				log.info("msg ========>" + msg);
+				Integer id0Total = 0;
+				Integer id1Total = 0;
+	
+				//List<Map<String, Object>> orders = objectMapper.readValue(msg.getPayload(), new TypeReference<List<Map<String, Object>>>() {});
+				List<Map<String, Object>> orders = objectMapper.readValue(msg.getPayload(), new TypeReference<List<Map<String, Object>>>() {});
+				
+				log.info("orders ===============>" + orders);
+				DataMap orderMap = new DataMap();
+				List<DataMap> salesMapList = new ArrayList<DataMap>();
+				for (Map<String, Object> order : orders) {
+            log.info("Order received: =======> " +  order);
+            //{id=0, name=sample cosmetic, price=11000, quantity=11}
+            //{id=1, name=쌔럼 , price=13000, quantity=12}
+            if((Integer) order.get("id") != null && (Integer) order.get("id") == 0) {
+            		//해당 아이템 총 값을 계산해서 넘겨 줄 지 결정
+            		int total = (int) order.get("total");
+            		id0Total += total;
+            		orderMap.put("O_id_0", id0Total);
+            		
+            } 
+            if ((Integer) order.get("id") != null && (Integer) order.get("id") == 1) {
+            		int total = (int) order.get("total");
+            		id1Total += total;
+            		orderMap.put("O_id_1", id1Total);
+            		
+            }
+        }
+				String jsonSalesTotal = objectMapper.writeValueAsString(orderMap);
+				TextMessage responseVal = new TextMessage(jsonSalesTotal);
 				CLIENTSMAP.entrySet().forEach(arg -> {
 					try {
-							String id = session.getId();
-							String payload = msg.getPayload();
-							int receivedValue = Integer.parseInt(payload);
-							int eCosmetic_TotalSales = 0;
-							eCosmetic_TotalSales += receivedValue;
-							log.info("eCosmetic_TotalSales =====>" + eCosmetic_TotalSales);
-							TextMessage responseVal = new TextMessage(Integer.toString(eCosmetic_TotalSales));
-							log.info("responseVal ========>" + responseVal);
-							
+
+
 							arg.getValue().sendMessage(responseVal);
 					} catch (IOException e) {
 							e.printStackTrace();
@@ -74,5 +107,6 @@ public class SalesWebSocketHandler extends TextWebSocketHandler  {
 				});
 				
 		}
+
 		
 }
