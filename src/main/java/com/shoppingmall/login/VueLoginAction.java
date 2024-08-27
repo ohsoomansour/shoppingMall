@@ -16,7 +16,7 @@ import com.shoppingmall.toaf.object.DataMap;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -71,14 +71,15 @@ public class VueLoginAction {
 	    @PostMapping("/login/Vueloginx.do")
 	    public DataMap doLogin(@RequestBody Map<String, Object> userMap, HttpServletRequest request, HttpServletResponse response) throws IOException {
 	    	try {	
-	    	log.info("login's userMap =============>" + userMap);
-	    		
+	    		log.info("login's userMap =============>" + userMap);
+	    		HttpSession session = request.getSession();
+	    		session.setAttribute("u_email", userMap.get("u_email"));
   	    	String error_code = "1";
   	    	String error_mesg = "로그인 실패 했습니다.";
   	    	String result;
   	    	String resultMsg;
   	    	
-  	   
+  	    	
   	  		List<DataMap> loginMenu = new ArrayList<DataMap>();
      	    DataMap dataMap = new DataMap();
      	    log.info("u_email ======>" +  userMap.get("u_email"));

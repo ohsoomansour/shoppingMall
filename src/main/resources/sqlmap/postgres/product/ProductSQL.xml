@@ -5,5 +5,21 @@
     <select id="ProductSQL.getProductsInfo" resultType="dataMap">
       SELECT * FROM product;
     </select>
-
+    <insert id="ProductSQL.doStoreItemsInCart" parameterType="dataMap">
+      INSERT INTO items_cart
+      (
+        u_email 
+       ,items_cart 
+      )
+      VALUES
+      (
+        #{u_email}
+       ,#{items_cart}::jsonb
+      ) 
+      
+    </insert>
+    <select id="ProductSQL.doGetStoredMyItemsFromCart" parameterMap="dataMap" resultType="dataMap">
+      SELECT * FROM items_cart WHERE u_email = #{u_email}
+      
+    </select>
 </mapper>

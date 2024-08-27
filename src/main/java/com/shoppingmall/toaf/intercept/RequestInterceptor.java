@@ -84,15 +84,15 @@ public class RequestInterceptor implements MethodInterceptor {
   				HttpServletRequest request = (HttpServletRequest) invocation.getArguments()[reqIndex];
   				logger.info("invocation.getArguments():"+invocation.getArguments());
   				DataMap dataMap = new DataMap();
-  					
-  				Enumeration<String> enumeration = request.getParameterNames();
+  				//#주의 사항# : 여기에서 JSON 데이터의 파라미터이면 읽을 수 없다!!	
+  				Enumeration<String> enumeration = request.getParameterNames(); //enumeration : 여러 개의 문자열(String Object)을 순차적으로 접근할 수 있는 일종의 반복자, 컬렉션의 요소들을 하나씩 열거할 수 있는 인터페이스
   				logger.info("enumeration ===>" + enumeration);
   				while (enumeration.hasMoreElements()) {
+  					logger.info("enumeration.hasMoreElements() ========> "+ "여기 들어오나 ?? ");
   					String name = enumeration.nextElement(); //HTTP 요청에서 파라미터 이름을 읽어오는 코드
   					String[] vals = request.getParameterValues(name); //HttpServletRequest 객체를 사용하여 요청 파라미터를 읽어와
             
   					if (vals == null) continue; 
-  				// ==================== 여기에서 컷  ===================
   					//HTTP 요청 파라미터 처리: 요청 파라미터의 이름이 "models"의 경우, models에 json ArrayList<DataMap> 객체 저장
   					if ("models".equals(name)) {
   						JSONArray jsonList = (JSONArray) JSONSerializer.toJSON(request.getParameter(name));
