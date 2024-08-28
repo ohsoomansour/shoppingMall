@@ -18,7 +18,7 @@
       ) 
       
     </insert>
-    <select id="ProductSQL.doGetStoredMyItemsFromCart" parameterMap="dataMap" resultType="dataMap">
+    <select id="ProductSQL.doGetStoredMyItemsFromCart" parameterType="dataMap" resultType="dataMap">
       SELECT * FROM items_cart WHERE u_email = #{u_email}
       
     </select>

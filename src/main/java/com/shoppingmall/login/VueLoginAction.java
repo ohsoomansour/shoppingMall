@@ -88,7 +88,8 @@ public class VueLoginAction {
          	dataMap.put("u_email", userMap.get("u_email")); 
          	dataMap.put("u_pw", userMap.get("u_pw"));
          	DataMap userInfo = this.vueLoginService.getOneUserInfo(dataMap); //userInfo는 u_pw를 가져와서 안됨
-	        //session.setAttribute("u_email", dataMap.get("u_email"));
+	        log.info("vueLoginService.getOneUserInfo ======>" + userInfo);
+         	//session.setAttribute("u_email", dataMap.get("u_email"));
 	    		boolean loginResult = this.vueLoginService.login(dataMap);
 	    		log.info("loginResult=========>" + loginResult);
 	    		log.info("loginResult===============>" +  loginResult);
@@ -126,7 +127,7 @@ public class VueLoginAction {
 	    			return dataMap;
 	    		} 
 	    	} catch (Exception e) {
-	    		System.out.println(e);
+	    		e.printStackTrace();
 	    	}
   	    log.info("here================");
   	    DataMap failMap = new DataMap();

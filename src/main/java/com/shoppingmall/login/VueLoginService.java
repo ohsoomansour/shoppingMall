@@ -17,7 +17,9 @@ public class VueLoginService extends BaseSvc<DataMap> {
 			}
 			
 			public DataMap getOneUserInfo(DataMap paraMap) {
-				return this.dao.selectQuery("VueLoginSQL.getOneUserInfo", paraMap); 
+				
+				return this.dao.selectQuery("VueLoginSQL.getOneUserInfo", paraMap);
+			
 			}
 			
 			// 6.12 사용자 메뉴 권한 (+Tbiz 참조)

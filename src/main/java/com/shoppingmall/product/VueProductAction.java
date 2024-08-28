@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shoppingmall.toaf.object.DataMap;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -50,15 +50,20 @@ public class VueProductAction {
 					log.info("productMap===============>" + itemsInCartMap.getClass().getName()); //java.util.LinkedHashMap
 					
 					List<DataMap> itemsInCart = (ArrayList<DataMap>) itemsInCartMap.get("items_cart"); 
+				   ObjectMapper objectMapper = new ObjectMapper();
+				   String jsonItemsInCart = objectMapper.writeValueAsString(itemsInCart);
+				   
 					log.info("itemsInCart ======>" + itemsInCart);
+					log.info("jsonItemsInCart ======>" + jsonItemsInCart);
 					//[{id=0, title=sm cosmetic, price=11000, quantity=4, options=[{text=+50ml, value=0_0, price=3000, quantity=20, total=null}, {text=+70ml, value=0_1, price=5000, quantity=24, total=null}], total=null}]
 					
 					
 					HttpSession session = request.getSession();
 					String u_email = (String) session.getAttribute("u_email");
+					log.info("u_email================>" + u_email);
 					DataMap storedItemsMap = new DataMap();
 					storedItemsMap.put("u_email", u_email);
-					storedItemsMap.put("items_cart", itemsInCart);
+					storedItemsMap.put("items_cart", jsonItemsInCart);
 					
 					int result = this.productService.doStoreItemsInCart(storedItemsMap);
 					
