@@ -82,10 +82,18 @@ public class VueProductAction {
 		 **/
 		@GetMapping("/products/get_storedMyItems")
 		DataMap doGetStoredProducts(@RequestParam String u_email){
-				DataMap userMap = new DataMap();
-				userMap.put("u_email", userMap);
-				DataMap result = this.productService.doGetStoredMyItemsFromCart(userMap);
-				return result;
+				try {
+						log.info("u_email ====>" + u_email);
+						DataMap userMap = new DataMap();
+						userMap.put("u_email", u_email);
+						DataMap result = this.productService.doGetStoredMyItemsFromCart(userMap);
+						return result;
+					
+				} catch (Exception e) {
+						e.printStackTrace();
+						DataMap failMap = new DataMap();
+						return failMap;
+				}
 		}
 		
 		

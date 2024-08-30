@@ -5,19 +5,18 @@
     <select id="ProductSQL.getProductsInfo" resultType="dataMap">
       SELECT * FROM product;
     </select>
+    <!-- 24.08.30 ON CONFLICT는 로우가 존재하는 경우 아무런 동작도 하지 않음 -> 기존 row를 업데이트 -->
     <insert id="ProductSQL.doStoreItemsInCart" parameterType="dataMap">
-      INSERT INTO items_cart
-      (
-        u_email 
-       ,items_cart 
-      )
-      VALUES
-      (
-        #{u_email}
-       ,#{items_cart}::jsonb
-      ) 
+      INSERT INTO items_cart(u_email ,items_cart )
+      VALUES(#{u_email} ,#{items_cart}::jsonb  ) 
+      ON CONFLICT(u_email)
+      DO UPDATE SET
+        items_cart = #{items_cart}
+      WHERE = #{u_email} 
       
     </insert>
+    
+    
     <select id="ProductSQL.doGetStoredMyItemsFromCart" parameterType="dataMap" resultType="dataMap">
       SELECT * FROM items_cart WHERE u_email = #{u_email}
       

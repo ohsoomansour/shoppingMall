@@ -47,7 +47,7 @@
                           (#{u_type} = 'A' AND tma.member_type IN ('A', 'CUSTOMER'))
                           OR tma.member_type = #{u_type}
                       )
-                ) 
+                   ) 
                 AND tm.depth = 0
             ORDER BY tm.menu_seqno 
         ]]>
