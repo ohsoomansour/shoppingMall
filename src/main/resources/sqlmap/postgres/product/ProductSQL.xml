@@ -11,8 +11,7 @@
       VALUES(#{u_email} ,#{items_cart}::jsonb  ) 
       ON CONFLICT(u_email)
       DO UPDATE SET
-        items_cart = #{items_cart}
-      WHERE = #{u_email} 
+        items_cart = EXCLUDED.items_cart;
       
     </insert>
     
