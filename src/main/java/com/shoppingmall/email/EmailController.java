@@ -3,7 +3,7 @@ package com.shoppingmall.email;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;

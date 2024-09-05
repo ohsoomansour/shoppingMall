@@ -81,7 +81,10 @@ server:
     path: /error
     whitelabel:
       enabled: false
-    
+#카카오 페이 설정
+kakaopay:
+  admin-key: 39daba07a27adf82da7822bc9980ece8
+
 mybatis:
   configuration:
     #map-underscore-to-camel-case: true
