@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.shoppingmall.toaf.object.DataMap;
+
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -40,21 +43,55 @@ public class PayController {
 		
 		return readyResponse;
 	}
-	@RequestMapping("/success")						  //pgToken 알아서 들어온다
-	public String  KakaoPayApprove(@RequestParam("pg_token") String pgToken) {
-		KaokaoPayApproveResponse approveResponse = payService.KakaopayApprove(pgToken);
-		log.info("approveResponse ========>" + approveResponse);
-		//http://localhost:8080/payment/approval
-		return "redirect:http://localhost:8088/#/product";
+	/**
+	 * @Function: Open API에서 성공 후 /payment/success 경로로 request 요청되는 기능  
+	 * @param : pgToken 
+	 * @return: 승인된 값 *KaokaoPayApproveResponse 타입 참조 
+	 * @Description: 영수증 만드는 값 반환 
+	 * @추천x방법1. 쿼리 스트링으로 반환하는 것은 결제 내역 전부를 넘겨주는 것은 옳지 못함, aid(요청 고유번호)approvedResponseByAid 또는 tid 
+	 * @추천o방법2. HttpSession session -> session.setAttribute("approveResponse", approveResponse);
+	 * @보완코드: 스프링 시큐리티로 사용자 계정이 인증이 전제 조건 
+	 * */
+	@GetMapping("/success")						  //pgToken 알아서 들어온다
+	public String KakaoPayApprove(@RequestParam("pg_token") String pgToken, HttpSession session) {
+		KaokaoPayApproveResponse approvedResponse = payService.KakaopayApprove(pgToken);
+		log.info("approveResponse ========>" + approvedResponse);
+		//쿼리 스트링으로 결제 고유번호(Aid)값 넘겨준다 ? -> 프론트에서 tid와 getBill했을 때 일치하면 보여주고  
+		String appprovedAid = "approvedAid_" + approvedResponse.getAid();
+		log.info("path:/pay/success =======> " + appprovedAid);
+		session.setAttribute(appprovedAid, approvedResponse);
+		return "redirect:http://localhost:8088/#/payment/approval?aid=" + approvedResponse.getAid();
 	}
-	@RequestMapping("/fail")
-	public void  KakaoPayFail() {
+	@GetMapping("/getMyBill")
+	@ResponseBody
+	public Object getKakaoPayBill(@RequestParam("aid") String aid,HttpSession session) {
+		try {
+			log.info(" QueryString aid ====>" + aid);
+			KaokaoPayApproveResponse approvedResponseByAid = (KaokaoPayApproveResponse) session.getAttribute("approvedAid_" + aid);
+			log.info("[ path:/pay/getMyBill ]=============> " + approvedResponseByAid);
+			/*
+			DataMap payMap = new DataMap();
+			payMap.put("payResult", approvedResponseByAid);
+			return payMap;*/
+			return approvedResponseByAid;
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			DataMap failMap = new DataMap();
+			return failMap;
+		}
+	}
+	
+	
+	@GetMapping("/fail")
+	public String  KakaoPayFail() {
 	   log.info("카카오 페이 결제에 실패하였습니다!");
-		
+		return "redirect:http://loalhost:8088/#/payment/fail";
 	}
-	@RequestMapping("/cancel")
-	public void KakaoPayCancel() {
-		
+	@GetMapping("/cancel")
+	public String KakaoPayCancel() {
+		log.info("카카오 페이 결제가 취소되었습니다.");
+		return "redirect:http://localhost:8088/#/payment/cancel";
 	}
 	
 	
