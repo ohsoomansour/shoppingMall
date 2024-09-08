@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
 <mapper namespace="SecUserSQL"> 
-	<select id="SecUserSQL.getSecUserByEmail" resultType="dataMap">
-	  SELECT * 
-	  FROM 
-	  
+	<select id="SecUserSQL.getSecUserByEmail" >
+	  SELECT u_email, u_pw, u_type
+	  FROM sec_user
+	  WHERE u_email =#{u_email}
 	</select>	
 	
 

@@ -99,6 +99,10 @@ mybatis:
 file: 
   upload-dir: C:/Users/USER/Desktop/osm/file_upload
 
+# Encryption key 256 key(길이 32) - https://randomkeygen.com/
+jwt:
+  secret-key: x5ca2b4GRQtw9zAHGjgnAqer2qzC9xDx
+  token-validity-in-sconds: 10
 
 # application.properties
 

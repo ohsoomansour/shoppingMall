@@ -20,13 +20,13 @@ import lombok.NoArgsConstructor;
 public class SecUser implements UserDetails {
 
 	private Long id;
-	private String email;
-	private String password;
+	private String u_email;
+	private String u_pw;
 	
 	//사용자의 id반환 
 	@Override
 	public String getUsername(){
-		return email;
+		return u_email;
 	}
 	/**
 	 * @getAuthorities: 인증된 사용자가 가진 권한 목록을 제공하기 위해 UserDetails 인터페이스의 getAuthorities 메서드 구현
@@ -41,7 +41,7 @@ public class SecUser implements UserDetails {
 	}
 	@Override
 	public String getPassword() {
-		return password;
+		return u_pw;
 	}
 	//계정 만료 여부 확인
 	@Override
