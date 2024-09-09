@@ -2,8 +2,8 @@ package com.shoppingmall.jwt;
 
 import java.io.IOException;
 
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 	
-	private static final String AUTHORIZATION_HEADER = "Authorization";
+	public static final String AUTHORIZATION_HEADER = "Authorization";
 	private final TokenProvider tokenProvider;
 	
 	/**
@@ -24,7 +24,20 @@ public class JwtFilter extends OncePerRequestFilter {
 	 * */
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		
-		
+		String jwt = resolveToken(httpServletRequest);
+		String requestURI = httpServletRequest.getRequestURI();
+	}
+	/**
+	 *@Date: 24.9.9 
+	 *@Function: Request Header에서 토큰 정보를 꺼내오기 위한 메소드 
+	 *@Front_Header: { Authorization:`Bearer ${token}` }
+	 * - Bearer은 인증 방식 중 하나 뒤에 토큰을 붙임
+	 */
+	private String resolveToken(HttpServletRequest request) {
+		 String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+		 if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+			return  bearerToken.substring(7);
+		 }
+		 return null;
 	}
 }

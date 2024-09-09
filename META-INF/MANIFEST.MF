@@ -15,3 +15,4 @@ Export-Package: com.example.demo,
  com.shoppingmall.service,
  com.shoppingmall.toaf.basemvc,
  com.shoppingmall.toaf.object
+Import-Package: org.slf4j;version="[1.7.0,2.0.0)"
