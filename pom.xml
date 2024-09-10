@@ -165,6 +165,7 @@
         <artifactId>spring-boot-starter-thymeleaf</artifactId>
         <version>3.0.0</version>
     </dependency>
+
     <!-- websocket -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -175,6 +176,7 @@
 	    <groupId>org.springframework.boot</groupId>
 	    <artifactId>spring-boot-starter-security</artifactId>
 	</dependency>
+
     <!-- jwt -->
     <dependency>
 	    <groupId>io.jsonwebtoken</groupId>
@@ -198,6 +200,7 @@
 	    <groupId>org.springframework.boot</groupId> 
 	    <artifactId>spring-boot-starter-validation</artifactId> 
 	</dependency>
+
 	</dependencies>
 
 	<build>

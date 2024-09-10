@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shoppingmall.jwt.JwtFilter;
 import com.shoppingmall.jwt.TokenDto;
 import com.shoppingmall.jwt.TokenProvider;
-import com.shoppingmall.secuser.NonSocialMemberLoginForm;
+import com.shoppingmall.secuser.NonSocialMemberSaveForm;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,14 +41,14 @@ public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     @PostMapping("/sec_users/login")
-    public ResponseEntity<TokenDto> login(@Valid @RequestBody NonSocialMemberLoginForm nonSocialMemberLoginForm) {
+    public ResponseEntity<TokenDto> login(@Valid @RequestBody NonSocialMemberSaveForm nonSocialMemberLoginForm) {
     	//UserDetails를 사용해서 만듬
         UsernamePasswordAuthenticationToken authenticationToken =
         												//principal, credentials 
                 new UsernamePasswordAuthenticationToken(nonSocialMemberLoginForm.getUser_email(), nonSocialMemberLoginForm.getUser_pw());
         log.info("authetntication manager builder get object = {}",authenticationManagerBuilder.getObject());
         /**
-         * @authenticationManagerBuilder.getObject(): AuthenticationManager 인스턴스 
+         * @authenticationManagerBuilder.getObject(): AuthenticationManager 인스턴스 -> AuthenticationProvider 호출 
          * @authenticate메소드가 실행이 될 때 CustomUserDetailsService class의 loadUserByUsername 메소드가 실행 및 db와 대조하여 인증
          *  - @DaoAuthenticationProvider가 사용
         */

@@ -3,44 +3,45 @@ package com.shoppingmall.secuser;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 /**
- * @Explain: DB에 있는 정보를 가져온다? 
+ * @CreationDate:24.9.10
+ * @Explain: UserDetails타입의 멤버, DB에 있는 정보 -> 
+ * @매핑시점: AuthenticationProvider의 retrieveUser를 호출해서 UserDetails 타입의 '멤버'를 로드했을 때 
  * */
 
 
 @Data
 public class CustomUserDetails implements UserDetails, Serializable  {
 
-	private String id;	// DB에서 PK 값
-    private String loginId;		// 로그인용 ID 값
+	private int id;	// DB에서 PK 값
+    private String login_id;		// 로그인용 ID 값
     private String password;	// 비밀번호
+    private String user_name;
     private String email;	//이메일
-    private boolean emailVerified;	//이메일 인증 여부
+    private boolean email_verified;	//이메일 인증 여부
     private boolean locked;	//계정 잠김 여부
     private String nickname;	//닉네임
     private Collection<GrantedAuthority> authorities;	//권한 목록
-    public CustomUserDetails(Long authId, String userEmail, String userPw, boolean emailVerified,boolean locked) {
-        this.id = String.valueOf(authId);
-        this.email = userEmail;
-        this.password = userPw;
-        this.emailVerified = emailVerified;
+    public CustomUserDetails(int auth_id, String email, String password, boolean email_verified,boolean locked) {
+        this.id = auth_id;
+        this.email = email;
+        this.password = password;
+        this.email_verified = email_verified;
         this.locked = !locked;
     }
 	
 	//사용자의 id반환 
 	@Override
 	public String getUsername(){
-		return id;
+		return user_name;
 	}
 	/**
 	 * @getAuthorities: 인증된 사용자가 가진 권한 목록을 제공하기 위해 UserDetails 인터페이스의 getAuthorities 메서드 구현

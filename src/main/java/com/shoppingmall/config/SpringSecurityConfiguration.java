@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,11 +15,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.shoppingmall.secuser.CustomUserDetailsService;
+import com.shoppingmall.jwt.JwtAccessDeniedHandler;
+import com.shoppingmall.jwt.JwtAuthenticationEntryPoint;
+import com.shoppingmall.jwt.TokenProvider;
+import com.shoppingmall.secuser.SecMemberService;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 /**
  * @Filter: 톰캣과 같은 웹 컨테이너에 관리되는 서블릿의 기술, Client 요청이 전달되기 전후의 URL 패턴에 맞는 요청에 필터링을 해준다.
  *  - Spring Security는 요청이 들어오면 Filter를 chain 형태로 묶어놓은 형태인 Servlet FilterChain을 자동으로 구성한 후 거치게 한다.
@@ -34,10 +35,11 @@ import lombok.RequiredArgsConstructor;
  *  - Principal :사용자를 식별한다. username/password 방식으로 인증할 때 보통 'UserDetails 인스턴스'이다.
  *  - credentials : 주로 비밃전호 정보이다. 대부분 사용자 이즏ㅇ에 사용한 다음 비운다.
  *  - authorities: 사용자에게 부여한 권한을 'GrantedAuthority'로 추상화하여 사용한다.
+ * @EnableWebSecurity: 모든 요청 URL이 스프링 시큐리티의 제어를 받도록 만드는 '어노테이션'
  * */
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class SpringSecurityConfiguration extends WebSecurityConfiguration {
 	
 	private final TokenProvider tokenProvider;
@@ -45,7 +47,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfiguration {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 	
 	@Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private SecMemberService secMemberService;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -53,10 +55,10 @@ public class SpringSecurityConfiguration extends WebSecurityConfiguration {
 	}
 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService) //1.사용자 정보를 가져오기 위해 CustomUserDetailsService를 사용
+        auth.userDetailsService(secMemberService) //1.사용자 정보를 가져오기 위해 CustomUserDetailsService를 사용
             .passwordEncoder(passwordEncoder());  // 어떤 패스워드 앤코더를 설정할지
     }
-    //@설명: 특정 HTTP 요청에 대한 보안 검사를 비활성화하는 역할
+    //@*명: 특정 HTTP 요청에 대한 보안 검사를 비활성화하는 역할
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         // 정적 resources 접근 허용 설정
@@ -64,7 +66,12 @@ public class SpringSecurityConfiguration extends WebSecurityConfiguration {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
      
-    //version 6.1 최신 
+    /**
+     *@version: version 6.1 최신 
+     *@authenticationEntryPoint: 인증이 필요한 자원에 접근할 때 인증되지 않은 사용자가 접근하면 호출
+     * - 사용 예시: 사용자가 인증이 필요한 URL에 접근했으나 인증되지 않은 상태일 때, 401 Unahtorized 상태 코드를 반환
+     * - 설정 방법: jwtAuthenticationEntryPoint와 같은 사용자 정의 클래스에 의해 구현 
+     */
 	@Bean
     public SecurityFilterChain securityFilterChains(HttpSecurity http) throws Exception {
 	 return http	
@@ -73,6 +80,10 @@ public class SpringSecurityConfiguration extends WebSecurityConfiguration {
 			headers.contentTypeOptions(contentTypeOptionConfig -> 
 				headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
 		))
+		.exceptionHandling((exceptionHandling) -> exceptionHandling
+				.accessDeniedHandler(jwtAccessDeniedHandler) // 
+				.authenticationEntryPoint(jwtAuthenticationEntryPoint) //
+		)
 		// 특정 URL에 대한 권한 설정.
         .authorizeHttpRequests((authorizeRequests) -> {
             authorizeRequests.requestMatchers("/user/**").authenticated();
@@ -84,7 +95,6 @@ public class SpringSecurityConfiguration extends WebSecurityConfiguration {
             authorizeRequests.requestMatchers("/admin/**")
                     // ROLE_은 붙이면 안 된다. hasRole()을 사용할 때 자동으로 ROLE_이 붙기 때문이다.
                     .hasRole("ADMIN");
-                    
             authorizeRequests.anyRequest().permitAll();
         })
         .sessionManagement(sessionManagement -> 
