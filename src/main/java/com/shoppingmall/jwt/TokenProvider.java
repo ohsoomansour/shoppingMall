@@ -56,7 +56,7 @@ public class TokenProvider implements InitializingBean {
 	/**
 	 * 
 	 * @getAuthorities: ROLE_ADMIN, ROLE_CUSTOMER
-	 * @stream: 반환된 권한 리스를 스트림으로 변환하여 각 권한 객체를 처리할 수 있게 한다.
+	 * @stream: 반환된 권한 리스트를 스트림으로 변환하여 각 권한 객체를 처리할 수 있게 한다.
 	 * @GrantedAuthority:GrantedAuthority는 권한을 나타내는 인터페이스, getAuthority() 메서드는 권한 이름을 반환
 	 * @collect(종단연산): Collectors.joining(",")는 추출된 권한 이름들을 하나의 문자열로 함침 예) "ROLE_ADMIN, ROLE_CUSTOER"
 	 *  - 다른 예시) List<String> asList = stringStream.collect(Collectors.toList());
@@ -71,7 +71,7 @@ public class TokenProvider implements InitializingBean {
 		
 		return Jwts.builder()
 				.setSubject(authentication.getName()) // principal = UserDetails 
-				.claim(AUTHORITIES_KEY, authorities)   //사용자 권한 정보를 JWT의 클레임에 저장 -> token값에 넣어서 반
+				.claim(AUTHORITIES_KEY, authorities)   //사용자 권한 정보를 JWT의 클레임에 저장 -> token값에 넣어서 반환
      			.signWith(key, SignatureAlgorithm.HS512)  //HMAC SHA-512 알고리즘을 사용해 secret 키로 서명
 				.setExpiration(validity)
 				.compact();   //모든 설정을 압축하여 최종 'JWT 문자열' 반환

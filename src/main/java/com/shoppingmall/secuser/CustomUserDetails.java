@@ -15,6 +15,7 @@ import lombok.Data;
  * @CreationDate:24.9.10
  * @Explain: UserDetails타입의 멤버, DB에 있는 정보 -> 
  * @매핑시점: AuthenticationProvider의 retrieveUser를 호출해서 UserDetails 타입의 '멤버'를 로드했을 때 
+ * @Collection타입: 자바의 모든 컬렉션 클래스(ArrayList, HashSet, LinkedList 등)의 상위 인터페이스
  * */
 
 
@@ -28,8 +29,7 @@ public class CustomUserDetails implements UserDetails, Serializable  {
     private String email;	//이메일
     private boolean email_verified;	//이메일 인증 여부
     private boolean locked;	//계정 잠김 여부
-    private String nickname;	//닉네임
-    private Collection<GrantedAuthority> authorities;	//권한 목록
+    private Collection<GrantedAuthority> authorities;	//권한 목록: 예)ROLE_ADMIN, ROLE_CUSTOMER
     public CustomUserDetails(int auth_id, String email, String password, boolean email_verified,boolean locked) {
         this.id = auth_id;
         this.email = email;
@@ -38,7 +38,6 @@ public class CustomUserDetails implements UserDetails, Serializable  {
         this.locked = !locked;
     }
 	
-	//사용자의 id반환 
 	@Override
 	public String getUsername(){
 		return user_name;
@@ -52,7 +51,7 @@ public class CustomUserDetails implements UserDetails, Serializable  {
 	//사용자가 가진 권한(역할)을 GrantedAuthorigy '객체를 list'로 반환  
 	@Override 
 	public Collection<? extends GrantedAuthority> getAuthorities(){
-		return Collections.emptyList();
+		return authorities;
 	}
 	@Override
 	public String getPassword() {

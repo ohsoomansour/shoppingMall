@@ -11,12 +11,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
-public class SecMemberService implements UserDetailsService  {
+public class SecMemberService implements UserDetailsService {
 	
 	@Autowired
 	MemberDao memberDao; 
@@ -26,8 +30,8 @@ public class SecMemberService implements UserDetailsService  {
 	@Autowired
 	SocialMemberDao socaialMemberDao;
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-    
+	PasswordEncoder pwdEncoder;
+
 	public int join (NonSocialMemberSaveForm nonSocialMemberSaveForm) throws NoSuchAlgorithmException {
 		int login_type = nonSocialMemberSaveForm.getLogin_type();
 		validateDuplicateName(nonSocialMemberSaveForm,login_type);
@@ -35,10 +39,12 @@ public class SecMemberService implements UserDetailsService  {
 		switch(login_type) {
 			case 0:{
 				NonSocialMember member = new NonSocialMember();
+				member.setLogin_type(nonSocialMemberSaveForm.getLogin_type());
+				member.setEmail(nonSocialMemberSaveForm.getEmail());
+				member.setPassword(pwdEncoder.encode(member.getPassword()));
 				member.setUser_name(nonSocialMemberSaveForm.getUser_name());
-				member.setEmail(nonSocialMemberSaveForm.getUser_email());
+				member.setEmail_verified(nonSocialMemberSaveForm.isEmail_verified());				
 				//####해시 적용 -> 유닛 테스트 필요!!####
-				member.setPassword(passwordEncoder.encode(member.getPassword()));
 				NonSocialMember savedMember = nonSocialMemberDao.signUpFor(member);
 				user_authid = savedMember.getAuth_id();
 			}
@@ -88,6 +94,13 @@ public class SecMemberService implements UserDetailsService  {
     	}else {
             throw new UsernameNotFoundException("User not found");
         }
-
     }
+    /*회원가입 후 아이디 중복 검사*/
+    @Transactional(value="postgresqlTransactionManager", propagation= Propagation.REQUIRED, rollbackFor=Exception.class)
+    public int doCounteLoginId(String login_id) {
+		return memberDao.countUserId(login_id);
+	}
+    
+    
+    
 }

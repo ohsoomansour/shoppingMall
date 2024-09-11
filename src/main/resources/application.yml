@@ -83,7 +83,7 @@ server:
       enabled: false
 #카카오 페이 설정
 kakaopay:
-  admin-key: 39daba07a27adf82da7822bc9980ece8
+  admin-key: InwtSk8M6VlunphqPxcEZD33qYlKyYvM
 
 mybatis:
   configuration:
@@ -101,7 +101,7 @@ file:
 
 # Encryption key 256 key(길이 32) - https://randomkeygen.com/
 jwt:
-  secret-key: x5ca2b4GRQtw9zAHGjgnAqer2qzC9xDx
+  secret-key: 5XCb6mZQulmcHuaCu7hTinaqO7Bsu9jmdfsdfasdfsdfsfsdf
   token-validity-in-sconds: 10
 
 # application.properties

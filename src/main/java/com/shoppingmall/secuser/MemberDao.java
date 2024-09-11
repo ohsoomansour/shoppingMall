@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface MemberDao<T> {
 	Optional<T> getOneMemberByName(String user_name); //공통 메서드
 	Object signUpFor(T user_name); //공통 메서드
+	int countUserId(String user_id);
 }

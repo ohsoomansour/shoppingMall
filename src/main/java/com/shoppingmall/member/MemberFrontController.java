@@ -95,7 +95,7 @@ public class MemberFrontController {
 	 *@Author: osm
 	 *@Date: 2024.5.20 
 	 *@Param: - 
-	 *@return: ModelAndView
+	 *@return: ModelAndView("jsonView")
 	 *@Function: 비번 생성 
 	*/
 	
@@ -129,7 +129,7 @@ public class MemberFrontController {
 			
 		} catch(Exception e) {
 			e.printStackTrace();
-			return new ModelAndView("error");
+
 		}
 		
 		return mav;

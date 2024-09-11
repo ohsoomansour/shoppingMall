@@ -1,4 +1,4 @@
-package com.shoppingmall.auth;
+package com.shoppingmall.secuser;
 
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -74,13 +74,19 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
     /**
      * @호출시점:인증이 성공적으로 완료되면 호출
      * @method설명: 사용자의 비밀번호 인코딩 여부(인코딩 방식 및 정책 변경시)를 확인하고, 비밀번호가 업그레이드가 필요한 경우 업데이트한다 
+     * - upgradeEncoding: 현재 저장된 비밀번호의 인코딩 방식이 오래되었거나, 더 강력한 인코딩 방식이 있는 경우
      * @return: Authentication 객체를 생성하여 반환  
+     *  Q. Object principal, Authentication authentication, UserDetails user 인수는 어디서 가져오나 ?
+     *  A. 스프링 시큐리티에서 인증이 성공하면 Authentication 객체 내부에 principal을 저장(='로그인한 사용자에 대한 정보'=UserDetails)
+     *   - retrieveUser 메서드 성공시 반환하는 UserDetails 
+     *  d
+     *  - 
      * */
 	@Override
 	protected Authentication createSuccessAuthentication(Object principal, Authentication authentication,
 			UserDetails user) {
 		boolean upgradeEncoding = this.userDetailsPasswordService != null
-				&& this.passwordEncoder.upgradeEncoding(user.getPassword());
+				&& this.passwordEncoder.upgradeEncoding(user.getPassword()); 
 		if (upgradeEncoding) {
 			String presentedPassword = authentication.getCredentials().toString();
 			String newPassword = this.passwordEncoder.encode(presentedPassword);

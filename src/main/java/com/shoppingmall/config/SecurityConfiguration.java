@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
@@ -21,7 +20,7 @@ import com.shoppingmall.jwt.JwtAuthenticationEntryPoint;
 import com.shoppingmall.jwt.TokenProvider;
 import com.shoppingmall.secuser.SecMemberService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 /**
  * @Filter: 톰캣과 같은 웹 컨테이너에 관리되는 서블릿의 기술, Client 요청이 전달되기 전후의 URL 패턴에 맞는 요청에 필터링을 해준다.
  *  - Spring Security는 요청이 들어오면 Filter를 chain 형태로 묶어놓은 형태인 Servlet FilterChain을 자동으로 구성한 후 거치게 한다.
@@ -39,15 +38,17 @@ import lombok.AllArgsConstructor;
  * */
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
-public class SpringSecurityConfiguration extends WebSecurityConfiguration {
+@RequiredArgsConstructor 
+public class SecurityConfiguration  {
 	
-	private final TokenProvider tokenProvider;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-	
-	@Autowired
-    private SecMemberService secMemberService;
+	@Autowired 
+	TokenProvider tokenProvider;
+	@Autowired 
+	JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	@Autowired 
+	JwtAccessDeniedHandler jwtAccessDeniedHandler;	
+	@Autowired 
+	SecMemberService secMemberService;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -71,6 +72,9 @@ public class SpringSecurityConfiguration extends WebSecurityConfiguration {
      *@authenticationEntryPoint: 인증이 필요한 자원에 접근할 때 인증되지 않은 사용자가 접근하면 호출
      * - 사용 예시: 사용자가 인증이 필요한 URL에 접근했으나 인증되지 않은 상태일 때, 401 Unahtorized 상태 코드를 반환
      * - 설정 방법: jwtAuthenticationEntryPoint와 같은 사용자 정의 클래스에 의해 구현 
+     *@authorizeRequests: 작동 순서, JwtFilter 인증 -> SecurityContext에 저장(Authentication-authorites)
+     * -> 이 인증 정보를 'authorizeHttpRequests'에서 요청이 처리
+     * ->
      */
 	@Bean
     public SecurityFilterChain securityFilterChains(HttpSecurity http) throws Exception {
@@ -87,11 +91,9 @@ public class SpringSecurityConfiguration extends WebSecurityConfiguration {
 		// 특정 URL에 대한 권한 설정.
         .authorizeHttpRequests((authorizeRequests) -> {
             authorizeRequests.requestMatchers("/user/**").authenticated();
-
             authorizeRequests.requestMatchers("/posts/**")
                     // ROLE_은 붙이면 안 된다. hasAnyRole()을 사용할 때 자동으로 ROLE_이 붙기 때문이다.
                     .hasAnyRole("ADMIN", "CUSTOMER");
-
             authorizeRequests.requestMatchers("/admin/**")
                     // ROLE_은 붙이면 안 된다. hasRole()을 사용할 때 자동으로 ROLE_이 붙기 때문이다.
                     .hasRole("ADMIN");
@@ -108,8 +110,4 @@ public class SpringSecurityConfiguration extends WebSecurityConfiguration {
         .build();
 
     }
-    
-	
-
-	
 }
