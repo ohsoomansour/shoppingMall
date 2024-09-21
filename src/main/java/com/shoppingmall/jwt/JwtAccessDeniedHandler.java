@@ -9,6 +9,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * @Explain: 접근 거부 처리 핸들러 
+ * */
+
 @Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override

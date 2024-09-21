@@ -8,7 +8,7 @@ import com.shoppingmall.toaf.basemvc.BaseSvc;
 import com.shoppingmall.toaf.object.DataMap;
 
 @Service
-public class VueProductService extends BaseSvc<DataMap> {
+public class VueProductService extends BaseSvc<DataMap> implements VueProductServiceImpl {
 	
 		public List<DataMap> getProducts(){
 				return this.dao.selectListQuery("ProductSQL.getProductsInfo", null);

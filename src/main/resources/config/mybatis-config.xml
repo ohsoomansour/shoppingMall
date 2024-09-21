@@ -13,6 +13,7 @@
 
 		<typeAlias type="com.shoppingmall.member.model.Member" alias="member" />
 		<typeAlias type="com.shoppingmall.toaf.object.DataMap" alias="dataMap" />
+		<!--<typeAlias type="com.shoppingmall.secuser.NonSocialUser" alias="nonSocialUser" /> -->
 	</typeAliases>
 
 </configuration>

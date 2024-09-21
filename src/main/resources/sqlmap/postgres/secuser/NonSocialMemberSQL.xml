@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
+<mapper namespace="NonSocialMemberSQL"> 
+
+	<select id="NonSocialMemberSQL.countMemberByLoginId" parameterType="dataMap" resultType="int">
+		/*아이디 중복검사: SQL ID: NonSocialMemberSQL.countMemberByLoginId*/
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				nonsocial_member
+			WHERE login_id = #{login_id}
+		]]>
+		
+	</select>
+	<select id="NonSocialMemberSQL.countMemberByName" resultType="int" parameterType="dataMap">
+		/*아이디 중복검사: SQL ID: NonSocialMemberSQL.countMemberByName*/
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				nonsocial_member
+			WHERE user_name = #{user_name}
+		]]>
+		
+	</select>
+	<select id="NonSocialMemberSQL.getOneMemberByName"  parameterType="dataMap" resultType="dataMap">
+        /*이름에 따른 회원: NonSocialMemberSQL.getOneMemberByName */
+        SELECT authid, login_id, email, password, user_name, authorities
+        FROM nonsocial_member
+        WHERE user_name = #{user_name}
+    </select>
+	<insert id="NonSocialMemberSQL.signUpFor" >
+	/* 회원 가입: */
+		INSERT INTO
+		(
+			login_id,
+			email,
+			password,
+			email_verified,
+			locked,
+			nickname,
+			authorities,
+			address,
+			login_type,
+			user_name,
+		)
+		VALUES
+		(
+		   #{login_id},
+		   #{email},
+		   #{password},
+		   #{email_verified},
+		   #{locked},
+		   #{nickname},
+		   #{authorities},
+		   #{address},
+		   #{login_type},
+		   #{user_name}
+		)
+		
+	</insert>
+	
+	
+	
+</mapper>

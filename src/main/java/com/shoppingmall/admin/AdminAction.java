@@ -1,4 +1,4 @@
-package com.shoppingmall.member;
+package com.shoppingmall.admin;
 
 
 
@@ -17,15 +17,17 @@ import com.shoppingmall.toaf.object.DataMap;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
-
+@RequiredArgsConstructor
 @RequestMapping(value="/admin")
 @Controller
 public class AdminAction {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
+	
 	@Autowired
-	private AdminService adminService;
+	AdminService adminService;
 	
 	
 	/** 

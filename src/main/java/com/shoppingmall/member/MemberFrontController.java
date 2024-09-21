@@ -7,21 +7,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.shoppingmall.member.model.Member;
-import com.shoppingmall.post.PostAction;
 import com.shoppingmall.toaf.object.DataMap;
-
 import com.shoppingmall.toaf.util.AES256Util;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+
 @RequestMapping("/member")
 @Controller
 public class MemberFrontController {
 	
-	
 	@Autowired
-	private MemberFrontService memberFrontService;
+	MemberFrontService memberFrontService;
 	
 	/* 
 	 *@Author: osm

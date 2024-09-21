@@ -33,14 +33,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class TokenProvider implements InitializingBean {
+public class TokenFilter implements InitializingBean {
 	
 	private final String secret_key;
 	private final long tokenValidityInSeconds;
 	private static final String AUTHORITIES_KEY = "auth";
 	private Key key;
 	
-	public TokenProvider( 
+	public TokenFilter( 
 			@Value("${jwt.secret-key}") String secret_key,
 			@Value("${jwt.token-validity-in-sconds}") long tokenValidityInSeconds) {
 		    

@@ -21,9 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailService {
+public class EmailService implements EmailServiceImpl {
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine; //Thymeleaf 템플릿 엔진을 사용해 이메일의 HTML 본문을 처리
+    
     @Autowired
     MemberFrontService memberFrontService;
 

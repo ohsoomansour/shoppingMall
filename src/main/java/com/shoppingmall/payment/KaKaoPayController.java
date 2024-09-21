@@ -19,9 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequestMapping("/pay")
-public class PayController {
+public class KaKaoPayController {
 	@Autowired
-	PayService payService;
+	KaKaoPayService payService;
 	
 	/**
 	 * @에러1. org.springframework.web.client.HttpClientErrorException$Unauthorized: 401 Unauthorized: [no body]] with root cause

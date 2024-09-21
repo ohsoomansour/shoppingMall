@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @Transactional(value="postgresqlTransactionManager", propagation= Propagation.REQUIRED, rollbackFor=Exception.class)
-public class VuePostService extends BaseSvc<DataMap> {
+public class VuePostService extends BaseSvc<DataMap> implements VuePostServiceImpl {
 	
 	public List<DataMap> getAllPostsList(){
 		return this.dao.selectListQuery("PostSQL.getAllPostsList", null);

@@ -56,18 +56,18 @@ public class WebMvcConfig implements WebMvcConfigurer{
     
     @Bean	
     public RegexpMethodPointcutAdvisor requestValueAdvisor() {  	
-    	RegexpMethodPointcutAdvisor requestValueAdvisor = new RegexpMethodPointcutAdvisor();
     /** 
+     * @Joinpoint: 조인 포인트는 애스펙트가 적용될 수 있는 프로그램 실행 지점(예: *Action.* 메소드 호출, 객체 생성 등)을 의미
+     * @PointCut: 어떤 포인트 커트(=requestValueAdvisor): 조인 포인트(*Action.*)와 어떤 어드 바이스(=requestInterceptor) 
      * @Advice: 특정 조인 포인트(Join Point)에서 수행하는 실제 동작을 정의
-     * @Joinpoint: 조인 포인트는 애스펙트가 적용될 수 있는 프로그램 실행 지점(예: 메소드 호출, 객체 생성 등)을 의미
      * @Explain1: 어드바이스(처리 방법)를 설정 :  이 어드바이스는 특정 관점에서 '메소드를 가로채 실행 전후에 실행될 코드'를 담고 있음
-	 * @Explain2: 어떤 포인트 커트(=requestValueAdvisor): 조인 포인트(*Action.*)와 어떤 어드 바이스(=requestInterceptor) 
 	     		  어떤 지점에 결합 할지를  결정하는 필터
-	 * @Explain3: .*: 어떤 문자나 문자열˙이든 (빈 문자열 포함) 0회 이상 반복될 수 있음 -> Action 포함된 경우 매칭 
+	 * @Explain2: .*: 어떤 문자나 문자열˙이든 (빈 문자열 포함) 0회 이상 반복될 수 있음 -> Action 포함된 경우 매칭 
 	 */
+    	RegexpMethodPointcutAdvisor requestValueAdvisor = new RegexpMethodPointcutAdvisor();
     	requestValueAdvisor.setAdvice(requestInterceptor);
     	//* @조인 포인트 설정 역할 *패턴 해석:.모든 Action클래스.모든 메서드: 
-    	requestValueAdvisor.setPattern(".*Action.*"); //
+    	requestValueAdvisor.setPattern(".*Action.*"); 
     	return requestValueAdvisor; 
     }
     
@@ -77,18 +77,28 @@ public class WebMvcConfig implements WebMvcConfigurer{
     }
     
     /**
-     * @Explain: Advisor가 적용될 모든 빈에 대해 자동으로 프록시를 생성하며, 어드바이스(Advice)가 적용될 시점에 메소드 호출을 인터셉트하여 추가 기능을 수행
+     * @Explain1: Advisor가 적용될 모든 빈에 대해 자동으로 프록시를 생성하며, 어드바이스(Advice)가 적용될 시점에 메소드 호출을 인터셉트하여 추가 기능을 수행
      * 			 Advisor가 프록시로 변환되어야 한다.
-     
-    */
-    /**/
+     * @Explain2: DefaultAdvisorAutoProxyCreator는 빈 생성 과정에서 '프록시를 자동으로 생성하는 빈 후처리기'이기 때문에, 
+     *           다른 빈이 생성되기 전에 해당 빈이 먼저 준비되어야 합니다. 인스턴스와 무관하게 먼저 호출
+     * @사용 주의: aop를 사용하기 위해서는  
+     *  1. CGLIB 프록시 사용, defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+     *  2. 그러면 Service의 클래스 기반으로 로그인 컨트롤러 사용해야 한다. 이유는 클래스 기반 Proxy이기 때문 
+     *  3. pom.xml 에서 주석처리 필요
+     *   <dependency>
+	 *	   <groupId>org.springframework.boot</groupId>
+	 *	   <artifactId>spring-boot-starter-security</artifactId>
+	 *	 </dependency> 
+     *  결론. (스프링 시큐리티) 충돌로 인해 사용하지 않는 것이 좋음 -> 해결하기 위해 많은 시간이 소요!
+     *  
+
     @Bean	
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() { 	
+    public  DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() { 	
     	DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
     	// if not set this, it will use JDK dynamic proxy 
         defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
     	return defaultAdvisorAutoProxyCreator;
-    } 
+    } */
     
     /*
     @Bean

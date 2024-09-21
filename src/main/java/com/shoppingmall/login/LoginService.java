@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class LoginService extends BaseSvc<DataMap>  {
+public class LoginService extends BaseSvc<DataMap> implements LoginServiceImpl  {
 	public int countUserInfo(DataMap paraMap) {
 		return this.dao.countQuery("LoginSQL.countUserInfo", paraMap);
 	}

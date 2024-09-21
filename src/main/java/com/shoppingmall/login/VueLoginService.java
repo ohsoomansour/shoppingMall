@@ -11,7 +11,7 @@ import com.shoppingmall.toaf.util.AES256Util;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
-public class VueLoginService extends BaseSvc<DataMap> {
+public class VueLoginService extends BaseSvc<DataMap> implements VueLoginServiceImpl {
 		public int countUserInfo(DataMap paraMap) {
 				return this.dao.countQuery("VueLoginSQL.countUserInfo", paraMap);
 			}

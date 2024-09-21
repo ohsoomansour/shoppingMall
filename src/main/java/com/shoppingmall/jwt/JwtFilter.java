@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtFilter extends OncePerRequestFilter {
 	
 	public static final String AUTHORIZATION_HEADER = "Authorization";
-	private final TokenProvider tokenProvider;
+	private final TokenFilter tokenProvider;
 	
 	/**
 	 *@doFilterInternal메서드: OncePerRequestFilter 클래스에서 '한 요청당 한 번만 실행되는 필터를 구현'할 때 호출되어 실행

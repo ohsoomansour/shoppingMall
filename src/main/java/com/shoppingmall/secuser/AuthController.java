@@ -8,16 +8,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shoppingmall.jwt.JwtFilter;
 import com.shoppingmall.jwt.TokenDto;
-import com.shoppingmall.jwt.TokenProvider;
+import com.shoppingmall.jwt.TokenFilter;
+import com.shoppingmall.toaf.object.DataMap;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,22 +39,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController   {
 	@Autowired
-	SecMemberService secMemberService;
+	SecUserService secMemberService;
+	@Autowired
+	TokenFilter tokenFilter;
 	
-    private final TokenProvider tokenProvider;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    @PostMapping("/sec_user/login")
-    public ResponseEntity<TokenDto> login(@Valid @RequestBody NonSocialMemberSaveForm nonSocialMemberLoginForm) {
+	 private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+
+
+	//   UsernamePasswordAuthenticationFilter가 '인터셉터'하기 위해서는 POST + /login 기본 세팅
+    @PostMapping("/login")
+    public ResponseEntity<TokenDto> login(@Valid @RequestBody NonSocialUserSaveForm nonSocialMemberLoginForm) {
     	//UserDetails를 사용해서 만듬
         UsernamePasswordAuthenticationToken authenticationToken =
         												//principal, credentials 
                 new UsernamePasswordAuthenticationToken(nonSocialMemberLoginForm.getEmail(), nonSocialMemberLoginForm.getPassword());
-        log.info("authetntication manager builder get object = {}",authenticationManagerBuilder.getObject());
+
         /**************************************** 핵심 코드 *************************************************************
+         * @UsernamePasswordAuthenticationFilter 객체에서 사용하는 AuthenticationManager 구현체 
          * @authenticationManagerBuilder.getObject(): AuthenticationManager 인스턴스 -> AuthenticationProvider 호출       *
-         * @authenticate메소드가 실행이 될 때 CustomUserDetailsService class의 loadUserByUsername 메소드가 실행 및 db와 대조하여 인증 *
+         * @authenticate메소드가 실행이 될 때 SecUserDetailsService class의 loadUserByUsername 메소드가 실행 및 db와 대조하여 인증   *
          *  - @DaoAuthenticationProvider가 사용, retrieveUser 메서드 호출 -> SecMemberServce의 UserDetails loadUserByUsername가 
          *     호출 됨, UserDetails타입 반환 -> CustomDetails에 매핑																		  *	 
          *************************************************************************************************************/
@@ -64,7 +69,7 @@ public class AuthController {
         // 해당 객체를 SecurityContextHolder에 저장하고
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 인증받은 새로운 authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
-        String jwt = tokenProvider.createToken(authentication);																		
+        String jwt = tokenFilter.createToken(authentication);																		
         HttpHeaders httpHeaders = new HttpHeaders();															
         // response header에 jwt token에 넣어줌
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
@@ -75,7 +80,7 @@ public class AuthController {
     }
     //secMemberService
     @PostMapping("/sec_user/join")
-    public void doJoin(@RequestBody NonSocialMemberSaveForm nonSocialMemberSaveForm) {
+    public void doJoin(@RequestBody NonSocialUserSaveForm nonSocialMemberSaveForm) {
     	//NonSocialMemberSaveForm nonSocialMemberSaveForm, login_type = 0, ]
     	try {
     		this.secMemberService.join(nonSocialMemberSaveForm);
@@ -85,17 +90,21 @@ public class AuthController {
     }
     /** 
 	 *@Author: osm
+	 *@Description: 경로에서 .do를 사용하게 되면 메서드 실행 전 후 인터셉터가 가능하다. (WebMvcConfig에서 설정)  
 	 *@CreatedDate: 2024.9.11 
-	 *@Param: - 
+	 *@Param: - @RequestBody는 DTO 역할, 이 핸들러에서는 HTTP 요청의 body 데이터를 'Map 인터페이스 타입'으로 변환이 가능 
 	 *@return: 0 또는 1이상의 값 
 	 *@Function: 아이디 및 사업자등록번호 중복검사아이디 
 	*/
-	@GetMapping("/sec_user/userDoubleCheck.do")
-	public int doMemberDoubleCheck(@RequestParam("gubun") String gubun, @RequestParam("id") String login_id) {
+	@PostMapping("/sec_user/userDuplicCheck.do")
+	public int doDoubleCheckActionUser(@RequestBody DataMap userInfo ) {
+		log.info("userInfo ==============> " + userInfo);
 	    int NonExistentUserResult = 0;
 		try {
+			String gubun = userInfo.getstr("gubun");
+			String login_id = userInfo.getstr("login_id");
 	    	if(gubun.equals("ID")) {
-	    		int memberCount = secMemberService.doCounteLoginId(login_id);
+	    		int memberCount = this.secMemberService.doCountLoginId(login_id);
 	    		return memberCount;
 	    	}
 	    } catch (Exception e) {

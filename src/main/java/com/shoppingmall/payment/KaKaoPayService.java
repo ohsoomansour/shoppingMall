@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PayService {
+public class KaKaoPayService implements KaKaoPayServiceImpl {
 	@Value("${kakaopay.admin-key}")
 	private String ADMIN_KEY;
 	

@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EmailController {
 
     @Autowired
-    EmailService emailService;
+    private EmailServiceImpl emailServiceImpl;
 
 
 	// 임시 비밀번호 발급 
@@ -31,7 +31,7 @@ public class EmailController {
                 .subject("[xXx ShoppingMall] 임시 비밀번호 발급")
                 .build();
 
-        String tempPw = emailService.sendMail(emailMessage, "password");
+        String tempPw = emailServiceImpl.sendMail(emailMessage, "password");
         if(!tempPw.isEmpty()) {
         	 return "메일을 확인해주세요. 비밀번호가 정상적으로 발급되었습니다.";
         } else {
@@ -53,7 +53,7 @@ public class EmailController {
                 .to(emailPostDto.getEmail())
                 .subject("[SAVIEW] 이메일 인증을 위한 인증 코드 발송")
                 .build();
-        String code = emailService.sendMail(emailMessage, "email");
+        String code = emailServiceImpl.sendMail(emailMessage, "email");
      
         EmailResponseDto emailResponseDto = new EmailResponseDto();
         emailResponseDto.setCode(code);

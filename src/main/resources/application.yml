@@ -1,4 +1,3 @@
-
 spring:
   profiles:
     active: local # 사용할 환경 설정
@@ -56,9 +55,15 @@ spring:
     suffix: .html
     cache: false
 
-    
-    
-                  
+
+  #security:
+    #user:
+      #name: test
+      #password: test
+      #roles: ADMIN, USER
+
+
+
 
 #오류 : this key is used in a map and contains special characters. it is recommended to escape it by surrounding it with '[]    
 logging:
@@ -81,7 +86,8 @@ server:
     path: /error
     whitelabel:
       enabled: false
-#카카오 페이 설정
+
+        #카카오 페이 설정
 kakaopay:
   admin-key: InwtSk8M6VlunphqPxcEZD33qYlKyYvM
 

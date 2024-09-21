@@ -1,7 +1,9 @@
 package com.shoppingmall.toaf.basemvc;
 
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
@@ -146,6 +148,7 @@ public class BaseDao <D> extends SqlSessionDaoSupport {
 	public D selectQuery (String queryId, D vo) {
 		return (D) getSqlSession().selectOne(queryId, vo);
 	}
+
 
 	@SuppressWarnings ({ "unchecked" })
 	public D selectQuery (DataMap map) {

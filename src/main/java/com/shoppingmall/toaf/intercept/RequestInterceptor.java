@@ -37,6 +37,8 @@ import net.sf.json.JSONSerializer;
  *  - Q. invoke 메서드는 언제 호출? A. 정의된 조인 포인트(Join Point)에 해당하는 메소드가 호출될 때 자동으로 호출
  *  - MethodInvocation 객체를 매개변수로 받아들이며, 이 객체는 호출되는 메소드에 대한 정보'를 포함
  *  - invocation.proceed() : 실제 메소드 호출을 대리하여 실행
+ * @주의: SpringSecurity 사용시 Proxy 충돌으로 인해 WebMvcConfig에서 defaultAdvisorAutoProxyCreator 메서드 bean 주석 처리
+ *    			 
  */
 @Component
 public class RequestInterceptor implements MethodInterceptor {
@@ -51,8 +53,8 @@ public class RequestInterceptor implements MethodInterceptor {
   			invocation.getMethod().getReturnType().equals(String.class) ||
   			invocation.getMethod().getReturnType().equals(Object.class) ||
   			invocation.getMethod().getReturnType().equals(DataMap.class)||
-  			invocation.getMethod().getReturnType().equals(void.class) || 
-  			invocation.getMethod().getReturnType().equals(int.class) 
+  			invocation.getMethod().getReturnType().equals(void.class) ||
+  			 invocation.getMethod().getReturnType().equals(int.class) 
 			
 			){
 

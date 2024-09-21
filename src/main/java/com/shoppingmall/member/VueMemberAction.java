@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class VueMemberAction {
 		
 		@Autowired
-		MemberFrontService  memberFrontService;
+		MemberFrontServiceImpl  memberFrontServiceImpl;
 		
 		/** 
 		 *@Author: osm
@@ -56,7 +56,7 @@ public class VueMemberAction {
 		    	  DataMap paraMap = new DataMap();
 		    	  paraMap.put("gubun", gubun);
 		    	  paraMap.put("u_email", u_email);
-		    	  int memberCount = memberFrontService.doCounteMemberId(paraMap);
+		    	  int memberCount = memberFrontServiceImpl.doCounteMemberId(paraMap);
 		    	  log.info("memberCount =========>" + memberCount);
 		    	  return memberCount; 
 		    	}
@@ -86,7 +86,7 @@ public class VueMemberAction {
 						//{u_type=A, u_email=admin5@naver.com, u_pw=dhtnaksen@3, u_name=오수만, u_address=서울 서초구 과천대로 786래미안 1201호 , biz_email1=osoomansour, biz_email2=@naver.com, u_ph=01036383330}
 						String u_pw = (String) userMap.get("u_pw");
 						userMap.put("u_pw", AES256Util.strEncode(u_pw));
-						return this.memberFrontService.doInsertMember(userMap);
+						return this.memberFrontServiceImpl.doInsertMember(userMap);
 				} catch(Exception e) {
 						e.printStackTrace();
 				

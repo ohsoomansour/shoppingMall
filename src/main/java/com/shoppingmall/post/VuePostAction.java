@@ -33,7 +33,7 @@ public class VuePostAction {
 		//protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 		
 	 @Autowired
-	 VuePostService postService;
+	 VuePostServiceImpl vuePostServiceImpl;
 	
 	 /**
 	 * @Function : 게시판 리스트 조회
@@ -43,7 +43,7 @@ public class VuePostAction {
 		
 		@GetMapping("/vuePost/list")
 		public Object getContentAction() {
-			List<DataMap> postList = postService.getAllPostsList();
+			List<DataMap> postList = vuePostServiceImpl.getAllPostsList();
 			log.info("postList" + postList);
 			DataMap postResult = new DataMap();
 			postResult.put("postList", postList);				
@@ -73,7 +73,7 @@ public class VuePostAction {
 		public void postData(@ModelAttribute("paraMap") DataMap articleMap, HttpServletRequest request, HttpServletResponse response) throws IOException{
 		  //이미 로그인 후 u_email & u_id가 sessionStorage 에 저장 -> u_id & u_email를 post 작성 시 입력
 		  log.info("===== pubPost's Controller - paraMap ====> " + articleMap );
-		  int p_cnt = postService.doPublishPost(articleMap);
+		  int p_cnt = vuePostServiceImpl.doPublishPost(articleMap);
 		  log.debug("p_cnt ============> " + p_cnt);
 		  if(p_cnt > 0) {
 		  	int u_id = articleMap.getint("u_id");
@@ -109,7 +109,7 @@ public class VuePostAction {
 		  		//
 		  		articleMap.putorg("fileInfos", fileInfos);
 		  	}
-		  	int f_cnt = postService.doSaveFile(articleMap);
+		  	int f_cnt = vuePostServiceImpl.doSaveFile(articleMap);
 		  	log.info("게시 글 작성 cnt ======> " + f_cnt);
 		  }
 		  	

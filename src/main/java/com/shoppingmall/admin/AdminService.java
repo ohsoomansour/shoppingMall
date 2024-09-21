@@ -1,4 +1,4 @@
-package com.shoppingmall.member;
+package com.shoppingmall.admin;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import com.shoppingmall.toaf.object.DataMap;
 
 @Service
 @Transactional(value="postgresqlTransactionManager", propagation= Propagation.REQUIRED, rollbackFor=Exception.class)
-public class AdminService extends BaseSvc<DataMap> {
+public class AdminService extends BaseSvc<DataMap> implements AdminServiceImpl {
 
 	public List<DataMap> getMemberList(DataMap dataMap) {
 	
