@@ -30,8 +30,11 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 	public DaoAuthenticationProvider(PasswordEncoder passwordEncoder) {
 		setPasswordEncoder(passwordEncoder);
 	}
-	// Spring이 객체의 의존성을 모두 주입한 후 @Autowired가 적용
-
+	/**
+	 *@explain1. Spring이 객체의 의존성을 모두 주입한 후 @Autowired가 적용
+	 *@순서: (AbstractUserDetailsAuthenticationProvider) The class is designed to respond to authentication requests.
+     * 
+	*/
 	@Override
 	protected final UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {

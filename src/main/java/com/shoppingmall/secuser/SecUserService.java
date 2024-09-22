@@ -4,6 +4,7 @@ package com.shoppingmall.secuser;
 
 import java.security.NoSuchAlgorithmException;
 
+import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,11 @@ import com.shoppingmall.toaf.object.DataMap;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+/**
+ *@순서: 인증 요청 ->  AbstractUserDetailsAuthenticationProvider -> DaoAuthenticationProvider의 retrieveUser
+ *      -> this.userDetailsService.loadUserByUsername(username); 호출 -> SecUserService의 loadUserByUsername
+ * */
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,8 +48,13 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
 				nonSocialMember.put("email_verified", false);
 				nonSocialMember.put("u_ph", nonSocialMemberSaveForm.getU_ph());
 				
-				this.dao.countQuery("NonSocialMemberSQL.countMemberByLoginId", nonSocialMember);
-				//## @Transactional 적용으로 -> 0 또는 1의 값인지 확인 필요 
+				int userCount = this.dao.countQuery("NonSocialMemberSQL.countMemberByLoginId", nonSocialMember);
+				if(userCount > 0) {
+					log.error("사용자가 존재합니다! 다른 아이디를 선택해주세요!");					
+					throw new Error("사용자가 존재합니다! 다른 아이디를 선택해주세요!");					
+				} else {
+					this.dao.insertQuery("NonSocialMemberSQL.signUpFor", nonSocialMember);
+				}
 				user_authid = 1;
 				break;
 			}

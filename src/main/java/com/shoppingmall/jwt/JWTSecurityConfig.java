@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JWTSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-	private final TokenFilter tokenProvider;
+	private final TokenProvider tokenProvider;
 	/**
 	 *@Description : security로직에 JwtFilter 등록
 	 *@UsernamePasswordAuthenticationFilter : 스프링 시큐리티에서 폼 기반 로그인 과정을 처리하는 필터. 로그인 정보를 제출하면이 필터가 해당 정보를 가로채
@@ -30,6 +30,8 @@ public class JWTSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurity
 				(Filter) new JwtFilter(tokenProvider),
 				UsernamePasswordAuthenticationFilter.class
 		);
+		
+		
 	}
 	
 	

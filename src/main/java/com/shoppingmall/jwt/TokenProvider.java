@@ -33,14 +33,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class TokenFilter implements InitializingBean {
+public class TokenProvider implements InitializingBean {
 	
 	private final String secret_key;
 	private final long tokenValidityInSeconds;
 	private static final String AUTHORITIES_KEY = "auth";
 	private Key key;
 	
-	public TokenFilter( 
+	public TokenProvider( 
 			@Value("${jwt.secret-key}") String secret_key,
 			@Value("${jwt.token-validity-in-sconds}") long tokenValidityInSeconds) {
 		    
@@ -79,6 +79,9 @@ public class TokenFilter implements InitializingBean {
 	/**
 	 *@Collection<? extends GrantedAuthority> authorities = Collections.emptyList();
      *  - GrantedAuthority 타입 또는 그 하위 타입의 권한들이 담길 수 있는 빈 리스트를 생성하는 것 
+     *@Jwts.parserBuilder().setSigningKey(key).build() - JWT 파서를 생성
+     *@parseClaimsJws(token) 메서드는 제공된 JWT 토큰을 파싱하고 검증합니다. 토큰이 유효하지 않거나 기간이 만료되었거나 서명이 잘못된 경우 예외를 발생
+     *@getBody() 메서드는 토큰의 클레임(=페이로드)을 가져온다.
 	 * */
     public Authentication getAuthentication(String token) {
     	Claims claims = Jwts

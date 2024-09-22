@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shoppingmall.jwt.JwtFilter;
 import com.shoppingmall.jwt.TokenDto;
-import com.shoppingmall.jwt.TokenFilter;
+import com.shoppingmall.jwt.TokenProvider;
 import com.shoppingmall.toaf.object.DataMap;
 
 import jakarta.validation.Valid;
@@ -43,10 +43,9 @@ public class AuthController   {
 	@Autowired
 	SecUserService secMemberService;
 	@Autowired
-	TokenFilter tokenFilter;
+	TokenProvider tokenFilter;
 	
 	 private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
 
 
 	//   UsernamePasswordAuthenticationFilter가 '인터셉터'하기 위해서는 POST + /login 기본 세팅
