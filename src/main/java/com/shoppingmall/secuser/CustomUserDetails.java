@@ -22,6 +22,8 @@ import lombok.Data;
 @Data
 public class CustomUserDetails implements UserDetails, Serializable  {
 
+	
+	private static final long serialVersionUID = 1L;
 	private int id;	// DB에서 PK 값
     private String login_id;		// 로그인용 ID 값
     private String password;	// 비밀번호

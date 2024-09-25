@@ -34,9 +34,11 @@ public class JwtFilter extends OncePerRequestFilter {
 			Authentication authentication = tokenProvider.getAuthentication(jwt);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
-		} else {
-			log.debug("유효한 JWT 토큰이 없습니다., uri: {}", requestURI);
+		} 
+		else {
+			log.info("유효한 JWT 토큰이 없습니다. uri:" + requestURI);
 		}
+		log.info("jwt 유효x -> 다음 필터로 이동!!");
 		filterChain.doFilter(httpServletRequest, response);
 	}
 	/**

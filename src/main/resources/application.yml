@@ -33,14 +33,14 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 2MB 
-      max-request-size: 2MB
+      max-file-size: 10MB 
+      max-request-size: 10MB
       
   mail:
       host: smtp.gmail.com #SMTP 서버 호스트
       port: 587 #SMTP 서버 포트 
       username: ceoosm # SMTP 서버 로그인 아이디: 발신자 (ceoosm@gmail.com)
-      password:  # 앱 비밀번호는 구글 계정, 16자리 자동 설정 됨 
+      password: syyj qhda wsgv gqdr # 앱 비밀번호는 구글 계정, 16자리 자동 설정 됨 
       properties:
         mail:
           smtp:
@@ -71,6 +71,7 @@ logging:
     root: INFO  #INFO, WARN, ERROR, FATAL 모두 표시 -> 하위 패키지 상속
     '[com.shoppingmall.login]': DEBUG #특정 패키지 경로
     '[com.shoppingmall.post]': DEBUG
+    '[com.shoppingmall.secuser]': DEBUG
     '[com.shoppingmall.toaf.intercept]': debug
  
 #서버 포트

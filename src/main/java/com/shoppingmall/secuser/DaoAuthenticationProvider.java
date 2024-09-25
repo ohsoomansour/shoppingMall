@@ -82,7 +82,7 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
      *  Q. Object principal, Authentication authentication, UserDetails user 인수는 어디서 가져오나 ?
      *  A. 스프링 시큐리티에서 인증이 성공하면 Authentication 객체 내부에 principal을 저장(='로그인한 사용자에 대한 정보'=UserDetails)
      *   - retrieveUser 메서드 성공시 반환하는 UserDetails 
-     *  d
+     *  성공하면 -> AuthenticationSuccessHandler 호출 -> redirect! 
      *  - 
      * */
 	@Override

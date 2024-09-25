@@ -26,38 +26,38 @@
 		
 	</select>
 	<select id="NonSocialMemberSQL.getOneMemberByName"  parameterType="dataMap" resultType="dataMap">
-        /*이름에 따른 회원: NonSocialMemberSQL.getOneMemberByName */
-        SELECT authid, login_id, email, password, user_name, authorities
+        /*이름에 따른 회원찾기 : NonSocialMemberSQL.getOneMemberByName */
+        SELECT auth_id, login_id, email, password, user_name, authorities
         FROM nonsocial_member
         WHERE user_name = #{user_name}
     </select>
-	<insert id="NonSocialMemberSQL.signUpFor" >
+	<insert id="NonSocialMemberSQL.signUpFor" parameterType="dataMap" >
 	/* 회원 가입: */
-		INSERT INTO
+		INSERT INTO nonsocial_member
 		(
+			login_type,
 			login_id,
 			email,
 			password,
 			email_verified,
 			locked,
-			nickname,
 			authorities,
 			address,
-			login_type,
 			user_name,
+			u_ph
 		)
 		VALUES
 		(
+		   #{login_type},
 		   #{login_id},
 		   #{email},
 		   #{password},
 		   #{email_verified},
 		   #{locked},
-		   #{nickname},
-		   #{authorities},
+		   #{authorities}::jsonb,
 		   #{address},
-		   #{login_type},
-		   #{user_name}
+		   #{user_name},
+		   #{u_ph}
 		)
 		
 	</insert>

@@ -1,5 +1,7 @@
 package com.shoppingmall.secuser;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -8,7 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,9 @@ import com.shoppingmall.jwt.TokenDto;
 import com.shoppingmall.jwt.TokenProvider;
 import com.shoppingmall.toaf.object.DataMap;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +41,15 @@ import lombok.extern.slf4j.Slf4j;
  *   A3.Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();  // 사용자의 권한
  *  @UsernamePasswordAuthenticationToken 타입: UserDetails를 사용해서 만듬 
  * */
+/**************************************** 핵심 코드 *************************************************************
+ * #상황: 처음 로그인은 토큰이 없음 - > TokenFilter -> UsernamePasswordAuthenticationFilter
+ * @UsernamePasswordAuthenticationFilter
+ *  - doFilter 메서드, attemptAuthentacate 메서드, authentication매니저가 authenticate 적절한 authenticationProvider를 찾음 
+ *  ->  AbstractUserDetailsAuthenticationProvider의 authenticate 메서드 실행 -> DaoAuthenticationProvider가 오버라이딩해서 구현 및 확장 
+ * #역할: authenticationManagerBuilder.getObject(): AuthenticationManager 인스턴스 -> AuthenticationProvider 호출       *
+ * 																  *	 
+ *************************************************************************************************************/
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -49,39 +63,42 @@ public class AuthController   {
 
 
 	//   UsernamePasswordAuthenticationFilter가 '인터셉터'하기 위해서는 POST + /login 기본 세팅
-    @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@Valid @RequestBody NonSocialUserSaveForm nonSocialMemberLoginForm) {
-    	//UserDetails를 사용해서 만듬
-        UsernamePasswordAuthenticationToken authenticationToken =
-        												//principal, credentials 
-                new UsernamePasswordAuthenticationToken(nonSocialMemberLoginForm.getEmail(), nonSocialMemberLoginForm.getPassword());
-
-        /**************************************** 핵심 코드 *************************************************************
-         * @UsernamePasswordAuthenticationFilter 객체에서 사용하는 AuthenticationManager 구현체 
-         * @authenticationManagerBuilder.getObject(): AuthenticationManager 인스턴스 -> AuthenticationProvider 호출       *
-         * @authenticate메소드가 실행이 될 때 SecUserDetailsService class의 loadUserByUsername 메소드가 실행 및 db와 대조하여 인증   *
-         *  - @DaoAuthenticationProvider가 사용, retrieveUser 메서드 호출 -> SecMemberServce의 UserDetails loadUserByUsername가 
-         *     호출 됨, UserDetails타입 반환 -> CustomDetails에 매핑																		  *	 
-         *************************************************************************************************************/
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        log.info("authentication info = {}",authentication);
-        // 해당 객체를 SecurityContextHolder에 저장하고
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        // 인증받은 새로운 authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
-        String jwt = tokenFilter.createToken(authentication);																		
-        HttpHeaders httpHeaders = new HttpHeaders();															
-        // response header에 jwt token에 넣어줌
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-        httpHeaders.add("location","http://localhost:8088/#/sec_user/login");
+    @PostMapping("/sec/login")  //@Valid 
+    public ResponseEntity<TokenDto> login(@RequestBody Map<String, Object> userMap) {
+    	//UserDetails를 사용해서 만듬 
+    	log.info("PATH: /login ===> nonSocialMemberLoginForm ===>" + userMap);
+    	log.debug("PATH: /login DEBUGING!!!!!===============>");
+    		//principal, credentials )
+	        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userMap.get("login_id"), userMap.get("password"));
+	        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+	        log.info("authentication info = {}",authentication);
+	        // 해당 객체를 SecurityContextHolder에 저장하고
+	        SecurityContextHolder.getContext().setAuthentication(authentication);
+	        // 인증받은 새로운 authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
+	        String jwt = tokenFilter.createToken(authentication);																		
+	        HttpHeaders httpHeaders = new HttpHeaders();															
+	        // response header에 jwt token에 넣어줌
+	        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+	        httpHeaders.add("location","http://localhost:8088/#/login");
 
         // tokenDto를 이용해 response body에도 넣어서 리턴
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        	return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+ 
+    	//HttpHeaders FailhttpHeaders = new HttpHeaders();	
+    	//return new ResponseEntity<>(FailhttpHeaders, HttpStatus.NOT_ACCEPTABLE);
     }
-    //secMemberService
+    /**
+     *@Date: 24.9.23  
+     *@Param: (*주의) form형태의 request에서 폼 데이터는 'Content-Type' : application/json 형태 
+     *  - const formData = new FormData ->  formData.append("authorities", ["Role_admin"]) 보내질 때   "Role_admin"이렇게 인식
+     *   유형1. application/json -> @RequestBody + Map<String, Object> userMap 
+     *   유형2. multipart/from-data -> @ModelAttribute NonSocialUserSaveForm nonSocialMemberSaveForm  
+     * */
     @PostMapping("/sec_user/join")
-    public void doJoin(@RequestBody NonSocialUserSaveForm nonSocialMemberSaveForm) {
-    	//NonSocialMemberSaveForm nonSocialMemberSaveForm, login_type = 0, ]
+    public void doJoin(@ModelAttribute NonSocialUserSaveForm nonSocialMemberSaveForm) {
+
     	try {
+    		log.info("/sec_user/join's nonSocialMemberSaveForm=========>" + nonSocialMemberSaveForm );
     		this.secMemberService.join(nonSocialMemberSaveForm);
     	} catch(Exception e) {
     		e.printStackTrace();
@@ -98,6 +115,7 @@ public class AuthController   {
 	@PostMapping("/sec_user/userDuplicCheck.do")
 	public int doDoubleCheckActionUser(@RequestBody DataMap userInfo ) {
 		log.info("userInfo ==============> " + userInfo);
+		log.debug("debug Testing.....!");
 	    int NonExistentUserResult = 0;
 		try {
 			String gubun = userInfo.getstr("gubun");
