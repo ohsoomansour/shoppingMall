@@ -25,11 +25,11 @@
 		]]>
 		
 	</select>
-	<select id="NonSocialMemberSQL.getOneMemberByName"  parameterType="dataMap" resultType="dataMap">
+	<select id="NonSocialMemberSQL.getOneMemberByUserId"  parameterType="dataMap" resultType="dataMap" >
         /*이름에 따른 회원찾기 : NonSocialMemberSQL.getOneMemberByName */
-        SELECT auth_id, login_id, email, password, user_name, authorities
+        SELECT auth_id, login_id, email, password, user_name, authority
         FROM nonsocial_member
-        WHERE user_name = #{user_name}
+        WHERE login_id = #{login_id}
     </select>
 	<insert id="NonSocialMemberSQL.signUpFor" parameterType="dataMap" >
 	/* 회원 가입: */
@@ -41,7 +41,7 @@
 			password,
 			email_verified,
 			locked,
-			authorities,
+			authority,
 			address,
 			user_name,
 			u_ph
@@ -54,7 +54,7 @@
 		   #{password},
 		   #{email_verified},
 		   #{locked},
-		   #{authorities}::jsonb,
+		   #{authority},
 		   #{address},
 		   #{user_name},
 		   #{u_ph}

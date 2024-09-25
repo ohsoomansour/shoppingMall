@@ -1,5 +1,6 @@
 package com.shoppingmall.secuser;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,15 +11,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class DaoAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 	//..생략된 변수 많음
-	private PasswordEncoder passwordEncoder;
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
+	
 	private UserDetailsService userDetailsService;
 	private UserDetailsPasswordService userDetailsPasswordService;
+
+	/*
 	public DaoAuthenticationProvider() {
 		this(PasswordEncoderFactories.createDelegatingPasswordEncoder());
 	}
@@ -29,7 +36,7 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 	
 	public DaoAuthenticationProvider(PasswordEncoder passwordEncoder) {
 		setPasswordEncoder(passwordEncoder);
-	}
+	}*/
 	/**
 	 *@explain1. Spring이 객체의 의존성을 모두 주입한 후 @Autowired가 적용
 	 *@순서: (AbstractUserDetailsAuthenticationProvider) The class is designed to respond to authentication requests.
@@ -67,6 +74,8 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 					.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
 		}
 		String presentedPassword = authentication.getCredentials().toString();
+		log.debug("presentedPassword =====>" + presentedPassword);
+		log.debug("db의 password========>" + userDetails.getPassword());
 		if (!this.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
 			this.logger.debug("Failed to authenticate since password does not match stored value");
 			throw new BadCredentialsException(this.messages
@@ -92,6 +101,7 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 				&& this.passwordEncoder.upgradeEncoding(user.getPassword()); 
 		if (upgradeEncoding) {
 			String presentedPassword = authentication.getCredentials().toString();
+			log.debug("createSuccessAuthentication에 들어오나??" + presentedPassword); 
 			String newPassword = this.passwordEncoder.encode(presentedPassword);
 			user = this.userDetailsPasswordService.updatePassword(user, newPassword);
 		}

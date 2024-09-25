@@ -3,13 +3,12 @@ package com.shoppingmall.secuser;
 
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,8 +30,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class SecUserService extends BaseSvc<DataMap> implements UserDetailsService {
-	private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-	
+	 private static final String BCryptPattern = "^\\$2[aby]?(\\$[0-9]{2})?\\$.{22}.*$";
+	  
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
+    
 
 	public int join (NonSocialUserSaveForm nonSocialMemberSaveForm) throws NoSuchAlgorithmException, JsonProcessingException {
 		int login_type = nonSocialMemberSaveForm.getLogin_type();
@@ -45,13 +48,14 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
 					nonSocialMember.put("login_type", nonSocialMemberSaveForm.getLogin_type());
 					nonSocialMember.put("login_id", nonSocialMemberSaveForm.getLogin_id());
 					nonSocialMember.put("email", nonSocialMemberSaveForm.getEmail());
-					nonSocialMember.put("password", passwordEncoder.encode(nonSocialMemberSaveForm.getPassword()) );
+					
+					String password = nonSocialMemberSaveForm.getPassword();
+	
+					
+					nonSocialMember.put("password", passwordEncoder.encode(password));
 					nonSocialMember.put("email_verified", true);
 					nonSocialMember.put("locked", false);
-					List<String> authorList = new ArrayList<>();
-					authorList.add(nonSocialMemberSaveForm.getAuthorities());
-					log.info("authorList ==========> " + authorList);
-					nonSocialMember.put("authorities", authorList); 
+					nonSocialMember.put("authority", nonSocialMemberSaveForm.getAuthority()); 
 					nonSocialMember.put("address", nonSocialMemberSaveForm.getAddress());			
 					nonSocialMember.put("user_name", nonSocialMemberSaveForm.getUser_name());
 					nonSocialMember.put("u_ph", nonSocialMemberSaveForm.getU_ph());
@@ -112,21 +116,33 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
 	 * @CreationDate: 24.9.10
 	 * @실행순서: DaoAuthenticationProvider에서 retrieveUser, this.userDetailsService.loadUserByUsername(username);
 	 *  -> SecMemberService 클래스의 loadUserByUsername 호출!  
+	 *    SimpleGrantedAuthority는 GrantedAuthority 인터페이스를 구현한 클래스이며, 문자열로 권한을 표현
+    	  SimpleGrantedAuthority("ROLE_ADMIN")과 같은 형태의 객체로 변환
 	 * */
     @Override
-    public UserDetails loadUserByUsername(String user_name) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String login_id) throws UsernameNotFoundException {
     	
-    	//이메일로 소셜비회원을 찾아옴 
-    	log.info("user_name ====> "+ user_name);
+    	log.info("user_name ====> "+ login_id);
     	DataMap userMap = new DataMap();
-    	userMap.put("user_name", userMap);
-    	DataMap nonSocialMember = this.dao.selectQuery("NonSocialMemberSQL.getOneMemberByName", userMap);
-    	log.debug("loadUserByUsername's nonSocialMember =======> " + nonSocialMember);
-    	
-    	//이게 컬렉션 타입이어야 하는데그게 아니면 error ee
-    	if(nonSocialMember.isEmpty()) {
+    	userMap.put("login_id", login_id);
+    	log.info("SecUserService's loadUserByUsername의 userMap" + userMap);
+    	//DB -> authorities를 가져옴  
+    	DataMap nonSocialMember = this.dao.selectQuery("NonSocialMemberSQL.getOneMemberByUserId", userMap);
+    	log.debug("loadUserByUsername's nonSocialMember =======> " + nonSocialMember); 
+
+
+    	if(!nonSocialMember.isEmpty()) {
     		log.info("loadUserByUsername= ====> user존재");
-    		return new CustomUserDetails(nonSocialMember.getint("auth_id"),nonSocialMember.getstr("email"), nonSocialMember.getstr("password"), true, false);
+    		return new CustomUserDetails(
+    				nonSocialMember.getint("auth_id"),
+    				nonSocialMember.getstr("login_id"),
+    				nonSocialMember.getstr("user_name"),
+    				nonSocialMember.getstr("email"),
+    				nonSocialMember.getstr("password"),
+    				 true,
+    				 false,
+    				 nonSocialMember.getstr("authority")
+    				);
     	}else {
             throw new UsernameNotFoundException("User not found");
         }

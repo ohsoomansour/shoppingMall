@@ -1,6 +1,6 @@
 package com.shoppingmall.secuser;
 
-import java.util.List;
+
 
 import lombok.Data;
 
@@ -12,7 +12,7 @@ public class NonSocialUserSaveForm {
     private boolean  email_verified;
     private String  password;	// 비밀번호
     private String  address;
-    private String  authorities;
+    private String  authority;
     private String  user_name;
     private String  u_ph;
 }

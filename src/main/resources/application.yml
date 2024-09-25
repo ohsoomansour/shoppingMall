@@ -72,6 +72,7 @@ logging:
     '[com.shoppingmall.login]': DEBUG #특정 패키지 경로
     '[com.shoppingmall.post]': DEBUG
     '[com.shoppingmall.secuser]': DEBUG
+    '[com.shoppingmall.jwt]': DEBUG
     '[com.shoppingmall.toaf.intercept]': debug
  
 #서버 포트
@@ -106,12 +107,11 @@ mybatis:
 file: 
   upload-dir: C:/Users/USER/Desktop/osm/file_upload
 
-# Encryption key 256 key(길이 32) - https://randomkeygen.com/
+# secret-key는 512bit 이상을 사용해야 한다. + 유효시간: 24h(86400)
 jwt:
-  secret-key: 5XCb6mZQulmcHuaCu7hTinaqO7Bsu9jmdfsdfasdfsdfsfsdf
-  token-validity-in-sconds: 10
+  secret-key: Y2hvcHBhLWRvbnQtYml0ZS1tZS1zcHJpbmctYm9vdC1qd3QtdGVzdC1zZWNyZXQta2V5LWNob3BwYS1kb250LWJpdGUtbWUtc3ByaW5nLWJvb3Qtand0LXRlc3Qtc2VjcmV0LWtleQo=
+  token-validity-in-sconds: 86400
 
-# application.properties
 
 
             

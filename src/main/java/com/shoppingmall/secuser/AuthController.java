@@ -67,7 +67,7 @@ public class AuthController   {
     public ResponseEntity<TokenDto> login(@RequestBody Map<String, Object> userMap) {
     	//UserDetails를 사용해서 만듬 
     	log.info("PATH: /login ===> nonSocialMemberLoginForm ===>" + userMap);
-    	log.debug("PATH: /login DEBUGING!!!!!===============>");
+    	log.info("======== 24.9.25 PATH: /sec/login DEBUGING!!!!!========");
     		//principal, credentials )
 	        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userMap.get("login_id"), userMap.get("password"));
 	        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);

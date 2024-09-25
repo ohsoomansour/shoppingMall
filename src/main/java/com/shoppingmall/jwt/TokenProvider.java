@@ -76,7 +76,7 @@ public class TokenProvider implements InitializingBean {
 				.setExpiration(validity)
 				.compact();   //모든 설정을 압축하여 최종 'JWT 문자열' 반환
 	}
-	/**
+	/**  
 	 *@Collection<? extends GrantedAuthority> authorities = Collections.emptyList();
      *  - GrantedAuthority 타입 또는 그 하위 타입의 권한들이 담길 수 있는 빈 리스트를 생성하는 것 
      *@Jwts.parserBuilder().setSigningKey(key).build() - JWT 파서를 생성
@@ -90,12 +90,21 @@ public class TokenProvider implements InitializingBean {
     			.build()
     			.parseClaimsJws(token)
     			.getBody();
-    	log.info("authorities = {}", claims.get(AUTHORITIES_KEY).toString().split(","));
+    	log.debug("authorities = {}", claims.get(AUTHORITIES_KEY).toString().split(","));
     	Collection<? extends GrantedAuthority> authorities = Collections.emptyList();
     	User principal = new User(claims.getSubject(), "", authorities);
+    	log.debug("principal ======> " + principal);
     	return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
-    // 토큰의 유효성 검증을 수행
+    
+    /*************** ##### 핵심 역할, 여기서  key로 '토큰 유효성' 검사  #### *****
+     *@유효성방법: key로 jwt 유효성 검사 -> 서명과 Clains를 확인 				   *		
+     * 1.확인: 토큰의 변조												   *	
+     * 2.서명이 유효하거나 												   *	
+     * 3.토큰의 만료시간													   *
+     * 만약 에러가 난다! 그러면 로그인 창에서 authenticate -> db 비번과 비교  	   *	                                   		   *
+     ****************************************************************** */
+    // 
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
