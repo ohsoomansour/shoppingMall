@@ -81,7 +81,7 @@ public class SecurityConfig {
 	     		  		.authenticationEntryPoint(jwtAuthenticationEntryPoint)
 	     		 )
 	     		 .authorizeHttpRequests((authorize) -> authorize
-	     		    .requestMatchers("/sec/login","/sec_user/join","/sec_user/userDuplicCheck.do", "/send-mail/email").permitAll()
+	     		    .requestMatchers("/sec/login","/sec/join","/sec_user/userDuplicCheck.do", "/send-mail/email").permitAll()
 	     		    .requestMatchers("/error/**").permitAll()
 	     		    
 	     		    .anyRequest().authenticated()

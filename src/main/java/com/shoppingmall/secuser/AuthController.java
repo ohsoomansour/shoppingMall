@@ -94,7 +94,7 @@ public class AuthController   {
      *   유형1. application/json -> @RequestBody + Map<String, Object> userMap 
      *   유형2. multipart/from-data -> @ModelAttribute NonSocialUserSaveForm nonSocialMemberSaveForm  
      * */
-    @PostMapping("/sec_user/join")
+    @PostMapping("/sec/join")
     public void doJoin(@ModelAttribute NonSocialUserSaveForm nonSocialMemberSaveForm) {
 
     	try {
