@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  *  -> hasRole("ADMIN"):ROLE_ADMIN -> 로그인 사용자가 ROLE_USER -> JwtAccessDeniedHandler(accessDeniedHandler)호출
  *  ->  JwtAccessDeniedHandler가 실제 구현
  *  -> 클라이언트 사이드, status: 403, error: Forbidden, path: /admin/searchForUsers 
+ *  test
  * */
 
 @Slf4j
