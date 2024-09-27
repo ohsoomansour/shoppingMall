@@ -1,9 +1,9 @@
 package com.shoppingmall.jwt;
 
 import java.security.Key;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
@@ -82,6 +83,9 @@ public class TokenProvider implements InitializingBean {
      *@Jwts.parserBuilder().setSigningKey(key).build() - JWT 파서를 생성
      *@parseClaimsJws(token) 메서드는 제공된 JWT 토큰을 파싱하고 검증합니다. 토큰이 유효하지 않거나 기간이 만료되었거나 서명이 잘못된 경우 예외를 발생
      *@getBody() 메서드는 토큰의 클레임(=페이로드)을 가져온다.
+     *claims.get(AUTHORITIES_KEY).toString().split(",") 해석
+     * claims.get(AUTHORITIES_KEY).toString() -> "ROLE_ADMIN", "ROLE_USER"
+     * claims.get(AUTHORITIES_KEY).toString().split(",")) -> ["ROLE_ADMIN", "ROLE_USER"]
 	 * */
     public Authentication getAuthentication(String token) {
     	Claims claims = Jwts
@@ -91,8 +95,12 @@ public class TokenProvider implements InitializingBean {
     			.parseClaimsJws(token)
     			.getBody();
     	log.debug("authorities = {}", claims.get(AUTHORITIES_KEY).toString().split(","));
-    	Collection<? extends GrantedAuthority> authorities = Collections.emptyList();
-    	User principal = new User(claims.getSubject(), "", authorities);
+    	//Collection<? extends GrantedAuthority> authorities = Collections.emptyList();
+    	List<GrantedAuthority> authorities =  Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+    			.map(SimpleGrantedAuthority::new)  // 각 권한 문자열을 SimpleGrantedAuthority 객체로 변환
+                .collect(Collectors.toList());     // List로 수집
+    			
+    			User principal = new User(claims.getSubject(), "", authorities);
     	log.debug("principal ======> " + principal);
     	return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }

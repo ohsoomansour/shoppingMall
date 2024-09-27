@@ -31,6 +31,16 @@
         FROM nonsocial_member
         WHERE login_id = #{login_id}
     </select>
+    <select id="NonSocialMemberSQL.searchForUsers"  parameterType="dataMap" resultType="dataMap" >
+        /*admin이 회원 검색: NonSocialMemberSQL.searchForUsers" */
+        
+        SELECT auth_id, login_id, email, user_name, authority
+        FROM nonsocial_member
+        WHERE login_id LIKE CONCAT('%', #{keyword}, '%') 
+           OR email LIKE CONCAT('%', #{keyword}, '%') 
+           OR user_name LIKE CONCAT('%', #{keyword}, '%') 
+    </select>
+    
 	<insert id="NonSocialMemberSQL.signUpFor" parameterType="dataMap" >
 	/* 회원 가입: */
 		INSERT INTO nonsocial_member

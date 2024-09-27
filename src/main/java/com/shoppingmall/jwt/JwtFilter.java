@@ -24,7 +24,9 @@ public class JwtFilter extends OncePerRequestFilter {
 	/**
 	 *@doFilterInternal메서드: OncePerRequestFilter 클래스에서 '한 요청당 한 번만 실행되는 필터를 구현'할 때 호출되어 실행
 	 * - 역할: 실제로 HTTP 요청을 처리, 요청에 대해 특정 로직을 수행한 후 다음 필터로요청을 전달하는 역할을 한다.
-	 *@SecurityContextHolder: 안에 저장된 Authentication은 다음 필터에서 사용 가능하다. 이유는 현재 인증된 사용자 정보를 전역적으로 관리 
+	 *@SecurityContextHolder: 안에 저장된 Authentication은 다음 필터에서 사용 가능하다. 이유는 현재 인증된 사용자 정보를 전역적으로 관리
+	 *@ 스프링 시큐리티에서 로그인 후 authentication 을 성공적으로 받아서 SecurityContextHolder에 넣었어 
+	 *   그럼 다른 경로에서 SecurityContextHolder.getContext()하면 그 authentication이 그대로 있어?  
 	 * */
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
@@ -34,7 +36,8 @@ public class JwtFilter extends OncePerRequestFilter {
 		String requestURI = httpServletRequest.getRequestURI();
 		if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 			Authentication authentication = tokenProvider.getAuthentication(jwt);
-			log.debug("authentication ====>" + authentication);
+			log.debug("JwtFilter -> getAuthentication(jwt) ====>" + authentication);
+			//필터 -> Authentication에 권한 넣고 -> SecurityContextHolder 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
 		} 
