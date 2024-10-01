@@ -71,7 +71,7 @@ public class AuthController   {
     		//principal, credentials )
 	        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userMap.get("login_id"), userMap.get("password"));
 	        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-	        log.info("authentication info = {}",authentication);
+	        log.info("authentication info = {}",authentication);  //the successful authentication token : UsernamePasswordAuthenticationToken
 	        // 해당 객체를 SecurityContextHolder에 저장하고
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
 	        // 인증받은 새로운 authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성

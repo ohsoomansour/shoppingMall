@@ -42,6 +42,8 @@ public class KaKaoPayService implements KaKaoPayServiceImpl {
 	 *  - item_name(상품명), quantity(상품수), total_amount
 	 * @HttpEntity:  HTTP 요청 또는 응답의 바디와 헤더를 담는 컨테이너 역할
 	 * @kReadyResponse: tid=T6d9696b4d6b11c541c8, next_redirect_pc_url=https://online-pay.kakao.com/mockup/v1/7282638d7c2c64334d0a1071a6d87e761256bffbb357758ddba93fe602be584d/info, created_at=2024-09-05T17:18:51
+	 * @RestTemplate: spring에서 제공하는 고수준의 HTTP 클라이언트
+	 * @RestTemplate: 	직접 요청 헤더, 바디를 설정하고, 요청을 보낸 후 응답 코드를 읽는 등의 작업을 수동
 	 * */
 //https://developers.kakaopay.com/docs/payment/online/single-payment
 	public KakaoPayReadyResponse doKaokaoPayReady(Map<String, Object> params) {
