@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @Explain: 접근 거부 처리 핸들러 
+ * @Explain: 접근 거부 처리 핸들러, '인증은 성공했지만, 사용자가 해당 리소스에 접근할 권한이 없는 경우에 호출!' 
  * @When: *config: 설정에서 accessDeniedHandler에서 JwtAccessDeniedHandler등록 
  *  -> hasRole("ADMIN"):ROLE_ADMIN -> 로그인 사용자가 ROLE_USER -> JwtAccessDeniedHandler(accessDeniedHandler)호출
  *  ->  JwtAccessDeniedHandler가 실제 구현

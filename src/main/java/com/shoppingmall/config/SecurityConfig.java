@@ -15,6 +15,8 @@ import com.shoppingmall.jwt.JwtAccessDeniedHandler;
 import com.shoppingmall.jwt.JwtAuthenticationEntryPoint;
 import com.shoppingmall.jwt.JwtFilter;
 import com.shoppingmall.jwt.TokenProvider;
+import com.shoppingmall.oauth.CustomOAuth2UserService;
+import com.shoppingmall.oauth.OAuth2SuccessHandler;
 /** 
  *@FilterChainProxy: Returns the first fistchain matching the supplied URL
  * /user경로와 매칭이 되면 filterChain1이 성공적으로 인증이 되면 filterChain1이 filterChain2보다 먼저 등록이 된다.
@@ -37,6 +39,17 @@ import com.shoppingmall.jwt.TokenProvider;
  * @jwt 필터는 어디서? 어떻게? 
  * Q. Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [116] milliseconds. 
  * A.  세션 ID 생성을 위해 암호학적으로 안전한 난수 생성기(SecureRandom)를 사용하는데, 이를 초기화하는 데 116밀리초가 걸렸다는 것   
+ * ################################################ oAuth2 ######################################################
+ * @oAuth설정:  https://console.cloud.google.com/
+ *  - Authorized redirect URIs : http://localhost:8080/login/oauth2/code/google
+ *  구글 로그인 페이지 - 클라이언트, Authorization Code Request -> Authorization server(구글서버) -> Authorization Code Response
+ *  -리다이렉트-> 서버, Access Token Request -> Authorization server, Access Token Response -> 서버 
+ *   User Info Request('사용자 정보'를 요청) -> Resource Server, 구글의 사용자 정보는 https://www.googleapis.com/oauth2/v3/userinfo (엔드포인트)에서
+ *   '사용자 정보'를 가져온다. -> 사용자 정보를 DB에 저장 그리고 서비스 자체 엑세스 토큰과 리프레쉬 토큰을 생성 -> 프론트, 쿠키에 두 토큰을 저장 
+ *   *리프레쉬 토큰: 새로운 액세스 토큰을 발급받기 위해 사용, 유효 기간이 길다. 
+ * @구글server: access Token을 발급 -> 클라이언트 -> @리소스server: 이 jwt를 받아, 그토큰이 유효한지 검증한 후 사용자가 요청한 자원(예:사용자 data)을
+ *  제공
+ *  
  */
 
 
@@ -44,6 +57,12 @@ import com.shoppingmall.jwt.TokenProvider;
 @EnableWebSecurity(debug=true)
 public class SecurityConfig {
     
+	@Autowired
+	private CustomOAuth2UserService oAuth2UserService;
+	
+	@Autowired
+	private OAuth2SuccessHandler oAuth2SuccessHandler;
+	
 	@Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
@@ -57,19 +76,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer WebSecurityCustomizer(){
 	  return web -> web.ignoring().requestMatchers("/resources/static/**");
 	}
-     /*
-      * 
-	     		 .formLogin(auth -> 
-	     		 	auth.loginPage("/#/sec_user/login")
 
-     		 		.defaultSuccessUrl("/#/products")
-     		 		.failureForwardUrl("/#/loginError")
-     		 	  )
-                .logout((logout) -> logout
-	     			.logoutSuccessUrl("/#/sec_user/login")
-	     			.invalidateHttpSession(true)
-	     		  );
-      * */
      
 	 @Bean
 	 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -77,6 +84,7 @@ public class SecurityConfig {
 	     		 .httpBasic(AbstractHttpConfigurer::disable)
 	     		 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
 	     		 .formLogin(AbstractHttpConfigurer::disable)
+	     		 .logout(AbstractHttpConfigurer::disable)
 	     		 .exceptionHandling((exceptionHandling) -> 
 	     		  	exceptionHandling
 	     		  		.accessDeniedHandler(jwtAccessDeniedHandler)
@@ -92,10 +100,12 @@ public class SecurityConfig {
 	     		 .sessionManagement(sessionMng ->
 	     		    sessionMng.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 	     		 )
-	     		.logout((logout) -> logout
-		     			.logoutSuccessUrl("/#/sec_user/login")
-		     			.invalidateHttpSession(true)
-		     	 );
+	     		.oauth2Login(oauth -> // 'OAuth2 로그인 기능'에 대한 여러 설정의 진입점
+	     		   //OAuth2 로그인 성공 이후 '사용자 정보'를 가져올 때의 설정을 담당
+	     		   oauth.userInfoEndpoint(c -> c.userService(oAuth2UserService))  
+	     			//로그인 성공 시 핸들러
+	     		   .successHandler(oAuth2SuccessHandler)
+	     	     );
 
 	     return http.build();
 	 }

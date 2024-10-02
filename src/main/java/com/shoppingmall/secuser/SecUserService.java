@@ -48,10 +48,7 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
 					nonSocialMember.put("login_type", nonSocialMemberSaveForm.getLogin_type());
 					nonSocialMember.put("login_id", nonSocialMemberSaveForm.getLogin_id());
 					nonSocialMember.put("email", nonSocialMemberSaveForm.getEmail());
-					
-					String password = nonSocialMemberSaveForm.getPassword();
-	
-					
+					String password = nonSocialMemberSaveForm.getPassword();				
 					nonSocialMember.put("password", passwordEncoder.encode(password));
 					nonSocialMember.put("email_verified", true);
 					nonSocialMember.put("locked", false);

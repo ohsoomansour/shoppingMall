@@ -56,12 +56,20 @@ spring:
     cache: false
 
 
-  #security:
-    #user:
-      #name: test
-      #password: test
-      #roles: ADMIN, USER
-
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-name: google
+            client-id: 55968493342-8nhocekuh1l9qj8fq4ek7363obpugd7f.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            authorization-grant-type: authorization_code
+            scope: 
+             - profile
+             - email
+  
 
 
 
