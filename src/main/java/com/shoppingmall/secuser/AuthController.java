@@ -95,7 +95,7 @@ public class AuthController   {
      *   유형2. multipart/from-data -> @ModelAttribute NonSocialUserSaveForm nonSocialMemberSaveForm  
      * */
     @PostMapping("/sec/join")
-    public void doJoin(@ModelAttribute NonSocialUserSaveForm nonSocialMemberSaveForm) {
+    public void doJoin(@ModelAttribute MemberSaveForm nonSocialMemberSaveForm) {
 
     	try {
     		log.info("/sec_user/join's nonSocialMemberSaveForm=========>" + nonSocialMemberSaveForm );

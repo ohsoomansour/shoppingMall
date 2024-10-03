@@ -37,32 +37,32 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
 
     
 
-	public int join (NonSocialUserSaveForm nonSocialMemberSaveForm) throws NoSuchAlgorithmException, JsonProcessingException {
-		int login_type = nonSocialMemberSaveForm.getLogin_type();
-		validateDuplicateName(nonSocialMemberSaveForm, login_type);
+	public int join (MemberSaveForm memberSaveForm) throws NoSuchAlgorithmException, JsonProcessingException {
+		int login_type = memberSaveForm.getLogin_type();
+		validateDuplicateName(memberSaveForm, login_type);
 		int user_authid = -1;
 		switch(login_type) {
 			case 0:{
 				try {
-					DataMap nonSocialMember = new DataMap();
-					nonSocialMember.put("login_type", nonSocialMemberSaveForm.getLogin_type());
-					nonSocialMember.put("login_id", nonSocialMemberSaveForm.getLogin_id());
-					nonSocialMember.put("email", nonSocialMemberSaveForm.getEmail());
-					String password = nonSocialMemberSaveForm.getPassword();				
-					nonSocialMember.put("password", passwordEncoder.encode(password));
-					nonSocialMember.put("email_verified", true);
-					nonSocialMember.put("locked", false);
-					nonSocialMember.put("authority", nonSocialMemberSaveForm.getAuthority()); 
-					nonSocialMember.put("address", nonSocialMemberSaveForm.getAddress());			
-					nonSocialMember.put("user_name", nonSocialMemberSaveForm.getUser_name());
-					nonSocialMember.put("u_ph", nonSocialMemberSaveForm.getU_ph());
-					log.debug("nonSocialMember =========>" + nonSocialMember);
-					int userCount = this.dao.countQuery("NonSocialMemberSQL.countMemberByLoginId", nonSocialMember);
+					DataMap membereInfo = new DataMap();
+					membereInfo.put("login_type", memberSaveForm.getLogin_type());
+					membereInfo.put("login_id", memberSaveForm.getLogin_id());
+					membereInfo.put("email", memberSaveForm.getEmail());
+					String password = memberSaveForm.getPassword();				
+					membereInfo.put("password", passwordEncoder.encode(password));
+					membereInfo.put("email_verified", true);
+					membereInfo.put("locked", false);
+					membereInfo.put("authority", memberSaveForm.getAuthority()); 
+					membereInfo.put("address", memberSaveForm.getAddress());			
+					membereInfo.put("user_name", memberSaveForm.getUser_name());
+					membereInfo.put("u_ph", memberSaveForm.getU_ph());
+					log.debug("nonSocialMember =========>" + membereInfo);
+					int userCount = this.dao.countQuery("NonSocialMemberSQL.countMemberByLoginId", membereInfo);
 					if(userCount > 0) {
 						log.error("사용자가 존재합니다! 다른 아이디를 선택해주세요!");					
 						throw new Error("사용자가 존재합니다! 다른 아이디를 선택해주세요!");					
 					} else {
-						this.dao.insertQuery("NonSocialMemberSQL.signUpFor", nonSocialMember);
+						this.dao.insertQuery("MemberSQL.signUpFor", membereInfo);
 					}
 				    user_authid = 1;
 				} catch (Exception e) {
@@ -77,8 +77,10 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
 		return user_authid;
 		
 	}
-	
-	public void validateDuplicateName(NonSocialUserSaveForm memberForm, Integer login_type){
+	public int socialJoin(Member member) {
+		return 0;
+	}
+	public void validateDuplicateName(MemberSaveForm memberForm, Integer login_type){
 		int memberCount = 0;
 		
 		switch(login_type) {
@@ -86,14 +88,14 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
 				DataMap userMap = new DataMap();
 				userMap.put("login_type", memberForm.getLogin_type());
 				memberCount
-				= this.dao.countQuery("NonSocialMemberSQL.countMemberByName", userMap);
+				= this.dao.countQuery("MemberSQL.countMemberByName", userMap);
 				log.info("memberCount 카운트 =======>" + memberCount);
 				break;
 			}
 			case 1:{
 				DataMap userMap = new DataMap();
 				userMap.put("login_type", memberForm.getLogin_type());
-				memberCount = this.dao.countQuery("NonSocialMemberSQL.countMemberByName", userMap);
+				memberCount = this.dao.countQuery("MemberSQL.countMemberByName", userMap);
 				
 				break;
 			}
@@ -124,7 +126,7 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
     	userMap.put("login_id", login_id);
     	log.info("SecUserService's loadUserByUsername의 userMap" + userMap);
     	//DB -> authorities를 가져옴  
-    	DataMap nonSocialMember = this.dao.selectQuery("NonSocialMemberSQL.getOneMemberByUserId", userMap);
+    	DataMap nonSocialMember = this.dao.selectQuery("MemberSQL.getOneMemberByUserId", userMap);
     	log.debug("loadUserByUsername's nonSocialMember =======> " + nonSocialMember); 
 
 
@@ -149,8 +151,13 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
     public int doCountLoginId(String login_id) {
     	DataMap userMap = new DataMap();
     	userMap.put("login_id", login_id);
-		return this.dao.countQuery("NonSocialMemberSQL.countMemberByLoginId", userMap);
+		return this.dao.countQuery("MemberSQL.countMemberByLoginId", userMap);
 	}
-
+    /*email로 회원 찾기*/
+    public DataMap getMemberByEmail(String email) {
+    	DataMap userMap = new DataMap();
+    	userMap.put("email", email);
+    	return this.dao.selectQuery("MemberSQL.getOneMemberByEmail", userMap);
+    }
 
 }

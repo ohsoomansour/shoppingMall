@@ -3,47 +3,54 @@
 <!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
 <mapper namespace="NonSocialMemberSQL"> 
 
-	<select id="NonSocialMemberSQL.countMemberByLoginId" parameterType="dataMap" resultType="int">
-		/*아이디 중복검사: SQL ID: NonSocialMemberSQL.countMemberByLoginId*/
+	<select id="MemberSQL.countMemberByLoginId" parameterType="dataMap" resultType="int">
+		/*아이디 중복검사: SQL ID: MemberSQL.countMemberByLoginId*/
 		<![CDATA[
 			SELECT
 				COUNT(*)
 			FROM
-				nonsocial_member
+				member
 			WHERE login_id = #{login_id}
 		]]>
 		
 	</select>
-	<select id="NonSocialMemberSQL.countMemberByName" resultType="int" parameterType="dataMap">
-		/*아이디 중복검사: SQL ID: NonSocialMemberSQL.countMemberByName*/
+	<select id="MemberSQL.countMemberByName" resultType="int" parameterType="dataMap">
+		/*아이디 중복검사: SQL ID: MemberSQL.countMemberByName*/
 		<![CDATA[
 			SELECT
 				COUNT(*)
 			FROM
-				nonsocial_member
+				member
 			WHERE user_name = #{user_name}
 		]]>
 		
 	</select>
-	<select id="NonSocialMemberSQL.getOneMemberByUserId"  parameterType="dataMap" resultType="dataMap" >
-        /*이름에 따른 회원찾기 : NonSocialMemberSQL.getOneMemberByName */
+	<select id="MemberSQL.getOneMemberByUserId"  parameterType="dataMap" resultType="dataMap" >
+        /*이름에 따른 회원찾기 : MemberSQL.getOneMemberByName */
         SELECT auth_id, login_id, email, password, user_name, authority
-        FROM nonsocial_member
+        FROM member
         WHERE login_id = #{login_id}
     </select>
-    <select id="NonSocialMemberSQL.searchForUsers"  parameterType="dataMap" resultType="dataMap" >
-        /*admin이 회원 검색: NonSocialMemberSQL.searchForUsers" */
+    <select id="MemberSQL.getOneMemberByEmail" parameterType="dataMap" resultType="dataMap">
+    	/*email로 회원 찾기 */
+    	SELECT * 
+    	FROM member
+    	WHERE email = #{email}
+    </select>
+    
+    <select id="MemberSQL.searchForUsers"  parameterType="dataMap" resultType="dataMap" >
+        /*admin이 회원 검색: MemberSQL.searchForUsers" */
         
         SELECT auth_id, login_id, email, user_name, authority
-        FROM nonsocial_member
+        FROM member
         WHERE login_id LIKE CONCAT('%', #{keyword}, '%') 
            OR email LIKE CONCAT('%', #{keyword}, '%') 
            OR user_name LIKE CONCAT('%', #{keyword}, '%') 
     </select>
     
-	<insert id="NonSocialMemberSQL.signUpFor" parameterType="dataMap" >
-	/* 회원 가입: */
-		INSERT INTO nonsocial_member
+	<insert id="MemberSQL.signUpFor" parameterType="dataMap" >
+	/* 회원 가입: MemberSQL.signUpFor*/
+		INSERT INTO member
 		(
 			login_type,
 			login_id,
@@ -69,6 +76,8 @@
 		   #{user_name},
 		   #{u_ph}
 		)
+		ON CONFLICT(login_id)
+		DO NOTHING;
 		
 	</insert>
 	

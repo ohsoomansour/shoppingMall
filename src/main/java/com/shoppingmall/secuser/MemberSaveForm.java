@@ -5,7 +5,7 @@ package com.shoppingmall.secuser;
 import lombok.Data;
 
 @Data
-public class NonSocialUserSaveForm {
+public class MemberSaveForm {
 	private int 	login_type;
     private String  login_id;		// 로그인용 ID 값
     private String  email;	//이메일

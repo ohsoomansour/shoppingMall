@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.shoppingmall.member.model.Member;
+import com.shoppingmall.member.model.User;
 import com.shoppingmall.toaf.object.DataMap;
 import com.shoppingmall.toaf.util.AES256Util;
 
@@ -98,7 +98,7 @@ public class MemberFrontController {
 	*/
 	
 	@RequestMapping("/signUp.do")
-	public ModelAndView doSignUp(@ModelAttribute Member member) {
+	public ModelAndView doSignUp(@ModelAttribute User member) {
 		
 		ModelAndView mav = new ModelAndView("jsonView");
 		DataMap paraMap = new DataMap();
