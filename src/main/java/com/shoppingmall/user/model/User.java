@@ -1,4 +1,4 @@
-package com.shoppingmall.member.model;
+package com.shoppingmall.user.model;
 
 import lombok.Data;
 

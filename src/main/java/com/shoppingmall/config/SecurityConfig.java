@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -49,7 +50,20 @@ import com.shoppingmall.oauth.OAuth2SuccessHandler;
  *   *리프레쉬 토큰: 새로운 액세스 토큰을 발급받기 위해 사용, 유효 기간이 길다. 
  * @구글server: access Token을 발급 -> 클라이언트 -> @리소스server: 이 jwt를 받아, 그토큰이 유효한지 검증한 후 사용자가 요청한 자원(예:사용자 data)을
  *  제공
+ * @OAuth2LoginAuthenticationFilter 설정 및 호출
+ *  - 언제? spring-boot-starter-oauth2-client 의존성을 추가
+ *  - 상세:  Spring Security 설정을 구성하여 OAuth2 로그인 기능을 활성화합니다. 
+ *          이때 OAuth2LoginAuthenticationFilter가 자동으로 필터 체인에 등록
+ *  - 역할: Authorization Code Grant 흐름에서 Authorization Code를 Access Token으로 교환하는 필터
+ *  - 어디? oauth2Login() 안에 
  *  
+ *  @oauth2Login 호출은 언제 ? A)로그인 시도, Spring Security는 자동으로 OAuth2 인증 흐름을 시작        
+ *  @OAuth2LoginAuthenticationProvider 호출은 언제? 
+ *  A. AuthenticationMangaer 의 authenticate() -> AuthennticationProvider -(implements)-> OAuth2LoginAuthenticationProvider
+ *  <OAuth2LoginAuthenticationFilter>
+ *  OAuth2LoginAuthenticationToken authenticationResult = (OAuth2LoginAuthenticationToken) this
+			.getAuthenticationManager()
+			.authenticate(authenticationRequest);
  */
 
 
@@ -76,7 +90,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer WebSecurityCustomizer(){
 	  return web -> web.ignoring().requestMatchers("/resources/static/**");
 	}
-
+    
      
 	 @Bean
 	 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -92,7 +106,7 @@ public class SecurityConfig {
 	     		 )
 	     		 .authorizeHttpRequests((authorize) -> authorize
 	     		    .requestMatchers("/admin/**").hasRole("ADMIN")
-	     		    .requestMatchers("/sec/login","/sec/join","/sec_user/userDuplicCheck.do", "/send-mail/email").permitAll()
+	     		    .requestMatchers("/sec/login","/sec/join","/sec_user/userDuplicCheck.do", "/send-mail/email", "/auth/success").permitAll()
 	     		    .requestMatchers("/error/**").permitAll()
 	     		    
 	     		    .anyRequest().authenticated()
@@ -101,8 +115,23 @@ public class SecurityConfig {
 	     		    sessionMng.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 	     		 )
 	     		.oauth2Login(oauth -> // 'OAuth2 로그인 기능'에 대한 여러 설정의 진입점
-	     		   //OAuth2 로그인 성공 이후 '사용자 정보'를 가져올 때의 설정을 담당
+	     		   /*OAuth2LoginAuthenticationFilter 토큰을 바탕으로 
+	     		    -> redirect_uri: http://localhost:8080/login/oauth2/code/google?state= "" &code= "ABCD"
+	     		    -> OAuth2LoginAuthenticationFilter의 attemptAuthentication, request.getParameterMap()    		 
+	     		    -> OAuth2LoginAuthenticationProvider는 언제 호출? authenticationManager가 authenticate()
+	     		       AuthenticationManager는 여러 AuthenticationProvider를 관리하는데, 여기에서 적합한 '프로바이더'의 authenticate()를
+	     		       찾아서 호출함! 
+	     		    -> OAuth2LoginAuthenticationProvider, code  OAuth 2.0 권한 부여 응답 
+	     		       OAuth2LoginAuthenticationToken`을 생성하여 AuthenticationManager`에 전달
+	     		    -> 리소스 서버에서 '사용자 세부 정보'를 로드하기 위해 가 호출, OAuth2UserService 호출!  
+	     		    -> OAuth2 로그인 성공 이후 '사용자 정보'를 가져올 때의 설정을 담당
+	     		       
+	     		   */
 	     		   oauth.userInfoEndpoint(c -> c.userService(oAuth2UserService))  
+	     		   .authorizationEndpoint(authorizationEndpointConfig -> 
+	     		   		authorizationEndpointConfig.baseUri("/oauth2/authorize")
+	     		   			
+	     		    )
 	     			//로그인 성공 시 핸들러
 	     		   .successHandler(oAuth2SuccessHandler)
 	     	     );

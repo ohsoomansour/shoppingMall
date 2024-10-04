@@ -1,4 +1,4 @@
-package com.shoppingmall.secuser;
+package com.shoppingmall.secmember;
 
 import java.util.Map;
 
@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,11 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shoppingmall.jwt.JwtFilter;
 import com.shoppingmall.jwt.TokenDto;
 import com.shoppingmall.jwt.TokenProvider;
+import com.shoppingmall.oauth.LoginResponse;
 import com.shoppingmall.toaf.object.DataMap;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,12 +54,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthController   {
 	@Autowired
-	SecUserService secMemberService;
+	SecMemberService secMemberService;
 	@Autowired
 	TokenProvider tokenFilter;
 	
 	 private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
+    
+	 
+	@GetMapping("/auth/succes")
+	public ResponseEntity<LoginResponse> loginSuccess(@Valid LoginResponse loginResponse){
+		return ResponseEntity.ok(loginResponse);
+	}
 
 	//   UsernamePasswordAuthenticationFilter가 '인터셉터'하기 위해서는 POST + /login 기본 세팅
     @PostMapping("/sec/login")  //@Valid 

@@ -69,7 +69,12 @@ spring:
             scope: 
              - profile
              - email
-  
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
 
 
 
@@ -81,7 +86,8 @@ logging:
     '[com.shoppingmall.post]': DEBUG
     '[com.shoppingmall.secuser]': DEBUG
     '[com.shoppingmall.jwt]': DEBUG
-    '[com.shoppingmall.toaf.intercept]': debug
+    '[com.shoppingmall.toaf.intercept]': DEBUG
+    '[com.shoppingmall.oauth]' : DEBUG
  
 #서버 포트
 server:

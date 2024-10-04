@@ -2,7 +2,6 @@ package com.shoppingmall.oauth;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -12,17 +11,25 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.shoppingmall.secuser.Member;
-import com.shoppingmall.secuser.SecUserService;
+import com.shoppingmall.secmember.Member;
+import com.shoppingmall.secmember.SecMemberService;
 import com.shoppingmall.toaf.object.DataMap;
 
 import jakarta.security.auth.message.AuthException;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ *@Date: 24.10.4
+ *@호출시점:'OAuth2LoginAuthenticationFilter'는 OAuth2UserService 인터페이스의 구현체를 호출하여, 
+ *        Access Token을 사용해 '사용자 정보'를 가져옵니다. 이때 DefaultOAuth2UserService가 호출  
+ * */
+
+@Slf4j
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 	
 	@Autowired
-	private SecUserService secUserService;
+	private SecMemberService secUserService;
 	
 	/**
 	 *@Explain: 
@@ -41,14 +48,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 		Map<String, Object> oAuth2UserAttributes =  super.loadUser(userRequest).getAttributes();
 		//2. registragtionId 가져오기: yml에서 client.registration 값
 		String registrationId = userRequest.getClientRegistration().getRegistrationId();
+		log.info("registrationId ===>"+ registrationId);
 		//3.userNameAttributeName 가져오기
 		String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
 				.getUserInfoEndpoint().getUserNameAttributeName();
+		log.info("userNameAttributeName ===>" + userNameAttributeName);
 		//4.유저 정보 dto 생성
 		OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
-	    
+	    log.info("oAuth2UserInfo =====> " + oAuth2UserInfo);
 		//5.회원 가입 및 로그인 : Member -> DataMap 
 	    Member member = getOrSave(oAuth2UserInfo);	
+	    log.debug("getOrSave return ===>" + member);
 		return new PrincipalDetails(member, oAuth2UserAttributes, userNameAttributeName);
 	   } catch (AuthException e) {
 			e.printStackTrace();
@@ -71,21 +81,29 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 	  //회원 검색
 	  DataMap user = secUserService.getMemberByEmail(oAuth2UserInfo.email());
 	  //회원이 없으면 가입
-	  if(user.isEmpty()) {
+	  if(user == null || user.isEmpty()) {
 		  Member authMember = oAuth2UserInfo.toEntity();
+		  log.debug("authMember ===> " + authMember);
 		  DataMap authMemberMap =  new DataMap();
+		  authMemberMap.put("login_id", authMember.email());
+		  authMemberMap.put("email_verified", false);
+		  authMemberMap.put("locked", false);
+		  authMemberMap.put("authority", "USER");
+		  authMemberMap.put("address", "");
+		  authMemberMap.put("u_ph", "");
+		  authMemberMap.put("login_type", 1); //  0:비회원, 1: 기본 로그인, 2: social
 		  authMemberMap.put("user_name", authMember.user_name()); // String name,String email,String profile
 		  authMemberMap.put("email", authMember.email());
 		  authMemberMap.put("profile", authMember.profile());
-		  secUserService.socialJoin(oAuth2UserInfo.toEntity());
+		  secUserService.socialJoin(authMemberMap);
 		  return authMember;
 	  }
 	  return Member.builder()
 			  .email(user.getstr("email"))
 			  .user_name(user.getstr("user_name"))
 			  .profile(user.getstr("profile"))
+			  .authority(user.getstr("authority"))
 			  .build();
-	  
 	}
 	
 }

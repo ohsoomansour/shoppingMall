@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
-<mapper namespace="NonSocialMemberSQL"> 
+<mapper namespace="SecMemberSQL"> 
 
-	<select id="MemberSQL.countMemberByLoginId" parameterType="dataMap" resultType="int">
-		/*아이디 중복검사: SQL ID: MemberSQL.countMemberByLoginId*/
+	<select id="SecMemberSQL.countMemberByLoginId" parameterType="dataMap" resultType="int">
+		/*아이디 중복검사: SQL ID: SecMemberSQL.countMemberByLoginId*/
 		<![CDATA[
 			SELECT
 				COUNT(*)
@@ -14,8 +14,8 @@
 		]]>
 		
 	</select>
-	<select id="MemberSQL.countMemberByName" resultType="int" parameterType="dataMap">
-		/*아이디 중복검사: SQL ID: MemberSQL.countMemberByName*/
+	<select id="SecMemberSQL.countMemberByName" resultType="int" parameterType="dataMap">
+		/*아이디 중복검사: SQL ID: SecMemberSQL.countMemberByName*/
 		<![CDATA[
 			SELECT
 				COUNT(*)
@@ -25,21 +25,21 @@
 		]]>
 		
 	</select>
-	<select id="MemberSQL.getOneMemberByUserId"  parameterType="dataMap" resultType="dataMap" >
-        /*이름에 따른 회원찾기 : MemberSQL.getOneMemberByName */
+	<select id="SecMemberSQL.getOneMemberByUserId"  parameterType="dataMap" resultType="dataMap" >
+        /*이름에 따른 회원찾기 : SecMemberSQL.getOneMemberByName */
         SELECT auth_id, login_id, email, password, user_name, authority
         FROM member
         WHERE login_id = #{login_id}
     </select>
-    <select id="MemberSQL.getOneMemberByEmail" parameterType="dataMap" resultType="dataMap">
+    <select id="SecMemberSQL.getOneMemberByEmail" parameterType="dataMap" resultType="dataMap">
     	/*email로 회원 찾기 */
     	SELECT * 
     	FROM member
     	WHERE email = #{email}
     </select>
     
-    <select id="MemberSQL.searchForUsers"  parameterType="dataMap" resultType="dataMap" >
-        /*admin이 회원 검색: MemberSQL.searchForUsers" */
+    <select id="SecMemberSQL.searchForUsers"  parameterType="dataMap" resultType="dataMap" >
+        /*admin이 회원 검색: SecMemberSQL.searchForUsers" */
         
         SELECT auth_id, login_id, email, user_name, authority
         FROM member
@@ -48,8 +48,8 @@
            OR user_name LIKE CONCAT('%', #{keyword}, '%') 
     </select>
     
-	<insert id="MemberSQL.signUpFor" parameterType="dataMap" >
-	/* 회원 가입: MemberSQL.signUpFor*/
+	<insert id="SecMemberSQL.signUpFor" parameterType="dataMap" >
+	/* 회원 가입: SecMemberSQL.signUpFor*/
 		INSERT INTO member
 		(
 			login_type,
@@ -76,11 +76,8 @@
 		   #{user_name},
 		   #{u_ph}
 		)
-		ON CONFLICT(login_id)
-		DO NOTHING;
+
 		
 	</insert>
-	
-	
-	
+
 </mapper>

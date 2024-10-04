@@ -1,4 +1,4 @@
-package com.shoppingmall.secuser;
+package com.shoppingmall.secmember;
 
 
 
@@ -9,7 +9,7 @@ import com.shoppingmall.toaf.object.DataMap;
 
 
 @Service
-public class UserService extends BaseSvc<DataMap> {
+public class MemberService extends BaseSvc<DataMap> {
 	
 	public int countMemberByLoginId(DataMap userMap) {
 		return this.dao.countQuery("NonSocialMemberSQL.countMemberByLoginId", userMap);

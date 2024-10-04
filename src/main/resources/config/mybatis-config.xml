@@ -11,7 +11,7 @@
 	-->
 	<typeAliases>
 
-		<typeAlias type="com.shoppingmall.member.model.Member" alias="member" />
+		<typeAlias type="com.shoppingmall.user.model.User" alias="user" />
 		<typeAlias type="com.shoppingmall.toaf.object.DataMap" alias="dataMap" />
 		<!--<typeAlias type="com.shoppingmall.secuser.NonSocialUser" alias="nonSocialUser" /> -->
 	</typeAliases>

@@ -24,7 +24,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.util.StringUtils;
 
 /**
  * @Date: 24.9.8 
@@ -99,11 +99,20 @@ public class TokenProvider implements InitializingBean {
     	List<GrantedAuthority> authorities =  Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
     			.map(SimpleGrantedAuthority::new)  // 각 권한 문자열을 SimpleGrantedAuthority 객체로 변환
                 .collect(Collectors.toList());     // List로 수집
-    			
-    			User principal = new User(claims.getSubject(), "", authorities);
+    	// security의 User객체 생성 		
+    	User principal = new User(claims.getSubject(), "", authorities);
     	log.debug("principal ======> " + principal);
     	return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
+    
+    /* accessToken 재발급
+    public String reissueAccessToken(String accessToken) {
+    	if(StringUtils.hasText(accessToken)) {
+    		
+    	}
+    }
+    */
+    
     
     /*************** ##### 핵심 역할, 여기서  key로 '토큰 유효성' 검사  #### *****
      *@유효성방법: key로 jwt 유효성 검사 -> 서명과 Clains를 확인 				   *		

@@ -25,30 +25,8 @@ System.out.printf("Formatted double value: %.2f%n", doubleValue);
 System.out.printf("Formatted float value: %.5f%n", floatValue);
 System.out.printf("Formatted double value: %.5f%n", doubleValue);
 */
-class Node {
-  int dest, cost;
-
-  public Node(int dest, int cost) {
-    this.dest = dest;
-    this.cost = cost;
-  }
-  /* nodes(Node[])   
-   * Arrays.toString(nodes)는 '배열의 각 요소'에 대해 toString() 메서드를 호출, 이 메서드를 재정의하지 않으면 기본적 '객체의 메모리 주소'가 출력
-  */
-  @Override
-  public String toString() {
-    return "Node{" + "dest=" + dest + ", cost=" + cost + '}';
-  }
-	 
-}
-@Slf4j
-@SpringBootApplication  
-public class ShoppingMallApp {
-
-	public static void main(String[] args) {
-		SpringApplication.run(ShoppingMallApp.class, args);
-		System.out.println("main!");
-		int[] array = {1, 2, 3, 4, 5}; //배열은 고정되어 있음, 동일한 자료형의 요소들만 저장, 연속된 메모리 공간에 저장, 인덱스를 통해요소에 빠르게 접근할 수 있다.
+/*
+ 		int[] array = {1, 2, 3, 4, 5}; //배열은 고정되어 있음, 동일한 자료형의 요소들만 저장, 연속된 메모리 공간에 저장, 인덱스를 통해요소에 빠르게 접근할 수 있다.
 		int[] array2 = new int[] {1, 3, 5, 7, 9};
 		int[] array3 = new int[5];
 		log.info("============================== 배열 vs List ======================== ");
@@ -94,6 +72,36 @@ public class ShoppingMallApp {
 		  nodes[4] = new Node(1, 25);
 		  Arrays.sort(nodes, (o1, o2) -> Integer.compare(o1.cost, o2.cost));  
 		  log.info("nodes ====>" + Arrays.toString(nodes));    
+  
+  
+  
+ * */
+class Node {
+	  int dest, cost;
+
+	  public Node(int dest, int cost) {
+	    this.dest = dest;
+	    this.cost = cost;
+	  }
+	  /* nodes(Node[])   
+	   * Arrays.toString(nodes)는 '배열의 각 요소'에 대해 toString() 메서드를 호출, 이 메서드를 재정의하지 않으면 기본적 '객체의 메모리 주소'가 출력
+	  */
+	  @Override
+	  public String toString() {
+	    return "Node{" + "dest=" + dest + ", cost=" + cost + '}';
+	  }
+		 
+	}
+
+
+@Slf4j
+@SpringBootApplication  
+public class ShoppingMallApp {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ShoppingMallApp.class, args);
+		System.out.println("main!");
+
 		
 	}
 }

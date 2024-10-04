@@ -1,4 +1,4 @@
-package com.shoppingmall.secuser;
+package com.shoppingmall.secmember;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;

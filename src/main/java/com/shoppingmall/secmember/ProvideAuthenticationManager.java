@@ -1,4 +1,4 @@
-package com.shoppingmall.secuser;
+package com.shoppingmall.secmember;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;

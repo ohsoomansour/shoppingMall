@@ -1,4 +1,4 @@
-package com.shoppingmall.secuser;
+package com.shoppingmall.secmember;
 
 
 

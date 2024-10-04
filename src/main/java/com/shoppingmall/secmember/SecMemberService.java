@@ -1,4 +1,4 @@
-package com.shoppingmall.secuser;
+package com.shoppingmall.secmember;
 
 
 
@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class SecUserService extends BaseSvc<DataMap> implements UserDetailsService {
+public class SecMemberService extends BaseSvc<DataMap> implements UserDetailsService {
 	 private static final String BCryptPattern = "^\\$2[aby]?(\\$[0-9]{2})?\\$.{22}.*$";
 	  
 	@Autowired
@@ -57,12 +56,12 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
 					membereInfo.put("user_name", memberSaveForm.getUser_name());
 					membereInfo.put("u_ph", memberSaveForm.getU_ph());
 					log.debug("nonSocialMember =========>" + membereInfo);
-					int userCount = this.dao.countQuery("NonSocialMemberSQL.countMemberByLoginId", membereInfo);
+					int userCount = this.dao.countQuery("SecMemberSQL.countMemberByLoginId", membereInfo);
 					if(userCount > 0) {
 						log.error("사용자가 존재합니다! 다른 아이디를 선택해주세요!");					
 						throw new Error("사용자가 존재합니다! 다른 아이디를 선택해주세요!");					
 					} else {
-						this.dao.insertQuery("MemberSQL.signUpFor", membereInfo);
+						this.dao.insertQuery("SecMemberSQL.signUpFor", membereInfo);
 					}
 				    user_authid = 1;
 				} catch (Exception e) {
@@ -77,8 +76,9 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
 		return user_authid;
 		
 	}
-	public int socialJoin(Member member) {
-		return 0;
+	
+	public void socialJoin(DataMap member) {
+		this.dao.insertQuery("SecMemberSQL.signUpFor", member);
 	}
 	public void validateDuplicateName(MemberSaveForm memberForm, Integer login_type){
 		int memberCount = 0;
@@ -88,14 +88,14 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
 				DataMap userMap = new DataMap();
 				userMap.put("login_type", memberForm.getLogin_type());
 				memberCount
-				= this.dao.countQuery("MemberSQL.countMemberByName", userMap);
+				= this.dao.countQuery("SecMemberSQL.countMemberByName", userMap);
 				log.info("memberCount 카운트 =======>" + memberCount);
 				break;
 			}
 			case 1:{
 				DataMap userMap = new DataMap();
 				userMap.put("login_type", memberForm.getLogin_type());
-				memberCount = this.dao.countQuery("MemberSQL.countMemberByName", userMap);
+				memberCount = this.dao.countQuery("SecMemberSQL.countMemberByName", userMap);
 				
 				break;
 			}
@@ -126,7 +126,7 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
     	userMap.put("login_id", login_id);
     	log.info("SecUserService's loadUserByUsername의 userMap" + userMap);
     	//DB -> authorities를 가져옴  
-    	DataMap nonSocialMember = this.dao.selectQuery("MemberSQL.getOneMemberByUserId", userMap);
+    	DataMap nonSocialMember = this.dao.selectQuery("SecMemberSQL.getOneMemberByUserId", userMap);
     	log.debug("loadUserByUsername's nonSocialMember =======> " + nonSocialMember); 
 
 
@@ -151,13 +151,13 @@ public class SecUserService extends BaseSvc<DataMap> implements UserDetailsServi
     public int doCountLoginId(String login_id) {
     	DataMap userMap = new DataMap();
     	userMap.put("login_id", login_id);
-		return this.dao.countQuery("MemberSQL.countMemberByLoginId", userMap);
+		return this.dao.countQuery("SecMemberSQL.countMemberByLoginId", userMap);
 	}
     /*email로 회원 찾기*/
     public DataMap getMemberByEmail(String email) {
     	DataMap userMap = new DataMap();
     	userMap.put("email", email);
-    	return this.dao.selectQuery("MemberSQL.getOneMemberByEmail", userMap);
+    	return this.dao.selectQuery("SecMemberSQL.getOneMemberByEmail", userMap);
     }
 
 }

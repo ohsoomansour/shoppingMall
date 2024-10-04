@@ -13,6 +13,6 @@ public class VueAdminService extends BaseSvc<DataMap> {
 
 	
 	public List<DataMap> searchForUsers(DataMap userMap) {
-		return this.dao.selectListQuery("NonSocialMemberSQL.searchForUsers", userMap);
+		return this.dao.selectListQuery("SecMemberSQL.searchForUsers", userMap);
 	}
 }

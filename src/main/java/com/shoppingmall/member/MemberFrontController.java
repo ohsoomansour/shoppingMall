@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.shoppingmall.member.model.User;
 import com.shoppingmall.toaf.object.DataMap;
 import com.shoppingmall.toaf.util.AES256Util;
+import com.shoppingmall.user.model.User;
 
 import lombok.extern.slf4j.Slf4j;
 

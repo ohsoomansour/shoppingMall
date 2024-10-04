@@ -2,7 +2,7 @@ package com.shoppingmall.oauth;
 
 import java.util.Map;
 
-import com.shoppingmall.secuser.Member;
+import com.shoppingmall.secmember.Member;
 import com.shoppingmall.toaf.util.KeyGenerator;
 
 import jakarta.security.auth.message.AuthException;
@@ -36,9 +36,9 @@ public record OAuth2UserInfo(
 	
 	private static OAuth2UserInfo ofGoogle(Map<String, Object> attributes) {
 		return OAuth2UserInfo.builder()
-				.name((String) attributes.get("nickname"))
+				.name((String) attributes.get("name"))
 				.email((String) attributes.get("email"))
-				.profile((String) attributes.get("profile_image_url"))
+				.profile((String) attributes.get("profile"))
 				.build();
 	}
 	
