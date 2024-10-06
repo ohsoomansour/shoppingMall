@@ -69,6 +69,9 @@ public class AuthController   {
 	//   UsernamePasswordAuthenticationFilter가 '인터셉터'하기 위해서는 POST + /login 기본 세팅
     @PostMapping("/sec/login")  //@Valid 
     public ResponseEntity<TokenDto> login(@RequestBody Map<String, Object> userMap) {
+    	// 소셜 로그인 감지, login_type이 2경우 SecurityContextHolder에서 UserDetails에서 login_id를 찾아옴
+    	//SecurityContextHolder.getContext().getAuthentication().getName(); // 여기에서 login_id와     	
+    	
     	//UserDetails를 사용해서 만듬 
     	log.info("PATH: /login ===> nonSocialMemberLoginForm ===>" + userMap);
     	log.info("======== 24.9.25 PATH: /sec/login DEBUGING!!!!!========");

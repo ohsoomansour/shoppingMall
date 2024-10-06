@@ -49,7 +49,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 	  * - 방법2. '쿠키'에 담아서 반환
 	  */
 	  Cookie cookie = new Cookie("accessToken", accessToken);
-	  cookie.setHttpOnly(true); //xss 공격 방지
+	  cookie.setHttpOnly(false); //xss 공격 방지, true의 경우, 크롬 브라우저에서 쿠키 값을 못 가져옴
 	  cookie.setSecure(false); // https에서만 전송 true or false
 	  cookie.setPath("/");  // accessToken  a path for the cookie to which the client should return the cookie. 
 	  cookie.setMaxAge(60 * 60); //1h

@@ -35,10 +35,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 	 *@Explain: 
 	 *@:소셜 로그인 -> 등록된 URL: http://{domain}/login/oauth2/code/{registrationId}?code=AUTHORIZATION_CODE 형식으로
 	 *         *registrationId: OAuth2 공급자(Identity Provider)를 식별하는 ID  
-	 *  -> *인증이 완료(호출시점) -> OAuth 2.0 공급자(google Authorization server=인증 서버)에서 토큰을 발급 
-	 *        -> SpringSecurity 필터가 loadUser 메서드를 호출하여 해당 엑세스 토큰, OAuth2AccessToken token = userRequest.getAccessToken();
-	 *         token 사용 -> 사용자 정보를 가져옴 
+	 *  -> *인증이 완료(호출시점): 토큰을 발급 -> OAuth2UserService 인터페이스의 구현체를 호출
 	 *@return: OAuth2User 객체는 Google의 사용자 정보 API를 통해 가져온 정보, new DefaultOAuth2User(authorities, attributes, userNameAttributeName) 
+	  - 추가 설명: SecurityContextHolder의 principal에 더 디테일하게 저장하기 위해 이렇게 변환해서 사용
 	 * */
 	@Transactional
 	@Override
@@ -52,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 		//3.userNameAttributeName 가져오기
 		String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
 				.getUserInfoEndpoint().getUserNameAttributeName();
-		log.info("userNameAttributeName ===>" + userNameAttributeName);
+		log.info("userNameAttributeName(attributeKey) ===>" + userNameAttributeName);
 		//4.유저 정보 dto 생성
 		OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
 	    log.info("oAuth2UserInfo =====> " + oAuth2UserInfo);
@@ -91,7 +90,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 		  authMemberMap.put("authority", "USER");
 		  authMemberMap.put("address", "");
 		  authMemberMap.put("u_ph", "");
-		  authMemberMap.put("login_type", 1); //  0:비회원, 1: 기본 로그인, 2: social
+		  authMemberMap.put("login_type", 2); //  0:비회원, 1: 기본 로그인, 2: social
 		  authMemberMap.put("user_name", authMember.user_name()); // String name,String email,String profile
 		  authMemberMap.put("email", authMember.email());
 		  authMemberMap.put("profile", authMember.profile());

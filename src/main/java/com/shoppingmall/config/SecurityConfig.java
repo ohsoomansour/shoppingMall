@@ -64,6 +64,9 @@ import com.shoppingmall.oauth.OAuth2SuccessHandler;
  *  OAuth2LoginAuthenticationToken authenticationResult = (OAuth2LoginAuthenticationToken) this
 			.getAuthenticationManager()
 			.authenticate(authenticationRequest);
+			
+     *핵심: 이 필터에서 반환 'oauth2Authentication' -> AbstractAuthenticationProcessingFilter의 doFilter 메서드로 전달 	
+          -> successfulAuthentication 메서드로 전달 되면서 SecurityContextHolder에 저장		
  */
 
 
@@ -115,22 +118,21 @@ public class SecurityConfig {
 	     		    sessionMng.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 	     		 )
 	     		.oauth2Login(oauth -> // 'OAuth2 로그인 기능'에 대한 여러 설정의 진입점
-	     		   /*OAuth2LoginAuthenticationFilter 토큰을 바탕으로 
+	     		   /* <OAuth2LoginAuthenticationFilter> 자동으로 설정 후 이 시점에 호출
 	     		    -> redirect_uri: http://localhost:8080/login/oauth2/code/google?state= "" &code= "ABCD"
 	     		    -> OAuth2LoginAuthenticationFilter의 attemptAuthentication, request.getParameterMap()    		 
 	     		    -> OAuth2LoginAuthenticationProvider는 언제 호출? authenticationManager가 authenticate()
 	     		       AuthenticationManager는 여러 AuthenticationProvider를 관리하는데, 여기에서 적합한 '프로바이더'의 authenticate()를
-	     		       찾아서 호출함! 
+	     		       찾아서 호출함! - (implements) -> OAuth2LoginAuthenticationProvider
 	     		    -> OAuth2LoginAuthenticationProvider, code  OAuth 2.0 권한 부여 응답 
 	     		       OAuth2LoginAuthenticationToken`을 생성하여 AuthenticationManager`에 전달
 	     		    -> 리소스 서버에서 '사용자 세부 정보'를 로드하기 위해 가 호출, OAuth2UserService 호출!  
-	     		    -> OAuth2 로그인 성공 이후 '사용자 정보'를 가져올 때의 설정을 담당
+	     		    -> OAuth2 로그인 성공 이후 '사용자 정보'를 가져올 때의 설정을 담당 
 	     		       
 	     		   */
 	     		   oauth.userInfoEndpoint(c -> c.userService(oAuth2UserService))  
 	     		   .authorizationEndpoint(authorizationEndpointConfig -> 
-	     		   		authorizationEndpointConfig.baseUri("/oauth2/authorize")
-	     		   			
+	     		   		authorizationEndpointConfig.baseUri("/oauth2/authorize")	
 	     		    )
 	     			//로그인 성공 시 핸들러
 	     		   .successHandler(oAuth2SuccessHandler)
