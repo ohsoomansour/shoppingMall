@@ -47,19 +47,18 @@ public record OAuth2UserInfo(
 		Map<String, Object> profile = (Map<String, Object>) account.get("profile");
 		return OAuth2UserInfo.builder()
 				.name((String) profile.get("nickname"))
-				.email((String) account.get("emial"))
-				.profile((String) profile.get("profile_image_url"))
+				.email((String) account.get("email"))
+				.profile((String) profile.get("profile"))
 				.build();
 				
 	}
-	/**/
+	/* 			    .memberKey(KeyGenerator.generateKey()) */
 	public Member toEntity() {
 		return Member.builder()
 				.user_name(name)
 			    .email(email)
 			    .profile(profile)
 			    .authority("USER")
-			    .memberKey(KeyGenerator.generateKey())
 				.build();
 	}
 	

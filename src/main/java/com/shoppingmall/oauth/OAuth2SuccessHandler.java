@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
  *@Date: 24.10.4 
  *@선행조건: code -> 구글 서버, accessToken발급
  *@Explan: 호출 시점, 'accessToken'을 사용하여 사용자를 인증 -> 인증 성공 후 OAuth2SuccessHandler 호출!
- *@ 
  * */
 
 @Slf4j
@@ -36,14 +35,14 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler  {
 	  
 	  // ***로그인 인증 -> authentication -> 토큰 발급 
 	  String accessToken = tokenprovider.createToken(authentication);
-	  log.info("OAuth2SuccessHandler' accessToken ===> " + accessToken);
-	  String redirectUrl = URI + "#/auth/success?accessToken=" + accessToken;
+	  log.info("OAuth2SuccessHandler' accessToken ===> " + accessToken);	  
 	  /*
 	  String redirectUrl = UriComponentsBuilder.fromUriString(URI)
 			  .queryParam("accessToken", accessToken)
 			  .build().toUriString();
-      */
-	  
+			  //String redirectUrl = URI + "#/auth/success?accessToken=" + accessToken;
+	  */
+	  String redirectUrl = URI + "#/auth/success";
 	  /*###문제점:'토큰 탈취 위험' - ###
 	  * - 방법1. 'HTTP header'에 담아서 바로 프론트로 리다이렉트
 	  * - 방법2. '쿠키'에 담아서 반환

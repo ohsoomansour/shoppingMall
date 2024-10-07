@@ -86,6 +86,19 @@ public class TokenProvider implements InitializingBean {
      *claims.get(AUTHORITIES_KEY).toString().split(",") 해석
      * claims.get(AUTHORITIES_KEY).toString() -> "ROLE_ADMIN", "ROLE_USER"
      * claims.get(AUTHORITIES_KEY).toString().split(",")) -> ["ROLE_ADMIN", "ROLE_USER"]
+     *<SimpleGrantedAuthority::new - 'method reference'>
+     *@map(SimpleGrantedAuthority::new) = map(role -> new SimpleGrantedAuthority(role) )
+     *  - 해석1. SimpleGrantedAuthority 클래스 이름으로 -> ::new 생성자(정적 메서드)를 참조  
+     *  - 해석2. stream의 각 요소를 가지고 'SimpleGrantedAuthority 객체'로 변환 
+     *@collect: collect 메서드는 'stream의 모든 요소'를 수집하여 '특정 컬렉션 타입'으로 변환
+     *@stream이란: (Java8 SE부터 도입) 내부 반복
+     * - 정의: 데이터 처리 연산을 지원하도록 소스에서 추출된 연속된 요소
+     * 
+     * - 참조: https://devbksheen.tistory.com/entry/%EB%AA%A8%EB%8D%98-%EC%9E%90%EB%B0%94-%EC%8A%A4%ED%8A%B8%EB%A6%BCStream%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80
+     * - 정의: 스티림API는 데이터를 '추상화'하여 다루므로, 다양한 방식으로 저장된 데이터를 읽고 쓰기 위한 공통된 방법 
+     *   기존, 질의를 수행할 데이터 소스(컬렉션) -> 중간연산(map, filter, sort가 '파이프라인 역할') -> 최종연산(forEach, collect, reduce) 
+     * - 특징1. 스트림은 '원본 데이터'를 변경하지 않는다. 즉, immutable
+     * 
 	 * */
     public Authentication getAuthentication(String token) {
     	Claims claims = Jwts

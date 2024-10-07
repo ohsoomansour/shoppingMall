@@ -38,6 +38,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 	 *  -> *인증이 완료(호출시점): 토큰을 발급 -> OAuth2UserService 인터페이스의 구현체를 호출
 	 *@return: OAuth2User 객체는 Google의 사용자 정보 API를 통해 가져온 정보, new DefaultOAuth2User(authorities, attributes, userNameAttributeName) 
 	  - 추가 설명: SecurityContextHolder의 principal에 더 디테일하게 저장하기 위해 이렇게 변환해서 사용
+	  - 10.7 git 데스크 탑
 	 * */
 	@Transactional
 	@Override
@@ -45,6 +46,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 	  try {
 		//1.소셜 유저 정보 가져오기
 		Map<String, Object> oAuth2UserAttributes =  super.loadUser(userRequest).getAttributes();
+		log.info("oAuth2UserAttributes ===>" + oAuth2UserAttributes);
 		//2. registragtionId 가져오기: yml에서 client.registration 값
 		String registrationId = userRequest.getClientRegistration().getRegistrationId();
 		log.info("registrationId ===>"+ registrationId);
@@ -56,10 +58,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 		OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
 	    log.info("oAuth2UserInfo =====> " + oAuth2UserInfo);
 		//5.회원 가입 및 로그인 : Member -> DataMap 
-	    Member member = getOrSave(oAuth2UserInfo);	
+	    Member member = getOrSave(oAuth2UserInfo);	// PrincipalDetails에 member기준 user_name, email이 반드시 포함되어야 한다.
 	    log.debug("getOrSave return ===>" + member);
 		return new PrincipalDetails(member, oAuth2UserAttributes, userNameAttributeName);
 	   } catch (AuthException e) {
+		    log.debug("loadUser error! ");
 			e.printStackTrace();
 	   }
 	   return new DefaultOAuth2User(
@@ -77,6 +80,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 	*
 	*/
 	private Member getOrSave(OAuth2UserInfo oAuth2UserInfo) {
+	  log.debug("getOrSave's param(=oAuth2UserInfo) ===> " + oAuth2UserInfo);
 	  //회원 검색
 	  DataMap user = secUserService.getMemberByEmail(oAuth2UserInfo.email());
 	  //회원이 없으면 가입
@@ -99,6 +103,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 	  }
 	  return Member.builder()
 			  .email(user.getstr("email"))
+			  .login_type(user.getint("user_type"))
 			  .user_name(user.getstr("user_name"))
 			  .profile(user.getstr("profile"))
 			  .authority(user.getstr("authority"))
