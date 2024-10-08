@@ -1,5 +1,6 @@
 package com.shoppingmall.secmember;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import com.shoppingmall.jwt.TokenProvider;
 import com.shoppingmall.oauth.LoginResponse;
 import com.shoppingmall.toaf.object.DataMap;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,13 +60,21 @@ public class AuthController   {
 	SecMemberService secMemberService;
 	@Autowired
 	TokenProvider tokenFilter;
-	
 	 private final AuthenticationManagerBuilder authenticationManagerBuilder;
     
-	 
+	/**
+	 *@Date: 24.10.08  
+	 *@Explain: 소셜 로그인 성공 시 메뉴 반환!
+	 *@param:  OAuth2SuccessHandler - loginMenu(session) -> /auth/succes
+	 *@return: SpringBoot는 loginMenu(JSON)으로 반환  
+	 * */ 
 	@GetMapping("/auth/succes")
-	public ResponseEntity<LoginResponse> loginSuccess(@Valid LoginResponse loginResponse){
-		return ResponseEntity.ok(loginResponse);
+	public ResponseEntity<List<DataMap>> loginSuccess(
+			HttpServletRequest request, HttpServletResponse response
+			){
+		List<DataMap> loginMenu = (List<DataMap>) request.getSession().getAttribute("loginMenu");
+		log.info("session'attribute loginMenu ======>" + loginMenu);
+		return ResponseEntity.ok(loginMenu);
 	}
 
 	//   UsernamePasswordAuthenticationFilter가 '인터셉터'하기 위해서는 POST + /login 기본 세팅

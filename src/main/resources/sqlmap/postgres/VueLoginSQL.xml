@@ -27,10 +27,20 @@
                 u_email = #{u_email}
         ]]>
     </select>
-    
-    <!-- 사용자 메뉴 권한 -->
-    <!-- SQL ID: LoginSQL.getUserMenuByMembertype -->
+    <select id="VueLoginSQL.getUserInfoByUserName" parameterType="dataMap" resultType="dataMap">
+     <![CDATA[ 
+    	SELECT 
+    		*
+    	FROM   
+    		member
+    	WHERE
+    		user_name=#{user_name}  
+     ]]>		
+
+    </select>
+    <!-- 사용자 메뉴 권한: ADMIN으로 입장은 ADMIN, CUSTOMER 메뉴 열고 or CUSTMOER이면 인증테이블에서 그 메뉴만 가져와  -->
     <select id="VueLoginSQL.getUserMenuByMembertype" parameterType="dataMap" resultType="dataMap">
+        /* SQL ID: LoginSQL.getUserMenuByMembertype */
         <![CDATA[
             SELECT  tm.menu_id AS id,
                     tm.menu_name AS title,
@@ -44,15 +54,15 @@
                     FROM tb_menu_auth tma
                     WHERE tma.menu_id = tm.menu_id
                       AND (
-                          (#{u_type} = 'A' AND tma.member_type IN ('A', 'CUSTOMER'))
-                          OR tma.member_type = #{u_type}
+                          (#{authority} = 'ADMIN' AND tma.authority IN ('ADMIN', 'CUSTOMER'))
+                          OR tma.authority = #{authority}
                       )
                    ) 
                 AND tm.depth = 0
             ORDER BY tm.menu_seqno 
         ]]>
     </select>
-    
+
     <!-- 사용자 자식 메뉴 권한 -->
     <!-- SQL ID: LoginSQL.getUserChildMenuByMembertype -->
     <select id="VueLoginSQL.getUserChildMenuByMembertype" parameterType="dataMap" resultType="dataMap">
@@ -68,10 +78,10 @@
                     FROM tb_menu_auth tma
                     WHERE tma.menu_id = tm.menu_id 
                       AND (
-                          (#{u_type} = 'A' AND tma.member_type IN ('A', 'CUSTOMER'))
-                          OR tma.member_type = #{u_type}
+                          (#{authority} = 'ADMIN' AND tma.authority IN ('ADMIN', 'CUSTOMER'))
+                          OR tma.authority = #{authority}
                       )
-                ) 
+                  ) 
                 AND depth = 1
                 AND tm.parent_menu_id = #{parent_menu_id}
             ORDER BY tm.menu_seqno

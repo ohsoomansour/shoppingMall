@@ -15,11 +15,12 @@ public class VueLoginService extends BaseSvc<DataMap> implements VueLoginService
 		public int countUserInfo(DataMap paraMap) {
 				return this.dao.countQuery("VueLoginSQL.countUserInfo", paraMap);
 			}
-			
 			public DataMap getOneUserInfo(DataMap paraMap) {
-				
 				return this.dao.selectQuery("VueLoginSQL.getOneUserInfo", paraMap);
-			
+			}
+			// 10.8 소셜 로그인 닉네임으로 유저정보 얻기
+			public DataMap getUserInfoByUserName(DataMap paraMap) {
+				return this.dao.selectQuery("VueLoginSQL.getUserInfoByUserName", paraMap);
 			}
 			
 			// 6.12 사용자 메뉴 권한 (+Tbiz 참조)

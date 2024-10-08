@@ -95,7 +95,7 @@ public class VueLoginAction {
 	    		log.info("loginResult===============>" +  loginResult);
 	    		if(loginResult) {
 	    			result = "SUCCESS";
-	    			dataMap.put("u_type", userInfo.get("u_type"));
+	    			dataMap.put("authority", userInfo.get("authority"));
 	    			dataMap.put("u_id", userInfo.get("u_id"));
 	    			//session.setAttribute("u_type", userInfo.get("u_type"));
 	    			//session.setAttribute("u_id", userInfo.get("u_id"));
@@ -115,8 +115,8 @@ public class VueLoginAction {
 	    				resultMapSub.put("u_email", userInfo.get("u_email"));
 	    				log.info("list.get(\"id\") ======> " + list.get("id"));
 	    				resultMapSub.put("parent_menu_id", list.get("id"));  //0depth - 예)A0
-	    				log.info("userInfo.get(\"u_type\") ====>" + userInfo.get("u_type"));
-	    				resultMapSub.put("u_type", userInfo.get("u_type")); //A		    
+	    				log.info("userInfo.get(\"authority\") ====>" + userInfo.get("u_type"));
+	    				resultMapSub.put("authority", userInfo.get("authority")); //A		    
 					    list.put("children", vueLoginService.getUserChildMenuByMembertype(resultMapSub));
 					    log.info("list ============> :" + list);
 	    				loginMenu.add(list);

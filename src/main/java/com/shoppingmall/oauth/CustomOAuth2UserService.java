@@ -91,7 +91,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService   {
 		  authMemberMap.put("login_id", authMember.email());
 		  authMemberMap.put("email_verified", false);
 		  authMemberMap.put("locked", false);
-		  authMemberMap.put("authority", "USER");
+		  authMemberMap.put("authority", "CUSTOMER");
 		  authMemberMap.put("address", "");
 		  authMemberMap.put("u_ph", "");
 		  authMemberMap.put("login_type", 2); //  0:비회원, 1: 기본 로그인, 2: social
