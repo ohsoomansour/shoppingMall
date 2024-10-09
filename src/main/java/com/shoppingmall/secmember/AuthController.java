@@ -68,7 +68,7 @@ public class AuthController   {
 	 *@param:  OAuth2SuccessHandler - loginMenu(session) -> /auth/succes
 	 *@return: SpringBoot는 loginMenu(JSON)으로 반환  
 	 * */ 
-	@GetMapping("/auth/succes")
+	@GetMapping("/sec/gAuthSuccess")
 	public ResponseEntity<List<DataMap>> loginSuccess(
 			HttpServletRequest request, HttpServletResponse response
 			){
