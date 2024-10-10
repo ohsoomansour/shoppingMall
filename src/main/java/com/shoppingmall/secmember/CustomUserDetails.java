@@ -24,7 +24,6 @@ public class CustomUserDetails implements UserDetails, Serializable  {
 
 	
 	private static final long serialVersionUID = 1L;
-	private int id;	// DB에서 PK 값
     private String login_id;		// 로그인용 ID 값
     private String password;	// 비밀번호
     private String user_name;
@@ -33,7 +32,7 @@ public class CustomUserDetails implements UserDetails, Serializable  {
     private boolean locked;	//계정 잠김 여부
     private String authority;	//권한 목록: 예)ROLE_ADMIN, ROLE_CUSTOMER
     public CustomUserDetails(
-    		int auth_id,
+
     		String login_id,
     		String user_name,
     		String email,
@@ -42,7 +41,6 @@ public class CustomUserDetails implements UserDetails, Serializable  {
     		boolean locked,
     		String authority
     		) {
-        this.id = auth_id;
         this.login_id = login_id;
         this.password = password;
         this.user_name = user_name;

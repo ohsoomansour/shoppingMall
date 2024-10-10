@@ -25,9 +25,9 @@
 		]]>
 		
 	</select>
-	<select id="SecMemberSQL.getOneMemberByUserId"  parameterType="dataMap" resultType="dataMap" >
-        /*이름에 따른 회원찾기 : SecMemberSQL.getOneMemberByName */
-        SELECT auth_id, login_id, email, password, user_name, authority
+	<select id="SecMemberSQL.getOneMemberByloginId"  parameterType="dataMap" resultType="dataMap" >
+        /*이름에 따른 회원찾기 : SecMemberSQL.getOneMemberByloginId */
+        SELECT login_id, email, password, user_name, authority
         FROM member
         WHERE login_id = #{login_id}
     </select>

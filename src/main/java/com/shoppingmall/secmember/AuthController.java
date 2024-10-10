@@ -1,7 +1,9 @@
 package com.shoppingmall.secmember;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,12 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shoppingmall.jwt.JwtFilter;
 import com.shoppingmall.jwt.TokenDto;
 import com.shoppingmall.jwt.TokenProvider;
-import com.shoppingmall.oauth.LoginResponse;
 import com.shoppingmall.toaf.object.DataMap;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,30 +81,30 @@ public class AuthController   {
 	//   UsernamePasswordAuthenticationFilter가 '인터셉터'하기 위해서는 POST + /login 기본 세팅
     @PostMapping("/sec/login")  //@Valid 
     public ResponseEntity<TokenDto> login(@RequestBody Map<String, Object> userMap) {
-    	// 소셜 로그인 감지, login_type이 2경우 SecurityContextHolder에서 UserDetails에서 login_id를 찾아옴
-    	//SecurityContextHolder.getContext().getAuthentication().getName(); // 여기에서 login_id와     	
-    	
-    	//UserDetails를 사용해서 만듬 
-    	log.info("PATH: /login ===> nonSocialMemberLoginForm ===>" + userMap);
-    	log.info("======== 24.9.25 PATH: /sec/login DEBUGING!!!!!========");
-    		//principal, credentials )
-	        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userMap.get("login_id"), userMap.get("password"));
-	        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-	        log.info("authentication info = {}",authentication);  //the successful authentication token : UsernamePasswordAuthenticationToken
-	        // 해당 객체를 SecurityContextHolder에 저장하고
-	        SecurityContextHolder.getContext().setAuthentication(authentication);
-	        // 인증받은 새로운 authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
-	        String jwt = tokenFilter.createToken(authentication);																		
-	        HttpHeaders httpHeaders = new HttpHeaders();															
-	        // response header에 jwt token에 넣어줌
-	        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-	        httpHeaders.add("location","http://localhost:8088/#/login");
+		//principal, credentials )
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userMap.get("login_id"), userMap.get("password"));
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        log.info("authentication info = {}",authentication);  //the successful authentication token : UsernamePasswordAuthenticationToken
+        log.info("principal ===> " + authentication.getAuthorities().toString());
+     
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        //10.10 JSON 형태로 반환해줘야 하나 -> getAuthority 인터페이스의 쓰임
+        List<String> authorityList = authorities.stream()
+        										.map(GrantedAuthority::getAuthority)
+        										.collect(Collectors.toList());
+        											
+        
+        // 해당 객체를 SecurityContextHolder에 저장하고
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        // 인증받은 새로운 authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
+        String jwt = tokenFilter.createToken(authentication);																		
+        HttpHeaders httpHeaders = new HttpHeaders();															
+        // response header에 jwt token에 넣어줌
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);	
+        httpHeaders.add("location","http://localhost:8088/#/login");
+    // tokenDto를 이용해 response body에도 넣어서 리턴
+    	return new ResponseEntity<>(new TokenDto(jwt, authorityList), httpHeaders, HttpStatus.OK);
 
-        // tokenDto를 이용해 response body에도 넣어서 리턴
-        	return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
- 
-    	//HttpHeaders FailhttpHeaders = new HttpHeaders();	
-    	//return new ResponseEntity<>(FailhttpHeaders, HttpStatus.NOT_ACCEPTABLE);
     }
     /**
      *@Date: 24.9.23  

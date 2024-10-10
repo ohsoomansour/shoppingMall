@@ -1,5 +1,7 @@
 package com.shoppingmall.jwt;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -17,4 +19,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class TokenDto {
 	private String token;  // JWT 토큰 값만 포함
+	List<String> authorities;
 }

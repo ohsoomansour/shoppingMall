@@ -121,19 +121,18 @@ public class SecMemberService extends BaseSvc<DataMap> implements UserDetailsSer
     @Override
     public UserDetails loadUserByUsername(String login_id) throws UsernameNotFoundException {
     	
-    	log.info("user_name ====> "+ login_id);
+    	log.info("login_id ====> "+ login_id);
     	DataMap userMap = new DataMap();
     	userMap.put("login_id", login_id);
     	log.info("SecUserService's loadUserByUsername의 userMap" + userMap);
     	//DB -> authorities를 가져옴  
-    	DataMap nonSocialMember = this.dao.selectQuery("SecMemberSQL.getOneMemberByUserId", userMap);
+    	DataMap nonSocialMember = this.dao.selectQuery("SecMemberSQL.getOneMemberByloginId", userMap);
     	log.debug("loadUserByUsername's nonSocialMember =======> " + nonSocialMember); 
 
 
     	if(!nonSocialMember.isEmpty()) {
     		log.info("loadUserByUsername= ====> user존재");
     		return new CustomUserDetails(
-    				nonSocialMember.getint("auth_id"),
     				nonSocialMember.getstr("login_id"),
     				nonSocialMember.getstr("user_name"),
     				nonSocialMember.getstr("email"),
