@@ -23,6 +23,10 @@ public record Member(
 	public String getName() {
 		return user_name;
 	}
+	
+	public String setName(String user_name) {
+		return user_name;
+	}
 		
 }
 

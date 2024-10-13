@@ -79,5 +79,10 @@
 
 		
 	</insert>
-
+    <update id="SecMemberSQL.updateUserName" parameterType="dataMap">
+	    UPDATE member
+	    SET user_name = #{user_name}
+	    WHERE login_id = #{login_id}
+	</update>
+       
 </mapper>
