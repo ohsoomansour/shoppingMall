@@ -1,11 +1,13 @@
 package com.shoppingmall.batch;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.batch.MyBatisPagingItemReader;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -16,6 +18,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.shoppingmall.toaf.object.DataMap;
+
+import jakarta.activation.DataSource;
 
 /**
  *@SpringBoot3이상: java17이상써야한다.(따라서 부트 프로젝트이면 17버전을 사용할 것으로 예상) 
@@ -46,12 +50,15 @@ import com.shoppingmall.toaf.object.DataMap;
  *  @BATCH_JOB_SEQ: 배치 작업 인스턴스 및 실행 정보에 대한 고유 식별자를 생성하는 데 사용
  *@PazeSize: 한번에 조회할 item의 양  vs @ChunkSize: '한번에 처리될 트랜잭션 단위' 
  *  JobRepository jobRepository, PlatformTransactionManager transactionManager
- *
+ *  
  * */
 
 @Configuration
+@EnableBatchProcessing
 public class ChunkBatchConfig {
-
+  
+  
+	
   @Bean
   public Job memberJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, Step memberStep) {
 	  return new JobBuilder("memberJob", jobRepository)
