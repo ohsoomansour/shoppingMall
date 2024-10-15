@@ -110,8 +110,8 @@ public class SecurityConfig {
 	     		 .authorizeHttpRequests((authorize) -> authorize
 	     		    .requestMatchers("/admin/**").hasRole("ADMIN")
 	     		    																			// 10.9 /auth/success 삭제 
-	     		    .requestMatchers("/sec/login","/sec/join","/sec_user/userDuplicCheck.do", "/send-mail/email", "/sec/gAuthSuccess").permitAll()
-	     		    .requestMatchers("/error/**").permitAll()
+	     		    .requestMatchers("/run-batch","/sec/login","/sec/join","/sec_user/userDuplicCheck.do", "/send-mail/email", "/sec/gAuthSuccess").permitAll()
+	     		    .requestMatchers("/error/** ").permitAll()
 	     		    
 	     		    .anyRequest().authenticated()
 	     		  )

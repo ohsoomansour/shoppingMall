@@ -2,7 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace=com.shoppingmall.admin.repository.MemberMapper -->
 <mapper namespace="SecMemberSQL"> 
-
+	<select id="SecMemberSQL.selectSecMembers" parameterType="dataMap" resultType="dataMap" >
+		/*아이디 중복검사: SQL ID: SecMemberSQL.selectMembers*/
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				member
+		]]>
+		
+	</select>
 	<select id="SecMemberSQL.countMemberByLoginId" parameterType="dataMap" resultType="int">
 		/*아이디 중복검사: SQL ID: SecMemberSQL.countMemberByLoginId*/
 		<![CDATA[
@@ -79,7 +88,7 @@
 
 		
 	</insert>
-    <update id="SecMemberSQL.updateUserName" parameterType="dataMap">
+    <update id="SecMemberSQL.updateUserName" parameterType="dataMap" >
 	    UPDATE member
 	    SET user_name = #{user_name}
 	    WHERE login_id = #{login_id}

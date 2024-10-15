@@ -1,7 +1,6 @@
 spring:
   profiles:
     active: local # 사용할 환경 설정
-  
   datasource:
     driverClassName: org.postgresql.Driver
     jdbcUrl: jdbc:postgresql://localhost:5432/postgres
@@ -90,7 +89,10 @@ logging:
     '[com.shoppingmall.jwt]': DEBUG
     '[com.shoppingmall.toaf.intercept]': DEBUG
     '[com.shoppingmall.oauth]' : DEBUG
- 
+    '[com.shoppingmall.batch]' : DEBUG 
+    '[org.mybatis]': DEBUG 
+    '[jdbc.sql]': DEBUG 
+    
 #서버 포트
 server:
   port: 8080

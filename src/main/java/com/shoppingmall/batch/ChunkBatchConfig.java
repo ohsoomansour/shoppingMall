@@ -1,25 +1,27 @@
 package com.shoppingmall.batch;
 
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.batch.MyBatisBatchItemWriter;
 import org.mybatis.spring.batch.MyBatisPagingItemReader;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.shoppingmall.toaf.object.DataMap;
 
-import jakarta.activation.DataSource;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *@SpringBoot3이상: java17이상써야한다.(따라서 부트 프로젝트이면 17버전을 사용할 것으로 예상) 
@@ -49,18 +51,23 @@ import jakarta.activation.DataSource;
  *  @BATCH_STEP_EXECUTION_PARAMS: 배치 작업 실행에 전달된 매개변수를 저장. 배치 작업이 실행될 때 전달된 매개변수가 여기에 저장
  *  @BATCH_JOB_SEQ: 배치 작업 인스턴스 및 실행 정보에 대한 고유 식별자를 생성하는 데 사용
  *@PazeSize: 한번에 조회할 item의 양  vs @ChunkSize: '한번에 처리될 트랜잭션 단위' 
+ *@JobLauncherApplicationRunner: 이 클래스는 Spring Boot가 배치 작업을 실행하는데 사용되는 실행기
+ * - 
  *  JobRepository jobRepository, PlatformTransactionManager transactionManager
- *  
+ * ####################Debugging ####################
+ * Q. DB에 반영되지 않는 이유는? 
+ * 추정1. 프로세서가 실행이 되지 않고 있다. 
+ *   -> Reader가 데이터를 제공할 때만 실행
+ *   
+ * 추정2. 배치작업을 실행하려면 배치 실행을 명시적으로 트리거해야 한다. 트리거 방식에는 여러 
  * */
-
+@Slf4j
 @Configuration
-@EnableBatchProcessing
 public class ChunkBatchConfig {
   
-  
-	
   @Bean
   public Job memberJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, Step memberStep) {
+	  log.info("memberJob 실행중!!");
 	  return new JobBuilder("memberJob", jobRepository)
 			  .start(memberStep)
 			  .build();
@@ -71,6 +78,7 @@ public class ChunkBatchConfig {
 		  MyBatisPagingItemReader<DataMap> myBatisPagingItemReader,
           ItemProcessor<DataMap, DataMap> memberProcessor,
           ItemWriter<DataMap> memberWriter) {
+	  	  log.info("memberSTEP 실행중!!");
 	  return new StepBuilder("memberStep", jobRepository)
 			  .<DataMap, DataMap>chunk(10, transactionManager)
 			  .reader(myBatisPagingItemReader)
@@ -80,60 +88,69 @@ public class ChunkBatchConfig {
   }
   
  /**
-   *@Explain:  
+   *@Date: 24.10.14
+   *@실행 설명: Step실행 시 리더가 데이터를 읽음 ->   SecMemberSQL.selectSecMembers 쿼리 -> DB에서 값을 조회 
+   * -> MyBatisPagingItemReader는 그 결과를 Spring Batch의 처리 단계로 전달 
+   *@return: List<DataMap> 
+   *@SqlSessionFactory: MyBatisConfig.java에서 DI-> postgresqlSession 팩토리임
+   * - Qualifier로 
+   * 
    * */
+  
   @Bean
-  public MyBatisPagingItemReader<DataMap> myBatisPagingItemReader(SqlSessionFactory sqlSessionFactory){
+  public MyBatisPagingItemReader<DataMap> myBatisPagingItemReader(@Qualifier("postgresqlSession")SqlSessionFactory sqlSessionFactory){
 	  MyBatisPagingItemReader<DataMap> reader = new MyBatisPagingItemReader<>();
+	  reader.setPageSize(20);  //페이지 크기 설정
 	  reader.setSqlSessionFactory(sqlSessionFactory); 
-	  reader.setQueryId("SecMemberSQL.getOneMemberByEmail");
+	  reader.setQueryId("SecMemberSQL.selectSecMembers");
 	  //파라미터 설정 (email을 매퍼 쿼리에 전달)
-	  DataMap parameterValues = new DataMap();
-	  parameterValues.put("email", "admin@naver.com");
-	  reader.setParameterValues(parameterValues);
-	  reader.setPageSize(10);  //페이지 크기 설정
 	  return reader;
   }
+  /**
+   *@Date: 24.10.14
+   *@process의param: 리더에서 넘어온 '객체(DataMap)'를 하나씩 받는다.  
+   *@return: 
+   *@실행 설명: 리더에서 넘견
+   * */
   @Bean
   public ItemProcessor<DataMap, DataMap> memberProcessor() {
-	  return member -> {
-		  String user_name = member.getstr("user_name");
-		  String updatedUserName = user_name + "10.13";
-	        
-	        // 변경된 user_name을 DataMap에 다시 설정합니다.
-	      member.put("user_name", updatedUserName);
-	      System.out.println("Processed user_name: " + updatedUserName); // 로그 추가
-		return member;
+  /*
+  return member -> {
+	  log.info("processor 실행 중!!");
+	  String user_name = member.getstr("user_name");
+	  String updatedUserName = user_name + "10.14";
+        
+        // 변경된 user_name을 DataMap에 다시 설정합니다.
+      member.put("user_name", updatedUserName);
+      System.out.println("Processed user_name: " + updatedUserName); // 로그 추가
+	return member;
+  };*/
+	  return new ItemProcessor<DataMap, DataMap>(){
+		  @Override
+		  public DataMap process(DataMap member) throws Exception { 
+			  log.info("프로세서 ");
+			  member.put("user_name", member.getstr("user_name") +"10.14 Updated");
+			  return member;
+		  }
 	  };
   };
-  //처리된 데이터를 출력
+
+  /**
+   *@Date: 24.10.14 
+   *@Explain: '프로세서'에서 처리된 데이터를 'chunk 단위'로 모아서 한 번에 DB에 쓰기 작업을 수행 
+   * */
   @Bean
-  public ItemWriter<DataMap> memberWriter(SqlSessionFactory sqlSessionFactory) {
-      return items -> {
-          try (var session = sqlSessionFactory.openSession()) {
-              for (DataMap item : items) {
-            	  System.out.println("ing.."); //일단 여기 안 들어오고 있음
-                  session.update("SecMemberSQL.updateUserName", item);
-              }
-              System.out.println("========== commit ==========");
-              session.commit();
-          }
-      };
+  public MyBatisBatchItemWriter<DataMap> memberWriter(@Qualifier("postgresqlSession")SqlSessionFactory sqlSessionFactory) {
+	  var session = sqlSessionFactory.openSession();
+	  MyBatisBatchItemWriter<DataMap> writer = new MyBatisBatchItemWriter<>();
+	  log.info("writer ===>" + writer);
+	  writer.setSqlSessionFactory(sqlSessionFactory);
+	  writer.setStatementId("SecMemberSQL.updateUserName");
+	  writer.setItemToParameterConverter(item -> {
+		  log.info("Writing item:{} ", item);
+		  return item;
+	  });
+	  return writer;
   }
 
-  @Bean
-  public JobExecutionListener listener() {
-      return new JobExecutionListener() {
-          @Override
-          public void beforeJob(JobExecution jobExecution) {
-              System.out.println("Job started: " + jobExecution.getJobInstance().getJobName());
-          }
-
-          @Override
-          public void afterJob(JobExecution jobExecution) {
-              System.out.println("Job finished: " + jobExecution.getJobInstance().getJobName());
-          }
-      };
-  }
-  
 }
