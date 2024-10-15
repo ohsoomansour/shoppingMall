@@ -6,12 +6,12 @@ spring:
     jdbcUrl: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: 284823
-  batch:
+  batch:  #mysql에서는 rewriteBatchedStatements=true -> #jdbc:mysql://localhost:3306/reservation?rewriteBatchedStatements=true
     jdbc:
       initialize-schema: always
        
-      #datasource:
-      #jdbcUrl : jdbc:mysql://localhost:3307/mysql
+      #datasource:               
+      #jdbcUrl : jdbc:mysql://localhost:3307/mysql 
       #driver-class-name : com.mysql.cj.jdbc.Driver
       #username: root
       #password: 284823

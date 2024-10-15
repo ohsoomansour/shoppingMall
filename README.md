@@ -14,7 +14,7 @@
 
    이름    |   타입   |      설명            |   필수 |
  +--------+---------+-------------------- +-------+
-   query  |	String  |   	검색응         |   O    |
+   query  |	String  |   	검색           |   O    |
     page  |  Integer|       결과 페이지 번호 |   X    |
 
 
@@ -49,16 +49,10 @@ await(
 	})).JOSN()
 	
 
-
-
-
-
-
-
  
-#Errors 핸들링  ### 
+#Errors 핸들링
 -> known cunsumable format
-1) 400에러 처리(서버가 클라이언트 에러) 
+- 400에러 처리(서버가 클라이언트 에러) 
 {
   "error" : {
      "code" : 400,
@@ -66,7 +60,7 @@ await(
      "details": "User ID must be positive integer"
    } 
 }
-2)HTTP status code : 404
+- HTTP status code : 404
 {
   "error" : {
      "code" : 404,
@@ -74,7 +68,7 @@ await(
      "details": "Not found"
    } 
 }
-3) server issue 500 처리 
+ - server issue 500 처리 
 {
   "error" : {
      "code" : 500,

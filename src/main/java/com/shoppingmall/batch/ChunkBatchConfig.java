@@ -4,19 +4,17 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.batch.MyBatisBatchItemWriter;
 import org.mybatis.spring.batch.MyBatisPagingItemReader;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.shoppingmall.toaf.object.DataMap;
@@ -62,12 +60,18 @@ import lombok.extern.slf4j.Slf4j;
  * 추정2. 배치작업을 실행하려면 배치 실행을 명시적으로 트리거해야 한다. 트리거 방식에는 여러 
  * */
 @Slf4j
+//@RequiredArgsConstructor
 @Configuration
 public class ChunkBatchConfig {
+ 
+ //preparedStatement를 작성 -> 코드가 난잡 ? 
+ @Autowired 	
+ private JdbcTemplate jdbcTempalte;
   
   @Bean
   public Job memberJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, Step memberStep) {
 	  log.info("memberJob 실행중!!");
+	  //jdbcTempalte.batchUpdate("INSRT INTO ~ ");
 	  return new JobBuilder("memberJob", jobRepository)
 			  .start(memberStep)
 			  .build();
