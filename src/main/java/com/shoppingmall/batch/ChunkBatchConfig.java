@@ -114,17 +114,7 @@ public class ChunkBatchConfig {
    * */
   @Bean
   public ItemProcessor<DataMap, DataMap> memberProcessor() {
-  /*
-  return member -> {
-	  log.info("processor 실행 중!!");
-	  String user_name = member.getstr("user_name");
-	  String updatedUserName = user_name + "10.14";
-        
-        // 변경된 user_name을 DataMap에 다시 설정합니다.
-      member.put("user_name", updatedUserName);
-      System.out.println("Processed user_name: " + updatedUserName); // 로그 추가
-	return member;
-  };*/
+
 	  return new ItemProcessor<DataMap, DataMap>(){
 		  @Override
 		  public DataMap process(DataMap member) throws Exception { 
@@ -136,8 +126,14 @@ public class ChunkBatchConfig {
   };
 
   /**
-   *@Date: 24.10.14 
-   *@Explain: '프로세서'에서 처리된 데이터를 'chunk 단위'로 모아서 한 번에 DB에 쓰기 작업을 수행 
+   * 
+   *@Since: 24.10.14
+   *@verison: 1.0(AS IS) -> 2.0 (TO BE) 
+   *@Author: osooman 
+   *@Param: SqlSessionFactory
+   *@return: MyBatisBatchItemWriter writer 
+   *@Explain: '프로세서'에서 처리된 데이터를 'chunk 단위'로 모아서 한 번에 DB에 쓰기 작업을 수행
+   *@see: com.shoppingmall.batch 패키지  
    * */
   @Bean
   public MyBatisBatchItemWriter<DataMap> memberWriter(@Qualifier("postgresqlSession")SqlSessionFactory sqlSessionFactory) {
